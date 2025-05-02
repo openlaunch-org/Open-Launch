@@ -57,7 +57,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <PlausibleProvider
-          domain="openlaunch.com"
+          domain="open-launch.com"
           customDomain="https://plausible.dailypings.com"
           selfHosted={true}
           trackOutboundLinks={true}
@@ -73,7 +73,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
