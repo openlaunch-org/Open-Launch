@@ -1,5 +1,4 @@
 import {
-  // Importer les bonnes fonctions depuis home.ts
   getTodayProjects,
   getYesterdayProjects,
   getMonthBestProjects,
@@ -10,9 +9,9 @@ import Link from "next/link";
 import { ProjectCard } from "@/components/home/project-card";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
-// Importer le type Project si possible, sinon définir une interface locale
-// Pour l'instant, utilisons une interface locale simplifiée
 interface ProjectSummary {
   id: string;
   slug: string;
@@ -25,6 +24,8 @@ interface ProjectSummary {
   launchStatus: string;
   scheduledLaunchDate?: Date | string | null;
   createdAt: Date | string;
+  userHasUpvoted?: boolean;
+  categories?: { id: string; name: string }[];
 }
 
 export const metadata = {
@@ -34,7 +35,6 @@ export const metadata = {
 
 // Composant Skeleton principal
 function TrendingDataSkeleton() {
-  // Mettre ici le contenu JSX du skeleton (actuellement manquant)
   return (
     <div className="space-y-3 sm:space-y-4">
       <div className="px-3 sm:px-4">
@@ -67,7 +67,13 @@ function TrendingDataSkeleton() {
 }
 
 // Composant pour afficher les données
-async function TrendingData({ filter }: { filter: string }) {
+async function TrendingData({
+  filter,
+  isAuthenticated,
+}: {
+  filter: string;
+  isAuthenticated: boolean;
+}) {
   let projects: ProjectSummary[] = []; // Utiliser le type défini
   let title;
 
@@ -94,7 +100,6 @@ async function TrendingData({ filter }: { filter: string }) {
         <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
           {title}
         </h2>
-        {/* Retirer le dropdown de tri qui n'était pas utilisé */}
       </div>
 
       {sortedProjects.length === 0 ? (
@@ -102,7 +107,6 @@ async function TrendingData({ filter }: { filter: string }) {
           <p className="text-muted-foreground">
             No projects found for this period.
           </p>
-          {/* Retirer le message de chargement désactivé */}
         </div>
       ) : (
         <div className="space-y-1">
@@ -113,10 +117,10 @@ async function TrendingData({ filter }: { filter: string }) {
               description={project.description || ""}
               websiteUrl={project.websiteUrl ?? undefined}
               commentCount={project.commentCount ?? 0}
-              index={index + 1}
-              userHasUpvoted={false}
-              categories={[]}
-              isAuthenticated={false}
+              index={index}
+              userHasUpvoted={project.userHasUpvoted ?? false}
+              categories={project.categories || []}
+              isAuthenticated={isAuthenticated}
             />
           ))}
         </div>
@@ -134,7 +138,11 @@ export default async function TrendingPage({
   const filter = params.filter || "today";
   const topCategories = await getTopCategories(5);
 
-  // Appeler la bonne fonction pour les stats rapides
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const isAuthenticated = !!session?.user;
+
   const todayProjects = await getTodayProjects();
   const ongoingLaunches = todayProjects.filter(
     (project) => project.launchStatus === "ongoing"
@@ -147,7 +155,7 @@ export default async function TrendingPage({
           {/* Contenu principal */}
           <div className="md:col-span-2">
             <Suspense fallback={<TrendingDataSkeleton />}>
-              <TrendingData filter={filter} />
+              <TrendingData filter={filter} isAuthenticated={isAuthenticated} />
             </Suspense>
           </div>
 
