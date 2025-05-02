@@ -165,7 +165,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <div className="max-w-6xl mx-auto px-4 pb-12 relative">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:items-start">
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-background border dark:border-zinc-800 rounded-xl p-6 shadow-sm -mt-4 md:-mt-4">
+            <div className="bg-background border dark:border-zinc-800 rounded-xl p-6 -mt-4 md:-mt-4">
               <div className="hidden md:flex flex-row items-center gap-4 mb-6">
                 <div className="relative h-28 w-28 -mt-16 flex-shrink-0 ring-4 ring-background rounded-md">
                   <Image
@@ -341,7 +341,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
 
           <div className="md:sticky md:top-24 md:col-span-1 md:-mt-4">
-            <div className="bg-background border dark:border-zinc-800 rounded-xl p-5 space-y-5 sticky top-24 shadow-sm">
+            <div className="bg-background border dark:border-zinc-800 rounded-xl p-5 space-y-5 sticky top-24">
               <div className="space-y-1">
                 <h3 className="font-semibold">Added by</h3>
                 <div className="flex items-center justify-between text-sm">
