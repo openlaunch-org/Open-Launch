@@ -1,0 +1,25 @@
+<svg
+    viewBox="0 0 120 120"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <g>
+        <polygon
+            fill="#ff0000"
+            points="79.7,45.6 60,55.5 40.3,45.6 15.9,94.3 31.1,92.8 38.9,105.9 60,63.9 81.1,105.9 88.9,92.8 104.1,94.3"
+        />
+        <circle fill="#cc0000" cx="60" cy="46.4" r="32.2" />
+        <circle fill="#bb0000" cx="60" cy="46.4" r="25.3" />
+        <text
+            x="60"
+            y="50"
+            fontFamily="Arial, sans-serif"
+            fontSize="36"
+            fontWeight="bold"
+            fill="#FFFFFF"
+            textAnchor="middle"
+            dominantBaseline="middle"
+        >
+            3
+        </text>
+    </g>
+</svg>

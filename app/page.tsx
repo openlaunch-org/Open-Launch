@@ -1,0 +1,175 @@
+import { WelcomeBanner } from "@/components/home/welcome-banner";
+import { ProjectSection } from "@/components/home/project-section";
+import {
+  getTodayProjects,
+  getYesterdayProjects,
+  getMonthBestProjects,
+  getFeaturedPremiumProjects,
+} from "@/app/actions/home";
+import { getTopCategories } from "@/app/actions/projects";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { PremiumCard } from "@/components/home/premium-card";
+
+export default async function Home() {
+  // Récupérer les données réelles
+  const todayProjects = await getTodayProjects();
+  const yesterdayProjects = await getYesterdayProjects();
+  const monthProjects = await getMonthBestProjects();
+  const topCategories = await getTopCategories(5);
+  const featuredPremiumProjects = await getFeaturedPremiumProjects();
+
+  // // Get session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  // Stats rapides
+  const ongoingLaunches = todayProjects.filter(
+    (project) => project.launchStatus === "ongoing"
+  ).length;
+
+  return (
+    <main className="bg-secondary/20 min-h-screen">
+      <div className="container max-w-6xl mx-auto px-4 pt-8 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:items-start">
+          {/* Contenu principal */}
+          <div className="md:col-span-2 space-y-6 sm:space-y-8">
+            <div className="space-y-4">
+              <WelcomeBanner />
+
+              {/* Featured Premium Plus Projects */}
+              {featuredPremiumProjects.length > 0 && (
+                <PremiumCard projects={featuredPremiumProjects} />
+              )}
+            </div>
+
+            <ProjectSection
+              title="Top Projects Launching Today"
+              projects={todayProjects}
+              sortByUpvotes={true}
+              isAuthenticated={!!session?.user}
+            />
+
+            <ProjectSection
+              title="Yesterday's Launches"
+              projects={yesterdayProjects}
+              moreHref="/trending?filter=yesterday"
+              sortByUpvotes={true}
+              isAuthenticated={!!session?.user}
+            />
+
+            <ProjectSection
+              title="This Month's Best"
+              projects={monthProjects}
+              moreHref="/trending?filter=month"
+              sortByUpvotes={true}
+              isAuthenticated={!!session?.user}
+            />
+          </div>
+
+          {/* Sidebar */}
+          <div className="top-24">
+            {/* Quick Stats */}
+            <div className="p-5 pt-0 space-y-3">
+              <h3 className="font-semibold flex items-center gap-2">
+                Live Now
+              </h3>
+              <Link
+                href="/trending"
+                className="bg-secondary/30 hover:bg-secondary/50 px-5 py-2 rounded-md block transition-colors border-l-4 border-primary shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="text-2xl font-bold text-primary">
+                    {ongoingLaunches}
+                  </div>
+                  <div className="text-sm font-medium">Active Launches</div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Categories */}
+            <div className="p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold flex items-center gap-2">
+                  Top Categories
+                </h3>
+                <Button variant="ghost" size="sm" className="text-sm" asChild>
+                  <Link href="/categories" className="flex items-center gap-1">
+                    View all
+                  </Link>
+                </Button>
+              </div>
+              <div className="space-y-2 pr-2">
+                {topCategories.map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/categories?category=${category.id}`}
+                    className={`flex items-center justify-between rounded-md p-2 ${
+                      category.id === "all"
+                        ? "bg-muted font-medium"
+                        : "hover:bg-muted/40"
+                    }`}
+                  >
+                    <span className="text-sm hover:underline">
+                      {category.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+                      {category.count} projects
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* Podium
+            {yesterdayProjects.length > 0 && (
+              <div className="p-5 pt-0 space-y-3">
+                <h3 className="font-semibold flex items-center gap-2">
+                  Yesterday&apos;s Top Launches
+                </h3>
+                <TopLaunchesPodium topProjects={yesterdayProjects} />
+              </div>
+            )} */}
+
+            {/* Quick Links */}
+            <div className="p-5 space-y-3">
+              <h3 className="font-semibold flex items-center gap-2">
+                Quick Access
+              </h3>
+              <div className="space-y-2">
+                {session?.user && (
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                )}
+                <Link
+                  href="/trending"
+                  className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                >
+                  Trending Now
+                </Link>
+                <Link
+                  href="/winners"
+                  className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                >
+                  Daily Winners
+                </Link>
+                <Link
+                  href="/trending?filter=month"
+                  className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                >
+                  Best of Month
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
