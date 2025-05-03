@@ -53,7 +53,7 @@ cd open-launch
 npm install
 
 # Set up environment variables
-cp .env.example .env.local
+cp .env.example .env
 
 # Initialize the database
 npm run db:generate
