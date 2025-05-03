@@ -77,10 +77,12 @@ export function ProjectCard({
         <div className="min-w-0 flex-grow">
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <h3 className="group-hover:text-primary line-clamp-1 text-sm font-medium transition-colors sm:text-base">
-                {typeof index === "number" ? `${index + 1}. ` : ""}
-                {name}
-              </h3>
+              <Link href={projectPageUrl}>
+                <h3 className="group-hover:text-primary line-clamp-1 text-sm font-medium transition-colors sm:text-base">
+                  {typeof index === "number" ? `${index + 1}. ` : ""}
+                  {name}
+                </h3>
+              </Link>
               {websiteUrl && (
                 <a
                   href={websiteUrl}
