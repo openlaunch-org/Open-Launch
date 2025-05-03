@@ -108,7 +108,7 @@ export default async function Home() {
                       category.id === "all" ? "bg-muted font-medium" : "hover:bg-muted/40",
                     )}
                   >
-                    <span className="text-sm hover:underline">{category.name}</span>
+                    <span className="text-sm">{category.name}</span>
                     <span className="text-muted-foreground bg-secondary rounded-full px-2 py-0.5 text-xs">
                       {category.count} projects
                     </span>
