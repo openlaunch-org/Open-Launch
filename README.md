@@ -58,6 +58,7 @@ cp .env.example .env.local
 # Initialize the database
 npm run db:generate
 npm run db:migrate
+npm run db:push
 
 # Start the development server
 npm run dev
