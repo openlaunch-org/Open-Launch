@@ -67,7 +67,7 @@ export function ProjectSection({
 
   return (
     <section className="space-y-3 sm:space-y-4">
-      <div className="flex items-center justify-between px-3 sm:px-4">
+      <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
         {moreHref && (
           <div className="hidden sm:block">
@@ -76,9 +76,9 @@ export function ProjectSection({
         )}
       </div>
 
-      <div className="overflow-hidden">
+      <div>
         {sortedProjects.length > 0 ? (
-          <div className="flex flex-col">
+          <div className="-mx-3 flex flex-col sm:-mx-4">
             {sortedProjects.map((project, index) => (
               <ProjectCard
                 key={project.id}
@@ -99,15 +99,13 @@ export function ProjectSection({
             ))}
           </div>
         ) : (
-          <div className="px-3 sm:px-4">
-            <div className="text-muted-foreground border-border bg-card rounded-lg border border-dashed py-8 text-center text-sm">
-              {'No projects found for "' + title + '"'}
-            </div>
+          <div className="text-muted-foreground border-border bg-card rounded-lg border border-dashed py-8 text-center text-sm">
+            {'No projects found for "' + title + '"'}
           </div>
         )}
 
         {moreHref && (
-          <div className="px-3 pt-3 sm:hidden">
+          <div className="mt-4 sm:hidden">
             <ViewAllButtonMobile />
           </div>
         )}

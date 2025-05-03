@@ -2,6 +2,7 @@ import { headers } from "next/headers"
 import Link from "next/link"
 
 import { auth } from "@/lib/auth"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PremiumCard } from "@/components/home/premium-card"
 import { ProjectSection } from "@/components/home/project-section"
@@ -35,9 +36,9 @@ export default async function Home() {
   return (
     <main className="bg-secondary/20 min-h-screen">
       <div className="container mx-auto max-w-6xl px-4 pt-8 pb-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:items-start">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:items-start">
           {/* Contenu principal */}
-          <div className="space-y-6 sm:space-y-8 md:col-span-2">
+          <div className="space-y-6 sm:space-y-8 lg:col-span-2">
             <div className="space-y-4">
               <WelcomeBanner />
 
@@ -74,7 +75,7 @@ export default async function Home() {
           {/* Sidebar */}
           <div className="top-24">
             {/* Quick Stats */}
-            <div className="space-y-3 p-5 pt-0">
+            <div className="space-y-3 py-5 pt-0">
               <h3 className="flex items-center gap-2 font-semibold">Live Now</h3>
               <Link
                 href="/trending"
@@ -88,7 +89,7 @@ export default async function Home() {
             </div>
 
             {/* Categories */}
-            <div className="space-y-3 p-5">
+            <div className="space-y-3 py-5">
               <div className="flex items-center justify-between">
                 <h3 className="flex items-center gap-2 font-semibold">Top Categories</h3>
                 <Button variant="ghost" size="sm" className="text-sm" asChild>
@@ -102,12 +103,13 @@ export default async function Home() {
                   <Link
                     key={category.id}
                     href={`/categories?category=${category.id}`}
-                    className={`flex items-center justify-between rounded-md p-2 ${
-                      category.id === "all" ? "bg-muted font-medium" : "hover:bg-muted/40"
-                    }`}
+                    className={cn(
+                      "-mx-2 flex items-center justify-between rounded-md p-2",
+                      category.id === "all" ? "bg-muted font-medium" : "hover:bg-muted/40",
+                    )}
                   >
                     <span className="text-sm hover:underline">{category.name}</span>
-                    <span className="text-muted-foreground bg-secondary rounded-full px-2 py-0.5 text-xs">
+                    <span className="text-muted-foreground bg-secondary -mx-2 rounded-full px-2 py-0.5 text-xs">
                       {category.count} projects
                     </span>
                   </Link>
@@ -125,32 +127,32 @@ export default async function Home() {
             )} */}
 
             {/* Quick Links */}
-            <div className="space-y-3 p-5">
+            <div className="space-y-3 py-5">
               <h3 className="flex items-center gap-2 font-semibold">Quick Access</h3>
               <div className="space-y-2">
                 {session?.user && (
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
+                    className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                   >
                     Dashboard
                   </Link>
                 )}
                 <Link
                   href="/trending"
-                  className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
+                  className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
                   Trending Now
                 </Link>
                 <Link
                   href="/winners"
-                  className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
+                  className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
                   Daily Winners
                 </Link>
                 <Link
                   href="/trending?filter=month"
-                  className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
+                  className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
                   Best of Month
                 </Link>

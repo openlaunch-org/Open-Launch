@@ -46,7 +46,7 @@ export function ProjectCard({
   const projectPageUrl = `/projects/${slug}`
 
   return (
-    <div className="rounded-xl px-3 py-3 transition-colors hover:bg-zinc-50 sm:px-4 sm:py-4 dark:hover:bg-zinc-900/50">
+    <div className="group rounded-xl p-3 transition-colors hover:bg-zinc-50 sm:p-4 dark:hover:bg-zinc-900/50">
       <div className="flex items-start gap-3 sm:gap-4">
         <div className="flex-shrink-0">
           <Link href={projectPageUrl}>
@@ -70,7 +70,7 @@ export function ProjectCard({
 
         <div className="min-w-0 flex-grow">
           <div className="flex flex-col">
-            <div className="group flex items-center gap-1">
+            <div className="flex items-center gap-1">
               <Link href={projectPageUrl}>
                 <h3 className="group-hover:text-primary line-clamp-1 text-sm font-medium transition-colors sm:text-base">
                   {typeof index === "number" ? `${index + 1}. ` : ""}
@@ -82,7 +82,7 @@ export function ProjectCard({
                   href={websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary inline-flex items-center transition-opacity"
+                  className="text-primary mb-px inline-flex items-center transition-opacity"
                   onClick={(e) => {
                     e.stopPropagation()
                   }}
