@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { RiExternalLinkLine } from "@remixicon/react"
 
@@ -43,40 +44,43 @@ export function ProjectCard({
   isAuthenticated,
   websiteUrl,
 }: ProjectCardProps) {
+  const router = useRouter()
   const projectPageUrl = `/projects/${slug}`
 
   return (
-    <div className="group rounded-xl p-3 transition-colors hover:bg-zinc-50 sm:p-4 dark:hover:bg-zinc-900/50">
+    <div
+      className="group cursor-pointer rounded-xl p-3 transition-colors hover:bg-zinc-50 sm:p-4 dark:hover:bg-zinc-900/50"
+      onClick={(e) => {
+        e.stopPropagation()
+        router.push(projectPageUrl)
+      }}
+    >
       <div className="flex items-start gap-3 sm:gap-4">
         <div className="flex-shrink-0">
-          <Link href={projectPageUrl}>
-            <div className="relative h-12 w-12 overflow-hidden rounded-md sm:h-14 sm:w-14">
-              {logoUrl ? (
-                <Image
-                  src={logoUrl}
-                  alt={`${name} logo`}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 640px) 48px, 56px"
-                />
-              ) : (
-                <span className="text-muted-foreground flex h-full w-full items-center justify-center text-xl font-bold">
-                  {name.charAt(0)}
-                </span>
-              )}
-            </div>
-          </Link>
+          <div className="relative h-12 w-12 overflow-hidden rounded-md sm:h-14 sm:w-14">
+            {logoUrl ? (
+              <Image
+                src={logoUrl}
+                alt={`${name} logo`}
+                fill
+                className="object-contain"
+                sizes="(max-width: 640px) 48px, 56px"
+              />
+            ) : (
+              <span className="text-muted-foreground flex h-full w-full items-center justify-center text-xl font-bold">
+                {name.charAt(0)}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="min-w-0 flex-grow">
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <Link href={projectPageUrl}>
-                <h3 className="group-hover:text-primary line-clamp-1 text-sm font-medium transition-colors sm:text-base">
-                  {typeof index === "number" ? `${index + 1}. ` : ""}
-                  {name}
-                </h3>
-              </Link>
+              <h3 className="group-hover:text-primary line-clamp-1 text-sm font-medium transition-colors sm:text-base">
+                {typeof index === "number" ? `${index + 1}. ` : ""}
+                {name}
+              </h3>
               {websiteUrl && (
                 <a
                   href={websiteUrl}
