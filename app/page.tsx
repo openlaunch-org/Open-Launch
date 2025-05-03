@@ -98,7 +98,7 @@ export default async function Home() {
                   </Link>
                 </Button>
               </div>
-              <div className="space-y-2 pr-2">
+              <div className="space-y-2">
                 {topCategories.map((category) => (
                   <Link
                     key={category.id}
