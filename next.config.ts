@@ -22,11 +22,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "yxucdfr9f5.ufs.sh",
+        hostname: "designmodo.com",
       },
       {
         protocol: "https",
-        hostname: "designmodo.com",
+        hostname: process.env.NEXT_PUBLIC_UPLOADTHING_URL!,
       },
     ],
   },

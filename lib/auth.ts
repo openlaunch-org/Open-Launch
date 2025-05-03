@@ -59,7 +59,7 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
     github: {
@@ -84,7 +84,7 @@ export const auth = betterAuth({
       endpoints: ["/sign-up/email", "/sign-in/email", "/forget-password"],
     }),
     oneTap({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
     }),
     admin({}),
   ],

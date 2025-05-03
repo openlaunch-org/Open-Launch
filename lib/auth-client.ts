@@ -26,7 +26,7 @@ export const {
       subscription: true, //if you want to enable subscription management
     }),
     oneTapClient({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
       promptOptions: {
         maxAttempts: 1,
       },
