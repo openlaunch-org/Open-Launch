@@ -67,7 +67,11 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: ["https://www.open-launch.com"],
+  trustedOrigins: [
+    process.env.NODE_ENV !== "development"
+      ? "https://www.open-launch.com"
+      : "http://localhost:3000",
+  ],
   plugins: [
     stripe({
       stripeClient,

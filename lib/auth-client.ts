@@ -16,7 +16,11 @@ export const {
   admin,
 } = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL!,
-  trustedOrigins: ["https://www.open-launch.com"],
+  trustedOrigins: [
+    process.env.NODE_ENV !== "development"
+      ? "https://www.open-launch.com"
+      : "http://localhost:3000",
+  ],
   plugins: [
     stripeClient({
       subscription: true, //if you want to enable subscription management
