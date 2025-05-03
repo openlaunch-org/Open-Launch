@@ -1,42 +1,43 @@
-import { WelcomeBanner } from "@/components/home/welcome-banner";
-import { ProjectSection } from "@/components/home/project-section";
+import { headers } from "next/headers"
+import Link from "next/link"
+
+import { auth } from "@/lib/auth"
+import { Button } from "@/components/ui/button"
+import { PremiumCard } from "@/components/home/premium-card"
+import { ProjectSection } from "@/components/home/project-section"
+import { WelcomeBanner } from "@/components/home/welcome-banner"
 import {
+  getFeaturedPremiumProjects,
+  getMonthBestProjects,
   getTodayProjects,
   getYesterdayProjects,
-  getMonthBestProjects,
-  getFeaturedPremiumProjects,
-} from "@/app/actions/home";
-import { getTopCategories } from "@/app/actions/projects";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { PremiumCard } from "@/components/home/premium-card";
+} from "@/app/actions/home"
+import { getTopCategories } from "@/app/actions/projects"
 
 export default async function Home() {
   // Récupérer les données réelles
-  const todayProjects = await getTodayProjects();
-  const yesterdayProjects = await getYesterdayProjects();
-  const monthProjects = await getMonthBestProjects();
-  const topCategories = await getTopCategories(5);
-  const featuredPremiumProjects = await getFeaturedPremiumProjects();
+  const todayProjects = await getTodayProjects()
+  const yesterdayProjects = await getYesterdayProjects()
+  const monthProjects = await getMonthBestProjects()
+  const topCategories = await getTopCategories(5)
+  const featuredPremiumProjects = await getFeaturedPremiumProjects()
 
   // // Get session
   const session = await auth.api.getSession({
     headers: await headers(),
-  });
+  })
 
   // Stats rapides
   const ongoingLaunches = todayProjects.filter(
-    (project) => project.launchStatus === "ongoing"
-  ).length;
+    (project) => project.launchStatus === "ongoing",
+  ).length
 
   return (
     <main className="bg-secondary/20 min-h-screen">
-      <div className="container max-w-6xl mx-auto px-4 pt-8 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:items-start">
+      <div className="container mx-auto max-w-6xl px-4 pt-8 pb-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:items-start">
           {/* Contenu principal */}
-          <div className="md:col-span-2 space-y-6 sm:space-y-8">
+          <div className="space-y-6 sm:space-y-8 md:col-span-2">
             <div className="space-y-4">
               <WelcomeBanner />
 
@@ -73,29 +74,23 @@ export default async function Home() {
           {/* Sidebar */}
           <div className="top-24">
             {/* Quick Stats */}
-            <div className="p-5 pt-0 space-y-3">
-              <h3 className="font-semibold flex items-center gap-2">
-                Live Now
-              </h3>
+            <div className="space-y-3 p-5 pt-0">
+              <h3 className="flex items-center gap-2 font-semibold">Live Now</h3>
               <Link
                 href="/trending"
-                className="bg-secondary/30 hover:bg-secondary/50 px-5 py-2 rounded-md block transition-colors border-l-4 border-primary shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
+                className="bg-secondary/30 hover:bg-secondary/50 border-primary block rounded-md border-l-4 px-5 py-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-colors"
               >
                 <div className="flex items-center gap-4">
-                  <div className="text-2xl font-bold text-primary">
-                    {ongoingLaunches}
-                  </div>
+                  <div className="text-primary text-2xl font-bold">{ongoingLaunches}</div>
                   <div className="text-sm font-medium">Active Launches</div>
                 </div>
               </Link>
             </div>
 
             {/* Categories */}
-            <div className="p-5 space-y-3">
+            <div className="space-y-3 p-5">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold flex items-center gap-2">
-                  Top Categories
-                </h3>
+                <h3 className="flex items-center gap-2 font-semibold">Top Categories</h3>
                 <Button variant="ghost" size="sm" className="text-sm" asChild>
                   <Link href="/categories" className="flex items-center gap-1">
                     View all
@@ -108,15 +103,11 @@ export default async function Home() {
                     key={category.id}
                     href={`/categories?category=${category.id}`}
                     className={`flex items-center justify-between rounded-md p-2 ${
-                      category.id === "all"
-                        ? "bg-muted font-medium"
-                        : "hover:bg-muted/40"
+                      category.id === "all" ? "bg-muted font-medium" : "hover:bg-muted/40"
                     }`}
                   >
-                    <span className="text-sm hover:underline">
-                      {category.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+                    <span className="text-sm hover:underline">{category.name}</span>
+                    <span className="text-muted-foreground bg-secondary rounded-full px-2 py-0.5 text-xs">
                       {category.count} projects
                     </span>
                   </Link>
@@ -134,34 +125,32 @@ export default async function Home() {
             )} */}
 
             {/* Quick Links */}
-            <div className="p-5 space-y-3">
-              <h3 className="font-semibold flex items-center gap-2">
-                Quick Access
-              </h3>
+            <div className="space-y-3 p-5">
+              <h3 className="flex items-center gap-2 font-semibold">Quick Access</h3>
               <div className="space-y-2">
                 {session?.user && (
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                    className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                   >
                     Dashboard
                   </Link>
                 )}
                 <Link
                   href="/trending"
-                  className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                  className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
                   Trending Now
                 </Link>
                 <Link
                   href="/winners"
-                  className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                  className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
                   Daily Winners
                 </Link>
                 <Link
                   href="/trending?filter=month"
-                  className="flex items-center gap-2 text-sm hover:underline rounded-md p-2 transition-colors"
+                  className="flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
                   Best of Month
                 </Link>
@@ -171,5 +160,5 @@ export default async function Home() {
         </div>
       </div>
     </main>
-  );
+  )
 }

@@ -1,31 +1,19 @@
-"use client";
-import { cn } from "@/lib/utils";
-import { motion, Transition } from "motion/react";
+"use client"
+
+import { motion, Transition } from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 export type GlowEffectProps = {
-  className?: string;
-  style?: React.CSSProperties;
-  colors?: string[];
-  mode?:
-    | "rotate"
-    | "pulse"
-    | "breathe"
-    | "colorShift"
-    | "flowHorizontal"
-    | "static";
-  blur?:
-    | number
-    | "softest"
-    | "soft"
-    | "medium"
-    | "strong"
-    | "stronger"
-    | "strongest"
-    | "none";
-  transition?: Transition;
-  scale?: number;
-  duration?: number;
-};
+  className?: string
+  style?: React.CSSProperties
+  colors?: string[]
+  mode?: "rotate" | "pulse" | "breathe" | "colorShift" | "flowHorizontal" | "static"
+  blur?: number | "softest" | "soft" | "medium" | "strong" | "stronger" | "strongest" | "none"
+  transition?: Transition
+  scale?: number
+  duration?: number
+}
 
 export function GlowEffect({
   className,
@@ -41,7 +29,7 @@ export function GlowEffect({
     repeat: Infinity,
     duration: duration,
     ease: "linear",
-  };
+  }
 
   const animations = {
     rotate: {
@@ -55,8 +43,7 @@ export function GlowEffect({
     },
     pulse: {
       background: colors.map(
-        (color) =>
-          `radial-gradient(circle at 50% 50%, ${color} 0%, transparent 100%)`
+        (color) => `radial-gradient(circle at 50% 50%, ${color} 0%, transparent 100%)`,
       ),
       scale: [1 * scale, 1.1 * scale, 1 * scale],
       opacity: [0.5, 0.8, 0.5],
@@ -70,8 +57,7 @@ export function GlowEffect({
     breathe: {
       background: [
         ...colors.map(
-          (color) =>
-            `radial-gradient(circle at 50% 50%, ${color} 0%, transparent 100%)`
+          (color) => `radial-gradient(circle at 50% 50%, ${color} 0%, transparent 100%)`,
         ),
       ],
       scale: [1 * scale, 1.05 * scale, 1 * scale],
@@ -84,8 +70,8 @@ export function GlowEffect({
     },
     colorShift: {
       background: colors.map((color, index) => {
-        const nextColor = colors[(index + 1) % colors.length];
-        return `conic-gradient(from 0deg at 50% 50%, ${color} 0%, ${nextColor} 50%, ${color} 100%)`;
+        const nextColor = colors[(index + 1) % colors.length]
+        return `conic-gradient(from 0deg at 50% 50%, ${color} 0%, ${nextColor} 50%, ${color} 100%)`
       }),
       transition: {
         ...(transition ?? {
@@ -96,8 +82,8 @@ export function GlowEffect({
     },
     flowHorizontal: {
       background: colors.map((color) => {
-        const nextColor = colors[(colors.indexOf(color) + 1) % colors.length];
-        return `linear-gradient(to right, ${color}, ${nextColor})`;
+        const nextColor = colors[(colors.indexOf(color) + 1) % colors.length]
+        return `linear-gradient(to right, ${color}, ${nextColor})`
       }),
       transition: {
         ...(transition ?? {
@@ -109,11 +95,11 @@ export function GlowEffect({
     static: {
       background: `linear-gradient(to right, ${colors.join(", ")})`,
     },
-  };
+  }
 
   const getBlurClass = (blur: GlowEffectProps["blur"]) => {
     if (typeof blur === "number") {
-      return `blur-[${blur}px]`;
+      return `blur-[${blur}px]`
     }
 
     const presets = {
@@ -124,10 +110,10 @@ export function GlowEffect({
       stronger: "blur-xl",
       strongest: "blur-xl",
       none: "blur-none",
-    };
+    }
 
-    return presets[blur as keyof typeof presets];
-  };
+    return presets[blur as keyof typeof presets]
+  }
 
   return (
     <motion.div
@@ -144,8 +130,8 @@ export function GlowEffect({
         "pointer-events-none absolute inset-0 h-full w-full",
         "scale-[var(--scale)] transform-gpu",
         getBlurClass(blur),
-        className
+        className,
       )}
     />
-  );
+  )
 }

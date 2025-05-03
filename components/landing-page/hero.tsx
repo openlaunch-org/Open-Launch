@@ -1,30 +1,29 @@
-import { ZapIcon } from "lucide-react";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { RiArrowRightLine } from "@remixicon/react";
-import { GlowEffect } from "../ui/glow-effect";
+import Link from "next/link"
+
+import { RiArrowRightLine } from "@remixicon/react"
+import { ZapIcon } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+
+import { GlowEffect } from "../ui/glow-effect"
+
 export default function Hero() {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="mx-auto max-w-3xl">
       <div className="container mx-auto">
-        <div className="flex gap-8 py-20 lg:py-40 items-center justify-center flex-col">
+        <div className="flex flex-col items-center justify-center gap-8 py-20 lg:py-40">
           <div>
             <Badge>
-              <ZapIcon
-                className="-ms-0.5 opacity-60"
-                size={12}
-                aria-hidden="true"
-              />
+              <ZapIcon className="-ms-0.5 opacity-60" size={12} aria-hidden="true" />
               Badge
             </Badge>
           </div>
-          <div className="flex gap-4 flex-col">
-            <h1 className="font-heading text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
+          <div className="flex flex-col gap-4">
+            <h1 className="font-heading font-regular max-w-2xl text-center text-5xl tracking-tighter md:text-7xl">
               Boilerplate
             </h1>
-            <p className="text-lg md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
-              Next.js 15+, TailwindCSS, TypeScript, Shadcn UI, Drizzle ORM,
-              Postgres, Better Auth
+            <p className="text-muted-foreground max-w-2xl text-center text-lg leading-relaxed tracking-tight md:text-xl">
+              Next.js 15+, TailwindCSS, TypeScript, Shadcn UI, Drizzle ORM, Postgres, Better Auth
             </p>
           </div>
           <div>
@@ -47,5 +46,5 @@ export default function Hero() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -3,7 +3,7 @@ export const LAUNCH_LIMITS = {
   PREMIUM_DAILY_LIMIT: 12,
   PREMIUM_PLUS_DAILY_LIMIT: 3,
   TOTAL_DAILY_LIMIT: 20,
-} as const;
+} as const
 
 export const PROJECT_LIMITS_VARIABLES = {
   TODAY_LIMIT: 20, // par defaut
@@ -11,7 +11,7 @@ export const PROJECT_LIMITS_VARIABLES = {
   MONTH_LIMIT: 5, // par defaut
   VIEW_ALL_PAGE_TODAY_YESTERDAY_LIMIT: 20, // Nombre de lancements max par jour
   VIEW_ALL_PAGE_MONTH_LIMIT: 20,
-} as const;
+} as const
 
 export const LAUNCH_SETTINGS = {
   PREMIUM_PRICE: 10, // USD
@@ -24,13 +24,13 @@ export const LAUNCH_SETTINGS = {
   PREMIUM_PLUS_MAX_DAYS_AHEAD: 14, // Premium Plus users have the shortest window
   DAYS_PER_PAGE: 7, // Nombre de jours à afficher par page
   LAUNCH_HOUR_UTC: 8, // All launches happen at 8 AM UTC
-} as const;
+} as const
 
 export const LAUNCH_TYPES = {
   FREE: "free",
   PREMIUM: "premium",
   PREMIUM_PLUS: "premium_plus",
-} as const;
+} as const
 
 export const DATE_FORMAT = {
   DISPLAY: "EEE, MMM d, yyyy", // Format: Mon, Jan 1, 2024
@@ -38,7 +38,7 @@ export const DATE_FORMAT = {
   DISPLAY_DAY: "EEE d", // Format: Mon 1
   API: "yyyy-MM-dd",
   FULL: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", // Full ISO format with time
-} as const;
+} as const
 
 // Rate limits spécifiques pour différentes API
 export const API_RATE_LIMITS = {
@@ -50,7 +50,7 @@ export const API_RATE_LIMITS = {
     REQUESTS: 10, // 10 requêtes
     WINDOW: 60 * 1000, // par minute
   },
-} as const;
+} as const
 
 // Limites pour les upvotes
 export const UPVOTE_LIMITS = {
@@ -60,9 +60,7 @@ export const UPVOTE_LIMITS = {
   MIN_TIME_BETWEEN_ACTIONS_MS: 2000, // Temps minimum entre deux actions sur le même projet (2 secondes)
   MIN_TIME_BETWEEN_ACTIONS_SECONDS: 2, // Temps minimum entre deux actions sur le même projet (2 secondes)
   DEBOUNCE_TIME_MS: 500, // Temps de debounce côté client (500ms)
-} as const;
+} as const
 
-export const PREMIUM_PAYMENT_LINK =
-  process.env.NEXT_PUBLIC_PREMIUM_PAYMENT_LINK!;
-export const PREMIUM_PLUS_PAYMENT_LINK =
-  process.env.NEXT_PUBLIC_PREMIUM_PLUS_PAYMENT_LINK!;
+export const PREMIUM_PAYMENT_LINK = process.env.NEXT_PUBLIC_PREMIUM_PAYMENT_LINK!
+export const PREMIUM_PLUS_PAYMENT_LINK = process.env.NEXT_PUBLIC_PREMIUM_PLUS_PAYMENT_LINK!

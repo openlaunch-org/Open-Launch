@@ -1,13 +1,13 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/drizzle/db";
-import { sendEmail } from "@/lib/email";
-import Stripe from "stripe";
-import { stripe } from "@better-auth/stripe";
-import { captcha, oneTap } from "better-auth/plugins";
-import { admin } from "better-auth/plugins";
+import { db } from "@/drizzle/db"
+import { stripe } from "@better-auth/stripe"
+import { betterAuth } from "better-auth"
+import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { admin, captcha, oneTap } from "better-auth/plugins"
+import Stripe from "stripe"
 
-const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
+import { sendEmail } from "@/lib/email"
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -27,13 +27,13 @@ export const auth = betterAuth({
         <p>${url}</p>
         <p>This link will expire in 1 hour.</p>
         <p>If you didn't request this, please ignore this email.</p>
-      `;
+      `
 
       await sendEmail({
         to: user.email,
         subject: "Reset your password",
         html,
-      });
+      })
     },
   },
   emailVerification: {
@@ -48,13 +48,13 @@ export const auth = betterAuth({
         <p>${url}</p>
         <p>This link will expire in 24 hours.</p>
         <p>If you didn't create an account, please ignore this email.</p>
-      `;
+      `
 
       await sendEmail({
         to: user.email,
         subject: "Verify your email address",
         html,
-      });
+      })
     },
   },
   socialProviders: {
@@ -84,4 +84,4 @@ export const auth = betterAuth({
     }),
     admin({}),
   ],
-});
+})

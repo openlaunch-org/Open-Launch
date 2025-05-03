@@ -1,6 +1,5 @@
-import { db } from "@/drizzle/db";
-
-import { category } from "@/drizzle/db/schema";
+import { db } from "@/drizzle/db"
+import { category } from "@/drizzle/db/schema"
 
 const TECH_PROJECT_CATEGORIES = [
   // Development & IT
@@ -53,20 +52,20 @@ const TECH_PROJECT_CATEGORIES = [
   { id: "platform", name: "Platforms" },
   { id: "serverless", name: "Serverless" },
   { id: "security", name: "Security" },
-];
+]
 
 const initializeCategories = async () => {
-  const data = await db;
-  const categories = await data.query.category.findMany();
+  const data = await db
+  const categories = await data.query.category.findMany()
   if (categories.length === 0) {
-    await data.insert(category).values(TECH_PROJECT_CATEGORIES);
+    await data.insert(category).values(TECH_PROJECT_CATEGORIES)
   }
-};
+}
 
 try {
   initializeCategories().then(() => {
-    console.log("✅ Initialisation des catégories technologiques réussie !");
-  });
+    console.log("✅ Initialisation des catégories technologiques réussie !")
+  })
 } catch (error) {
-  console.error("❌ Erreur lors de l'initialisation des catégories :", error);
+  console.error("❌ Erreur lors de l'initialisation des catégories :", error)
 }

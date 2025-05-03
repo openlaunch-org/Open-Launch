@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { useTheme } from "next-themes";
-import { RiMoonLine, RiSunLine } from "@remixicon/react";
+import { RiMoonLine, RiSunLine } from "@remixicon/react"
+import { useTheme } from "next-themes"
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme()
 
   return (
     <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="flex cursor-pointer items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground transition-colors"
+      className="text-muted-foreground hover:text-foreground flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors"
     >
-      <RiSunLine className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <RiMoonLine className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <RiSunLine className="h-4 w-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+      <RiMoonLine className="absolute h-4 w-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
       <span className="sr-only">Toggle theme</span>
     </button>
-  );
+  )
 }

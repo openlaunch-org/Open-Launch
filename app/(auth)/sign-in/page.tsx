@@ -1,8 +1,9 @@
-import { SignInForm } from "@/components/auth/sign-in-form";
+import { SignInForm } from "@/components/auth/sign-in-form"
+
 export default function Login() {
   return (
-    <div className="flex justify-center items-center min-h-screen max-w-sm mx-auto">
+    <div className="mx-auto flex min-h-screen max-w-sm items-center justify-center">
       <SignInForm />
     </div>
-  );
+  )
 }

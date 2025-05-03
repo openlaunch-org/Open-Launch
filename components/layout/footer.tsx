@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { RiGithubFill, RiTwitterXFill } from "@remixicon/react";
+import Link from "next/link"
+
+import { RiGithubFill, RiTwitterXFill } from "@remixicon/react"
 
 const links = [
   {
@@ -26,14 +27,14 @@ const links = [
     title: "Privacy",
     href: "/legal/privacy",
   },
-];
+]
 
 export default function FooterSection() {
   return (
-    <footer className="border-b bg-white py-8 dark:bg-transparent border-t">
+    <footer className="border-t border-b bg-white py-8 dark:bg-transparent">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col items-center md:items-start gap-3">
+        <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+          <div className="flex flex-col items-center gap-3 md:items-start">
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-sm">
                 © {new Date().getFullYear()} Open-Launch
@@ -46,14 +47,14 @@ export default function FooterSection() {
                   href="https://twitter.com/Ericbn09"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline inline-flex items-center gap-1"
+                  className="text-primary inline-flex items-center gap-1 hover:underline"
                 >
                   Eric <RiTwitterXFill className="h-3 w-3" />
                 </a>
               </span>
             </div>
           </div>
-          <div className="flex flex-col items-center md:items-end gap-4">
+          <div className="flex flex-col items-center gap-4 md:items-end">
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               {links.map((link, index) => (
                 <Link
@@ -69,7 +70,7 @@ export default function FooterSection() {
               href="https://github.com/drdruide/open-launch"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary duration-150 flex items-center gap-1"
+              className="text-muted-foreground hover:text-primary flex items-center gap-1 duration-150"
             >
               <RiGithubFill className="h-4 w-4" />
               <span className="text-muted-foreground hover:text-primary text-sm duration-150">
@@ -80,5 +81,5 @@ export default function FooterSection() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

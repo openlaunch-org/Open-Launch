@@ -1,33 +1,36 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { RiArrowRightLine } from "@remixicon/react";
-import { ProjectCard } from "./project-card";
+import Link from "next/link"
+
+import { RiArrowRightLine } from "@remixicon/react"
+
+import { Button } from "@/components/ui/button"
+
+import { ProjectCard } from "./project-card"
 
 interface Project {
-  id: string;
-  slug: string;
-  name: string;
-  description: string | null;
-  logoUrl: string;
-  websiteUrl?: string | null;
-  upvoteCount: number;
-  commentCount?: number | null;
-  launchStatus: string;
-  scheduledLaunchDate?: Date | string | null;
-  createdAt: Date | string;
-  userHasUpvoted?: boolean;
-  categories?: { id: string; name: string }[];
-  dailyRanking?: number | null;
+  id: string
+  slug: string
+  name: string
+  description: string | null
+  logoUrl: string
+  websiteUrl?: string | null
+  upvoteCount: number
+  commentCount?: number | null
+  launchStatus: string
+  scheduledLaunchDate?: Date | string | null
+  createdAt: Date | string
+  userHasUpvoted?: boolean
+  categories?: { id: string; name: string }[]
+  dailyRanking?: number | null
 }
 
 interface ProjectSectionProps {
-  title: string;
-  projects: Project[];
-  moreHref?: string;
-  sortByUpvotes?: boolean;
-  isAuthenticated: boolean;
+  title: string
+  projects: Project[]
+  moreHref?: string
+  sortByUpvotes?: boolean
+  isAuthenticated: boolean
 }
 
 export function ProjectSection({
@@ -39,38 +42,33 @@ export function ProjectSection({
 }: ProjectSectionProps) {
   const sortedProjects = sortByUpvotes
     ? [...projects].sort((a, b) => (b.upvoteCount ?? 0) - (a.upvoteCount ?? 0))
-    : projects;
+    : projects
 
   const ViewAllButton = () => (
-    <Button
-      variant="ghost"
-      size="sm"
-      className={"text-sm w-full sm:w-auto justify-center"}
-      asChild
-    >
+    <Button variant="ghost" size="sm" className={"w-full justify-center text-sm sm:w-auto"} asChild>
       <Link href={moreHref!} className="flex items-center gap-1">
         View all <RiArrowRightLine className="h-4 w-4" />
       </Link>
     </Button>
-  );
+  )
 
   const ViewAllButtonMobile = () => (
     <Button
       variant="ghost"
       size="sm"
-      className={"text-sm w-full sm:w-auto justify-center bg-secondary"}
+      className={"bg-secondary w-full justify-center text-sm sm:w-auto"}
       asChild
     >
       <Link href={moreHref!} className="flex items-center gap-1">
         View all <RiArrowRightLine className="h-4 w-4" />
       </Link>
     </Button>
-  );
+  )
 
   return (
     <section className="space-y-3 sm:space-y-4">
       <div className="flex items-center justify-between px-3 sm:px-4">
-        <h2 className="text-xl sm:text-2xl font-bold">{title}</h2>
+        <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
         {moreHref && (
           <div className="hidden sm:block">
             <ViewAllButton />
@@ -102,18 +100,18 @@ export function ProjectSection({
           </div>
         ) : (
           <div className="px-3 sm:px-4">
-            <div className="text-center text-sm text-muted-foreground border border-dashed border-border bg-card rounded-lg py-8">
+            <div className="text-muted-foreground border-border bg-card rounded-lg border border-dashed py-8 text-center text-sm">
               {'No projects found for "' + title + '"'}
             </div>
           </div>
         )}
 
         {moreHref && (
-          <div className="sm:hidden px-3 pt-3">
+          <div className="px-3 pt-3 sm:hidden">
             <ViewAllButtonMobile />
           </div>
         )}
       </div>
     </section>
-  );
+  )
 }

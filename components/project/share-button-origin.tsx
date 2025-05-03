@@ -1,40 +1,28 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  RiCodeFill,
-  RiFacebookFill,
-  RiMailLine,
-  RiTwitterXFill,
-} from "@remixicon/react";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react"
+
+import { RiCodeFill, RiFacebookFill, RiMailLine, RiTwitterXFill } from "@remixicon/react"
+import { CheckIcon, CopyIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function Component() {
-  const id = useId();
-  const [copied, setCopied] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const id = useId()
+  const [copied, setCopied] = useState<boolean>(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleCopy = () => {
     if (inputRef.current) {
-      navigator.clipboard.writeText(inputRef.current.value);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      navigator.clipboard.writeText(inputRef.current.value)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -49,25 +37,13 @@ export default function Component() {
               <Button size="icon" variant="outline" aria-label="Embed">
                 <RiCodeFill size={16} aria-hidden="true" />
               </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                aria-label="Share on Twitter"
-              >
+              <Button size="icon" variant="outline" aria-label="Share on Twitter">
                 <RiTwitterXFill size={16} aria-hidden="true" />
               </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                aria-label="Share on Facebook"
-              >
+              <Button size="icon" variant="outline" aria-label="Share on Facebook">
                 <RiFacebookFill size={16} aria-hidden="true" />
               </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                aria-label="Share via email"
-              >
+              <Button size="icon" variant="outline" aria-label="Share via email">
                 <RiMailLine size={16} aria-hidden="true" />
               </Button>
             </div>
@@ -87,39 +63,29 @@ export default function Component() {
                     <TooltipTrigger asChild>
                       <button
                         onClick={handleCopy}
-                        className="text-muted-foreground/80 cursor-pointer hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed"
+                        className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 cursor-pointer items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed"
                         aria-label={copied ? "Copied" : "Copy to clipboard"}
                         disabled={copied}
                       >
                         <div
                           className={cn(
                             "transition-all",
-                            copied
-                              ? "scale-100 opacity-100"
-                              : "scale-0 opacity-0"
+                            copied ? "scale-100 opacity-100" : "scale-0 opacity-0",
                           )}
                         >
-                          <CheckIcon
-                            className="stroke-emerald-500"
-                            size={16}
-                            aria-hidden="true"
-                          />
+                          <CheckIcon className="stroke-emerald-500" size={16} aria-hidden="true" />
                         </div>
                         <div
                           className={cn(
                             "absolute transition-all",
-                            copied
-                              ? "scale-0 opacity-0"
-                              : "scale-100 opacity-100"
+                            copied ? "scale-0 opacity-0" : "scale-100 opacity-100",
                           )}
                         >
                           <CopyIcon size={16} aria-hidden="true" />
                         </div>
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent className="px-2 py-1 text-xs">
-                      Copy to clipboard
-                    </TooltipContent>
+                    <TooltipContent className="px-2 py-1 text-xs">Copy to clipboard</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
@@ -128,5 +94,5 @@ export default function Component() {
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }

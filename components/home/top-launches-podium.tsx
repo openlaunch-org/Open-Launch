@@ -1,34 +1,30 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"
+import Link from "next/link"
 
 interface ProjectPodiumItem {
-  id: string;
-  name: string;
-  slug: string;
-  logoUrl: string;
-  dailyRanking: number | null;
+  id: string
+  name: string
+  slug: string
+  logoUrl: string
+  dailyRanking: number | null
 }
 
 interface TopLaunchesPodiumProps {
-  topProjects: ProjectPodiumItem[];
+  topProjects: ProjectPodiumItem[]
 }
 
-export default function TopLaunchesPodium({
-  topProjects,
-}: TopLaunchesPodiumProps) {
+export default function TopLaunchesPodium({ topProjects }: TopLaunchesPodiumProps) {
   if (!topProjects || topProjects.length === 0) {
     return (
-      <div className="text-center text-sm text-muted-foreground py-4">
-        No launches yesterday
-      </div>
-    );
+      <div className="text-muted-foreground py-4 text-center text-sm">No launches yesterday</div>
+    )
   }
 
   const sortedProjects = [...topProjects]
     .filter((project) => project.dailyRanking !== null)
-    .sort((a, b) => (a.dailyRanking || 0) - (b.dailyRanking || 0));
+    .sort((a, b) => (a.dailyRanking || 0) - (b.dailyRanking || 0))
 
   return (
     <div className="w-full">
@@ -37,27 +33,25 @@ export default function TopLaunchesPodium({
           <Link
             key={project.id}
             href={`/projects/${project.slug}`}
-            className="group block relative"
+            className="group relative block"
             title={project.name}
           >
-            <div className="aspect-square relative w-12 h-12 sm:w-14 sm:h-14">
+            <div className="relative aspect-square h-12 w-12 sm:h-14 sm:w-14">
               <Image
                 src={project.logoUrl || "/placeholder.svg"}
                 alt={project.name}
                 fill
-                className="object-cover rounded-md group-hover:opacity-90 transition-opacity"
+                className="rounded-md object-cover transition-opacity group-hover:opacity-90"
               />
               <div
-                className={`absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#FDFDFD] dark:border-[#1D1D1D] bg-primary text-primary-foreground `}
+                className={`bg-primary text-primary-foreground absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#FDFDFD] dark:border-[#1D1D1D]`}
               >
-                <span className="text-[10px] font-semibold">
-                  {project.dailyRanking}
-                </span>
+                <span className="text-[10px] font-semibold">{project.dailyRanking}</span>
               </div>
             </div>
           </Link>
         ))}
       </div>
     </div>
-  );
+  )
 }

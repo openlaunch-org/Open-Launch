@@ -1,4 +1,6 @@
-"use client";
+"use client"
+
+import { useRouter } from "next/navigation"
 
 import {
   Select,
@@ -6,18 +8,17 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/select"
 
 interface Category {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 interface MobileCategorySelectorProps {
-  categories: Category[];
-  selectedCategoryId: string;
-  sortParam?: string;
+  categories: Category[]
+  selectedCategoryId: string
+  sortParam?: string
 }
 
 export function MobileCategorySelector({
@@ -25,29 +26,21 @@ export function MobileCategorySelector({
   selectedCategoryId,
   sortParam = "",
 }: MobileCategorySelectorProps) {
-  const router = useRouter();
+  const router = useRouter()
 
   // Trouver le nom de la catégorie sélectionnée
-  const selectedCategory = categories.find(
-    (cat) => cat.id === selectedCategoryId
-  );
+  const selectedCategory = categories.find((cat) => cat.id === selectedCategoryId)
 
   return (
-    <div className="md:hidden w-full mt-3">
+    <div className="mt-3 w-full md:hidden">
       <Select
         value={selectedCategoryId}
         onValueChange={(value) => {
-          router.push(
-            `/categories?category=${value}${
-              sortParam ? `&sort=${sortParam}` : ""
-            }`
-          );
+          router.push(`/categories?category=${value}${sortParam ? `&sort=${sortParam}` : ""}`)
         }}
       >
         <SelectTrigger className="w-full text-sm">
-          <SelectValue
-            placeholder={selectedCategory?.name || "Sélectionner une catégorie"}
-          />
+          <SelectValue placeholder={selectedCategory?.name || "Sélectionner une catégorie"} />
         </SelectTrigger>
         <SelectContent className="max-h-[60vh]">
           {categories.map((cat) => (
@@ -58,5 +51,5 @@ export function MobileCategorySelector({
         </SelectContent>
       </Select>
     </div>
-  );
+  )
 }

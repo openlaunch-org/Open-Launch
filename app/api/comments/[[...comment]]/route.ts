@@ -1,33 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextComment } from "@fuma-comment/next";
-import { commentAuth, commentStorage } from "@/lib/comment.config";
-import { NextRequest, NextResponse } from "next/server";
-import { sendDiscordCommentNotification } from "@/lib/discord-notification";
-import { extractTextFromContent } from "@/lib/content-utils";
-import { checkCommentRateLimit } from "@/lib/comment-rate-limit";
+import { NextRequest, NextResponse } from "next/server"
+
+import { NextComment } from "@fuma-comment/next"
+
+import { checkCommentRateLimit } from "@/lib/comment-rate-limit"
+import { commentAuth, commentStorage } from "@/lib/comment.config"
+import { extractTextFromContent } from "@/lib/content-utils"
+import { sendDiscordCommentNotification } from "@/lib/discord-notification"
 
 // Create standard Fuma Comment handler
 const commentHandler = NextComment({
   mention: { enabled: true },
   auth: commentAuth,
   storage: commentStorage,
-});
+})
 
 // Intercept POST requests to add Discord notification and rate limiting
 export async function POST(req: NextRequest, context: any) {
   try {
     // Get parameters and user session
-    const params = await context.params;
-    const commentParams = params.comment || [];
-    const session = await commentAuth.getSession(req as any);
+    const params = await context.params
+    const commentParams = params.comment || []
+    const session = await commentAuth.getSession(req as any)
 
     // Check if it's a new comment (only 1 segment = projectId)
-    const isNewComment = commentParams.length === 1;
+    const isNewComment = commentParams.length === 1
 
     // Only for new comments with authenticated users
     if (isNewComment && session) {
       // Apply rate limiting for comments
-      const rateLimit = await checkCommentRateLimit(session.id);
+      const rateLimit = await checkCommentRateLimit(session.id)
 
       if (!rateLimit.success) {
         return NextResponse.json(
@@ -38,40 +40,36 @@ export async function POST(req: NextRequest, context: any) {
             type: "rate_limit_exceeded",
             resetInSeconds: rateLimit.reset,
           },
-          { status: 429 }
-        );
+          { status: 429 },
+        )
       }
 
       // The project ID is the first segment in commentParams
-      const projectId = commentParams[0];
+      const projectId = commentParams[0]
 
       try {
         // Clone the request to be able to read it
-        const clonedReq = req.clone();
-        const body = await clonedReq.json();
+        const clonedReq = req.clone()
+        const body = await clonedReq.json()
 
         // Extract comment text and send notification
         if (body && body.content) {
-          const commentText = extractTextFromContent(body.content);
+          const commentText = extractTextFromContent(body.content)
 
           // Send Discord notification asynchronously
-          void sendDiscordCommentNotification(
-            projectId,
-            session.id || "",
-            commentText
-          );
+          void sendDiscordCommentNotification(projectId, session.id || "", commentText)
         }
       } catch (error) {
-        console.error("Error processing comment:", error);
+        console.error("Error processing comment:", error)
       }
     }
   } catch (error) {
-    console.error("Error intercepting request:", error);
+    console.error("Error intercepting request:", error)
   }
 
   // Continue with normal handler
-  return commentHandler.POST(req, context);
+  return commentHandler.POST(req, context)
 }
 
 // Export other methods without modification
-export const { GET, DELETE, PATCH } = commentHandler;
+export const { GET, DELETE, PATCH } = commentHandler

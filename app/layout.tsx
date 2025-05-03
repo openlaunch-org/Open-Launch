@@ -1,21 +1,24 @@
-import type { Metadata } from "next";
-import { Outfit as FontHeading, Inter as FontSans } from "next/font/google";
-import "./globals.css";
-import Nav from "@/components/layout/nav";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import Footer from "@/components/layout/footer";
-import { Toaster } from "sonner";
-import PlausibleProvider from "next-plausible";
+import type { Metadata } from "next"
+import { Outfit as FontHeading, Inter as FontSans } from "next/font/google"
+
+import PlausibleProvider from "next-plausible"
+import { Toaster } from "sonner"
+
+import Footer from "@/components/layout/footer"
+import Nav from "@/components/layout/nav"
+import { ThemeProvider } from "@/components/theme/theme-provider"
+
+import "./globals.css"
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
-});
+})
 
 const fontHeading = FontHeading({
   subsets: ["latin"],
   variable: "--font-heading",
-});
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_URL!),
@@ -46,12 +49,12 @@ export const metadata: Metadata = {
       "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
     images: ["og.png"],
   },
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -77,7 +80,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
+          <div className="flex min-h-screen flex-col">
             <Nav />
             <main className="flex-grow">{children}</main>
             <Footer />
@@ -86,5 +89,5 @@ export default function RootLayout({
         <Toaster />
       </body>
     </html>
-  );
+  )
 }

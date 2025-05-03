@@ -1,7 +1,6 @@
-import { createAuthClient } from "better-auth/react";
-import { stripeClient } from "@better-auth/stripe/client";
-import { oneTapClient } from "better-auth/client/plugins";
-import { adminClient } from "better-auth/client/plugins";
+import { stripeClient } from "@better-auth/stripe/client"
+import { adminClient, oneTapClient } from "better-auth/client/plugins"
+import { createAuthClient } from "better-auth/react"
 
 export const {
   signIn,
@@ -30,4 +29,4 @@ export const {
     }),
     adminClient(),
   ],
-});
+})

@@ -1,16 +1,16 @@
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit"
 
 // Adjust values according to your needs
 const COMMENT_LIMITS = {
   ACTIONS_PER_WINDOW: 10, // Maximum 10 comments per window
   TIME_WINDOW_MS: 5 * 60 * 1000, // 5 minute window
-};
+}
 
 // Separate limits for votes (likes/dislikes)
 const VOTE_LIMITS = {
   ACTIONS_PER_WINDOW: 30, // Maximum 30 votes per window
   TIME_WINDOW_MS: 5 * 60 * 1000, // 5 minute window
-};
+}
 
 /**
  * Checks if the user has exceeded the comment rate limit
@@ -22,8 +22,8 @@ export async function checkCommentRateLimit(userId: string) {
   return checkRateLimit(
     `comment:${userId}`,
     COMMENT_LIMITS.ACTIONS_PER_WINDOW,
-    COMMENT_LIMITS.TIME_WINDOW_MS
-  );
+    COMMENT_LIMITS.TIME_WINDOW_MS,
+  )
 }
 
 /**
@@ -36,6 +36,6 @@ export async function checkUpvoteRateLimit(userId: string) {
   return checkRateLimit(
     `vote:${userId}`,
     VOTE_LIMITS.ACTIONS_PER_WINDOW,
-    VOTE_LIMITS.TIME_WINDOW_MS
-  );
+    VOTE_LIMITS.TIME_WINDOW_MS,
+  )
 }
