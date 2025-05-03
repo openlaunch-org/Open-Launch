@@ -1,6 +1,7 @@
-"use client";
+"use client"
 
-import Link from "next/link";
+import Link from "next/link"
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,14 +10,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+} from "@/components/ui/navigation-menu"
 
 export function NavMenu() {
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList className="gap-1">
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 px-3 text-sm cursor-pointer">
+          <NavigationMenuTrigger className="h-9 cursor-pointer px-3 text-sm">
             Explore
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -25,10 +26,10 @@ export function NavMenu() {
                 <NavigationMenuLink asChild>
                   <Link
                     href="/trending"
-                    className="block select-none rounded-md px-2 py-2 text-sm no-underline outline-none transition-colors"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
                     <div className="mb-1 font-medium">Trending Now</div>
-                    <p className="text-xs leading-tight text-muted-foreground">
+                    <p className="text-muted-foreground text-xs leading-tight">
                       Discover the most popular projects
                     </p>
                   </Link>
@@ -38,10 +39,10 @@ export function NavMenu() {
                 <NavigationMenuLink asChild>
                   <Link
                     href="/winners"
-                    className="block select-none rounded-md px-2 py-2 text-sm no-underline outline-none transition-colors"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
                     <div className="mb-1 font-medium">Daily Winners</div>
-                    <p className="text-xs leading-tight text-muted-foreground">
+                    <p className="text-muted-foreground text-xs leading-tight">
                       See the best projects of the day
                     </p>
                   </Link>
@@ -51,10 +52,10 @@ export function NavMenu() {
                 <NavigationMenuLink asChild>
                   <Link
                     href="/trending?filter=month"
-                    className="block select-none rounded-md px-2 py-2 text-sm no-underline outline-none transition-colors"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
                     <div className="mb-1 font-medium">Best of Month</div>
-                    <p className="text-xs leading-tight text-muted-foreground">
+                    <p className="text-muted-foreground text-xs leading-tight">
                       See the best projects of the month
                     </p>
                   </Link>
@@ -64,10 +65,10 @@ export function NavMenu() {
                 <NavigationMenuLink asChild>
                   <Link
                     href="/categories"
-                    className="block select-none rounded-md px-2 py-2 text-sm no-underline outline-none transition-colors"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
                     <div className="mb-1 font-medium">Categories</div>
-                    <p className="text-xs leading-tight text-muted-foreground">
+                    <p className="text-muted-foreground text-xs leading-tight">
                       Browse projects by category
                     </p>
                   </Link>
@@ -79,10 +80,7 @@ export function NavMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link
-              href="/dashboard"
-              className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}
-            >
+            <Link href="/dashboard" className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}>
               Dashboard
             </Link>
           </NavigationMenuLink>
@@ -101,15 +99,12 @@ export function NavMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link
-              href="/pricing"
-              className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}
-            >
+            <Link href="/pricing" className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}>
               Pricing
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-"use server";
+"use server"
 
-import { db } from "@/drizzle/db";
-import { project as projectTable, launchStatus } from "@/drizzle/db/schema";
-import { and, eq, sql } from "drizzle-orm";
+import { db } from "@/drizzle/db"
+import { launchStatus, project as projectTable } from "@/drizzle/db/schema"
+import { and, eq, sql } from "drizzle-orm"
 
 // Récupérer les projets gagnants pour une date spécifique
 export async function getWinnersByDate(date: Date) {
   // Créer le début et la fin de la journée
-  const dayStart = new Date(date);
-  dayStart.setHours(0, 0, 0, 0);
+  const dayStart = new Date(date)
+  dayStart.setHours(0, 0, 0, 0)
 
-  const dayEnd = new Date(date);
-  dayEnd.setHours(23, 59, 59, 999);
+  const dayEnd = new Date(date)
+  dayEnd.setHours(23, 59, 59, 999)
 
   const winners = await db
     .select({
@@ -29,22 +29,22 @@ export async function getWinnersByDate(date: Date) {
         eq(projectTable.launchStatus, launchStatus.LAUNCHED),
         sql`${projectTable.dailyRanking} IS NOT NULL`,
         sql`${projectTable.scheduledLaunchDate} >= ${dayStart.toISOString()}`,
-        sql`${projectTable.scheduledLaunchDate} <= ${dayEnd.toISOString()}`
-      )
+        sql`${projectTable.scheduledLaunchDate} <= ${dayEnd.toISOString()}`,
+      ),
     )
-    .orderBy(projectTable.dailyRanking);
+    .orderBy(projectTable.dailyRanking)
 
-  return winners;
+  return winners
 }
 
 // Vérifier si une date a des gagnants
 export async function dateHasWinners(date: Date) {
   // Créer le début et la fin de la journée
-  const dayStart = new Date(date);
-  dayStart.setHours(0, 0, 0, 0);
+  const dayStart = new Date(date)
+  dayStart.setHours(0, 0, 0, 0)
 
-  const dayEnd = new Date(date);
-  dayEnd.setHours(23, 59, 59, 999);
+  const dayEnd = new Date(date)
+  dayEnd.setHours(23, 59, 59, 999)
 
   const result = await db
     .select({
@@ -56,9 +56,9 @@ export async function dateHasWinners(date: Date) {
         eq(projectTable.launchStatus, launchStatus.LAUNCHED),
         sql`${projectTable.dailyRanking} IS NOT NULL`,
         sql`${projectTable.scheduledLaunchDate} >= ${dayStart.toISOString()}`,
-        sql`${projectTable.scheduledLaunchDate} <= ${dayEnd.toISOString()}`
-      )
-    );
+        sql`${projectTable.scheduledLaunchDate} <= ${dayEnd.toISOString()}`,
+      ),
+    )
 
-  return result?.[0]?.count > 0;
+  return result?.[0]?.count > 0
 }

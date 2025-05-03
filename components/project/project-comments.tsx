@@ -1,54 +1,53 @@
-"use client";
+"use client"
 
-import { Comments } from "@fuma-comment/react";
-import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+
+import { Comments } from "@fuma-comment/react"
+
+import { cn } from "@/lib/utils"
 
 interface ProjectCommentsProps {
-  projectId: string;
-  className?: string;
+  projectId: string
+  className?: string
 }
 
-export function ProjectComments({
-  projectId,
-  className,
-}: ProjectCommentsProps) {
-  const [isClient, setIsClient] = useState(false);
-  const router = useRouter();
+export function ProjectComments({ projectId, className }: ProjectCommentsProps) {
+  const [isClient, setIsClient] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
   const signIn = () => {
-    router.push("/sign-in");
-  };
+    router.push("/sign-in")
+  }
 
   if (!isClient) {
     return (
       <div className={cn("mt-8 animate-pulse", className)}>
-        <div className="h-6 w-32 bg-gray-200 rounded dark:bg-gray-700 mb-4"></div>
-        <div className="h-24 bg-gray-200 rounded dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-10 w-20 bg-gray-200 rounded dark:bg-gray-700"></div>
+        <div className="mb-4 h-6 w-32 rounded bg-gray-200 dark:bg-gray-700"></div>
+        <div className="mb-2.5 h-24 rounded bg-gray-200 dark:bg-gray-700"></div>
+        <div className="h-10 w-20 rounded bg-gray-200 dark:bg-gray-700"></div>
       </div>
-    );
+    )
   }
 
   return (
     <div
-      className={cn("mt-8 relative z-10", className)}
+      className={cn("relative z-10 mt-8", className)}
       data-fuma-comment-container="true"
       data-fuma-comment-button="true"
     >
       <Comments
         page={projectId}
-        className="w-full bg-background"
+        className="bg-background w-full"
         auth={{
           type: "api",
           signIn,
         }}
       />
     </div>
-  );
+  )
 }

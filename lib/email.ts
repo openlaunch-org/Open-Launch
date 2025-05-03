@@ -1,12 +1,12 @@
-import { Resend } from "resend";
+import { Resend } from "resend"
 
 // Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 interface EmailPayload {
-  to: string;
-  subject: string;
-  html: string;
+  to: string
+  subject: string
+  html: string
 }
 
 /**
@@ -15,7 +15,7 @@ interface EmailPayload {
  * @returns Promise that resolves when email is sent
  */
 export async function sendEmail(payload: EmailPayload) {
-  const { to, subject, html } = payload;
+  const { to, subject, html } = payload
 
   try {
     const data = await resend.emails.send({
@@ -23,11 +23,11 @@ export async function sendEmail(payload: EmailPayload) {
       to,
       subject,
       html,
-    });
+    })
 
-    return { success: true, data };
+    return { success: true, data }
   } catch (error) {
-    console.error("Failed to send email:", error);
-    throw new Error("Failed to send email");
+    console.error("Failed to send email:", error)
+    throw new Error("Failed to send email")
   }
 }

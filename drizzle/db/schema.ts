@@ -1,15 +1,15 @@
 import {
-  text,
   boolean,
-  pgTable,
-  timestamp,
-  primaryKey,
-  integer,
-  varchar,
-  serial,
-  json,
   index,
-} from "drizzle-orm/pg-core";
+  integer,
+  json,
+  pgTable,
+  primaryKey,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core"
 
 // Launch status enum
 export const launchStatus = {
@@ -18,25 +18,25 @@ export const launchStatus = {
   SCHEDULED: "scheduled",
   ONGOING: "ongoing",
   LAUNCHED: "launched",
-} as const;
+} as const
 
-export type LaunchStatus = (typeof launchStatus)[keyof typeof launchStatus];
+export type LaunchStatus = (typeof launchStatus)[keyof typeof launchStatus]
 
 // Launch type enum
 export const launchType = {
   FREE: "free",
   PREMIUM: "premium",
   PREMIUM_PLUS: "premium_plus",
-} as const;
+} as const
 
-export type LaunchType = (typeof launchType)[keyof typeof launchType];
+export type LaunchType = (typeof launchType)[keyof typeof launchType]
 
 // Ajouter de nouveaux enums pour les projets tech
 export const pricingType = {
   FREE: "free",
   FREEMIUM: "freemium",
   PAID: "paid",
-} as const;
+} as const
 
 export const platformType = {
   WEB: "web",
@@ -44,7 +44,7 @@ export const platformType = {
   DESKTOP: "desktop",
   API: "api",
   OTHER: "other",
-} as const;
+} as const
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -59,7 +59,7 @@ export const user = pgTable("user", {
   banned: boolean("banned"),
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),
-});
+})
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
@@ -73,7 +73,7 @@ export const session = pgTable("session", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   impersonatedBy: text("impersonated_by"),
-});
+})
 
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
@@ -91,7 +91,7 @@ export const account = pgTable("account", {
   password: text("password"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-});
+})
 
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
@@ -100,7 +100,7 @@ export const verification = pgTable("verification", {
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
-});
+})
 
 export const project = pgTable(
   "project",
@@ -117,9 +117,7 @@ export const project = pgTable(
     techStack: text("tech_stack").array(), // Array des technologies
     pricing: text("pricing").notNull().default(pricingType.FREE),
     platforms: text("platforms").array(), // Array des plateformes supportées
-    launchStatus: text("launch_status")
-      .notNull()
-      .default(launchStatus.SCHEDULED),
+    launchStatus: text("launch_status").notNull().default(launchStatus.SCHEDULED),
     scheduledLaunchDate: timestamp("scheduled_launch_date"),
     launchType: text("launch_type").default(launchType.FREE),
     featuredOnHomepage: boolean("featured_on_homepage").default(false),
@@ -133,9 +131,9 @@ export const project = pgTable(
   (table) => {
     return {
       nameIdx: index("project_name_idx").on(table.name),
-    };
-  }
-);
+    }
+  },
+)
 
 export const category = pgTable(
   "category",
@@ -148,9 +146,9 @@ export const category = pgTable(
   (table) => {
     return {
       nameIdx: index("category_name_idx").on(table.name),
-    };
-  }
-);
+    }
+  },
+)
 
 // Junction table for many-to-many relationship between projects and categories
 export const projectToCategory = pgTable(
@@ -166,9 +164,9 @@ export const projectToCategory = pgTable(
   (table) => {
     return {
       pk: primaryKey(table.projectId, table.categoryId),
-    };
-  }
-);
+    }
+  },
+)
 
 // Interactions
 export const upvote = pgTable("upvote", {
@@ -180,14 +178,14 @@ export const upvote = pgTable("upvote", {
     .notNull()
     .references(() => project.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+})
 
 // Tables pour Fuma Comment
 export const fumaRoles = pgTable("fuma_roles", {
   userId: varchar("user_id", { length: 256 }).primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   canDelete: boolean("can_delete").notNull(),
-});
+})
 
 export const fumaComments = pgTable("fuma_comments", {
   id: serial("id").primaryKey().notNull(),
@@ -195,10 +193,8 @@ export const fumaComments = pgTable("fuma_comments", {
   thread: integer("thread"),
   author: varchar("author", { length: 256 }).notNull(),
   content: json("content").notNull(),
-  timestamp: timestamp("timestamp", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+  timestamp: timestamp("timestamp", { withTimezone: true }).defaultNow().notNull(),
+})
 
 export const fumaRates = pgTable(
   "fuma_rates",
@@ -210,8 +206,8 @@ export const fumaRates = pgTable(
   (table) => [
     primaryKey({ columns: [table.userId, table.commentId] }),
     index("comment_idx").on(table.commentId),
-  ]
-);
+  ],
+)
 
 // New table for tracking daily launches
 export const launchQuota = pgTable("launch_quota", {
@@ -222,7 +218,7 @@ export const launchQuota = pgTable("launch_quota", {
   premiumPlusCount: integer("premium_plus_count").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+})
 
 // New table for tracking project submissions during coming soon phase
 export const waitlistSubmission = pgTable("waitlist_submission", {
@@ -231,4 +227,4 @@ export const waitlistSubmission = pgTable("waitlist_submission", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
-});
+})

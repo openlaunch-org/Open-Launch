@@ -1,34 +1,32 @@
-"use client";
+"use client"
 
-import { Calendar as CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface DatePickerProps {
-  date: Date;
+  date: Date
 }
 
 export function DatePicker({ date }: DatePickerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(date);
-  const router = useRouter();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(date)
+  const router = useRouter()
 
   const handleSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
+    setSelectedDate(date)
     if (date) {
       // Format date as YYYY-MM-DD
-      const formattedDate = format(date, "yyyy-MM-dd");
-      router.push(`/winners?date=${formattedDate}`);
+      const formattedDate = format(date, "yyyy-MM-dd")
+      router.push(`/winners?date=${formattedDate}`)
     }
-  };
+  }
 
   return (
     <div className="flex items-center space-x-2">
@@ -39,7 +37,7 @@ export function DatePicker({ date }: DatePickerProps) {
             size="sm"
             className={cn(
               "w-auto justify-start text-left font-normal",
-              !selectedDate && "text-muted-foreground"
+              !selectedDate && "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -57,5 +55,5 @@ export function DatePicker({ date }: DatePickerProps) {
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }

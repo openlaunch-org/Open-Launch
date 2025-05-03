@@ -1,36 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+"use client"
 
-import { useState, useEffect, useCallback, useId } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { useCallback, useEffect, useId, useState } from "react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+
+import { platformType, pricingType } from "@/drizzle/db/schema"
 import {
-  RiLoader4Line,
-  RiArrowRightLine,
   RiArrowLeftLine,
+  RiArrowRightLine,
   RiCalendarLine,
-  RiCheckLine,
-  RiInformationLine,
-  RiRocketLine,
   RiCheckboxCircleFill,
-  RiStarLine,
-  RiVipCrownLine,
+  RiCheckLine,
   RiCloseCircleLine,
-  RiListCheck,
   RiFileCheckLine,
   RiImageAddLine,
   RiInformation2Line,
-} from "@remixicon/react";
-import { submitProject, getAllCategories } from "@/app/actions/projects";
-import {
-  getLaunchAvailabilityRange,
-  scheduleLaunch,
-} from "@/app/actions/launch";
-import { format, addDays, parseISO } from "date-fns";
+  RiInformationLine,
+  RiListCheck,
+  RiLoader4Line,
+  RiRocketLine,
+  RiStarLine,
+  RiVipCrownLine,
+} from "@remixicon/react"
+import { addDays, format, parseISO } from "date-fns"
+import { Tag, TagInput } from "emblor"
+
 import {
   DATE_FORMAT,
   LAUNCH_LIMITS,
@@ -38,8 +33,14 @@ import {
   LAUNCH_TYPES,
   PREMIUM_PAYMENT_LINK,
   PREMIUM_PLUS_PAYMENT_LINK,
-} from "@/lib/constants";
-import type { LaunchAvailability } from "@/app/actions/launch";
+} from "@/lib/constants"
+import { UploadButton } from "@/lib/uploadthing"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   Select,
   SelectContent,
@@ -48,38 +49,36 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { pricingType, platformType } from "@/drizzle/db/schema";
-import { notifyDiscordLaunch } from "@/app/actions/discord";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { UploadButton } from "@/lib/uploadthing";
-import { Tag, TagInput } from "emblor";
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { notifyDiscordLaunch } from "@/app/actions/discord"
+import { getLaunchAvailabilityRange, scheduleLaunch } from "@/app/actions/launch"
+import type { LaunchAvailability } from "@/app/actions/launch"
+import { getAllCategories, submitProject } from "@/app/actions/projects"
 
 interface ProjectFormData {
-  name: string;
-  websiteUrl: string;
-  description: string;
-  categories: string[];
-  techStack: string[];
-  platforms: string[];
-  pricing: string;
-  githubUrl?: string;
-  twitterUrl?: string;
-  scheduledDate: string | null;
-  launchType: (typeof LAUNCH_TYPES)[keyof typeof LAUNCH_TYPES];
+  name: string
+  websiteUrl: string
+  description: string
+  categories: string[]
+  techStack: string[]
+  platforms: string[]
+  pricing: string
+  githubUrl?: string
+  twitterUrl?: string
+  scheduledDate: string | null
+  launchType: (typeof LAUNCH_TYPES)[keyof typeof LAUNCH_TYPES]
 }
 
 interface DateGroup {
-  key: string;
-  displayName: string;
-  dates: LaunchAvailability[];
+  key: string
+  displayName: string
+  dates: LaunchAvailability[]
 }
 
 export function SubmitProjectForm() {
-  const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const router = useRouter()
+  const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<ProjectFormData>({
     name: "",
     websiteUrl: "",
@@ -92,196 +91,162 @@ export function SubmitProjectForm() {
     twitterUrl: "",
     scheduledDate: null,
     launchType: LAUNCH_TYPES.FREE,
-  });
+  })
 
-  const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string | null>(null);
-  const [uploadedCoverImageUrl, setUploadedCoverImageUrl] = useState<
-    string | null
-  >(null);
+  const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string | null>(null)
+  const [uploadedCoverImageUrl, setUploadedCoverImageUrl] = useState<string | null>(null)
 
-  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
-  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false)
+  const [isUploadingCover, setIsUploadingCover] = useState(false)
 
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    []
-  );
-  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
-  const [availableDates, setAvailableDates] = useState<LaunchAvailability[]>(
-    []
-  );
-  const [isLoadingDates, setIsLoadingDates] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, setIsPending] = useState(false);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([])
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false)
+  const [availableDates, setAvailableDates] = useState<LaunchAvailability[]>([])
+  const [isLoadingDates, setIsLoadingDates] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, setIsPending] = useState(false)
 
-  const tagInputId = useId();
+  const tagInputId = useId()
 
-  const [techStackTags, setTechStackTags] = useState<Tag[]>([]);
-  const [activeTechTagIndex, setActiveTechTagIndex] = useState<number | null>(
-    null
-  );
+  const [techStackTags, setTechStackTags] = useState<Tag[]>([])
+  const [activeTechTagIndex, setActiveTechTagIndex] = useState<number | null>(null)
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   // Vérifier si l'URL du site est déjà utilisée
   const checkWebsiteUrl = async (url: string) => {
     try {
-      const response = await fetch(
-        `/api/projects/check-url?url=${encodeURIComponent(url)}`
-      );
-      const data = await response.json();
-      return data.exists;
+      const response = await fetch(`/api/projects/check-url?url=${encodeURIComponent(url)}`)
+      const data = await response.json()
+      return data.exists
     } catch (error) {
-      console.error("Error checking website URL:", error);
-      return false;
+      console.error("Error checking website URL:", error)
+      return false
     }
-  };
+  }
 
   const loadAvailableDates = useCallback(async () => {
-    setIsLoadingDates(true);
+    setIsLoadingDates(true)
     try {
-      let startDate, endDate;
-      const today = new Date();
+      let startDate, endDate
+      const today = new Date()
 
       if (formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS) {
         startDate = format(
           addDays(today, LAUNCH_SETTINGS.PREMIUM_PLUS_MIN_DAYS_AHEAD),
-          DATE_FORMAT.API
-        );
+          DATE_FORMAT.API,
+        )
         endDate = format(
           addDays(today, LAUNCH_SETTINGS.PREMIUM_PLUS_MAX_DAYS_AHEAD),
-          DATE_FORMAT.API
-        );
+          DATE_FORMAT.API,
+        )
       } else if (formData.launchType === LAUNCH_TYPES.PREMIUM) {
-        startDate = format(
-          addDays(today, LAUNCH_SETTINGS.PREMIUM_MIN_DAYS_AHEAD),
-          DATE_FORMAT.API
-        );
-        endDate = format(
-          addDays(today, LAUNCH_SETTINGS.PREMIUM_MAX_DAYS_AHEAD),
-          DATE_FORMAT.API
-        );
+        startDate = format(addDays(today, LAUNCH_SETTINGS.PREMIUM_MIN_DAYS_AHEAD), DATE_FORMAT.API)
+        endDate = format(addDays(today, LAUNCH_SETTINGS.PREMIUM_MAX_DAYS_AHEAD), DATE_FORMAT.API)
       } else {
-        startDate = format(
-          addDays(today, LAUNCH_SETTINGS.MIN_DAYS_AHEAD),
-          DATE_FORMAT.API
-        );
-        endDate = format(
-          addDays(today, LAUNCH_SETTINGS.MAX_DAYS_AHEAD),
-          DATE_FORMAT.API
-        );
+        startDate = format(addDays(today, LAUNCH_SETTINGS.MIN_DAYS_AHEAD), DATE_FORMAT.API)
+        endDate = format(addDays(today, LAUNCH_SETTINGS.MAX_DAYS_AHEAD), DATE_FORMAT.API)
       }
 
-      const availability = await getLaunchAvailabilityRange(
-        startDate,
-        endDate,
-        formData.launchType
-      );
-      setAvailableDates(availability);
+      const availability = await getLaunchAvailabilityRange(startDate, endDate, formData.launchType)
+      setAvailableDates(availability)
     } catch (err) {
-      console.error("Error loading dates:", err);
-      setError("Failed to load available dates");
+      console.error("Error loading dates:", err)
+      setError("Failed to load available dates")
     } finally {
-      setIsLoadingDates(false);
+      setIsLoadingDates(false)
     }
-  }, [formData.launchType]);
+  }, [formData.launchType])
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    fetchCategories()
+  }, [])
 
   useEffect(() => {
     if (currentStep === 3) {
-      loadAvailableDates();
+      loadAvailableDates()
     }
-  }, [currentStep, loadAvailableDates]);
+  }, [currentStep, loadAvailableDates])
 
   useEffect(() => {
     const tagsFromFormData = formData.techStack.map((tech, index) => ({
       id: `${index}-${tech}`,
       text: tech,
-    }));
+    }))
     if (JSON.stringify(tagsFromFormData) !== JSON.stringify(techStackTags)) {
-      setTechStackTags(tagsFromFormData);
+      setTechStackTags(tagsFromFormData)
     }
-  }, [formData.techStack]);
+  }, [formData.techStack])
 
   useEffect(() => {
-    const techStringArray = techStackTags.map((tag) => tag.text);
-    if (
-      JSON.stringify(techStringArray) !== JSON.stringify(formData.techStack)
-    ) {
-      setFormData((prev) => ({ ...prev, techStack: techStringArray }));
+    const techStringArray = techStackTags.map((tag) => tag.text)
+    if (JSON.stringify(techStringArray) !== JSON.stringify(formData.techStack)) {
+      setFormData((prev) => ({ ...prev, techStack: techStringArray }))
     }
-  }, [techStackTags]);
+  }, [techStackTags])
 
   async function fetchCategories() {
-    setIsLoadingCategories(true);
+    setIsLoadingCategories(true)
     try {
-      const data = await getAllCategories();
-      setCategories(data);
+      const data = await getAllCategories()
+      setCategories(data)
     } catch (err) {
-      console.error("Error fetching categories:", err);
-      setError("Failed to load categories");
+      console.error("Error fetching categories:", err)
+      setError("Failed to load categories")
     } finally {
-      setIsLoadingCategories(false);
+      setIsLoadingCategories(false)
     }
   }
 
-  const handleLaunchTypeChange = (
-    type: (typeof LAUNCH_TYPES)[keyof typeof LAUNCH_TYPES]
-  ) => {
+  const handleLaunchTypeChange = (type: (typeof LAUNCH_TYPES)[keyof typeof LAUNCH_TYPES]) => {
     setFormData((prev) => ({
       ...prev,
       launchType: type,
       scheduledDate: null,
-    }));
-  };
+    }))
+  }
 
   function groupDatesByMonth(dates: LaunchAvailability[]): DateGroup[] {
-    const uniqueDates = Array.from(
-      new Map(dates.map((date) => [date.date, date])).values()
-    );
+    const uniqueDates = Array.from(new Map(dates.map((date) => [date.date, date])).values())
 
-    const groups = new Map<string, DateGroup>();
+    const groups = new Map<string, DateGroup>()
 
     const sortedDates = [...uniqueDates].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    )
 
     sortedDates.forEach((date) => {
-      const dateObj = new Date(date.date);
-      const year = dateObj.getFullYear();
-      const month = dateObj.getMonth();
-      const groupKey = `${year}-${month}`;
-      const displayMonth = format(dateObj, DATE_FORMAT.DISPLAY_MONTH);
+      const dateObj = new Date(date.date)
+      const year = dateObj.getFullYear()
+      const month = dateObj.getMonth()
+      const groupKey = `${year}-${month}`
+      const displayMonth = format(dateObj, DATE_FORMAT.DISPLAY_MONTH)
 
       if (!groups.has(groupKey)) {
         groups.set(groupKey, {
           key: groupKey,
           displayName: displayMonth,
           dates: [],
-        });
+        })
       }
-      groups.get(groupKey)?.dates.push(date);
-    });
+      groups.get(groupKey)?.dates.push(date)
+    })
 
     return Array.from(groups.values()).sort((a, b) => {
-      const aDate = new Date(a.dates[0].date);
-      const bDate = new Date(b.dates[0].date);
-      return aDate.getTime() - bDate.getTime();
-    });
+      const aDate = new Date(a.dates[0].date)
+      const bDate = new Date(b.dates[0].date)
+      return aDate.getTime() - bDate.getTime()
+    })
   }
 
   const nextStep = () => {
-    setError(null);
+    setError(null)
     if (currentStep === 1) {
       if (
         !formData.name ||
@@ -290,16 +255,14 @@ export function SubmitProjectForm() {
         !uploadedLogoUrl ||
         !uploadedCoverImageUrl
       ) {
-        setError(
-          "Please fill in all required project information and upload images."
-        );
-        return;
+        setError("Please fill in all required project information and upload images.")
+        return
       }
       try {
-        new URL(formData.websiteUrl);
+        new URL(formData.websiteUrl)
       } catch {
-        setError("Please enter a valid website URL.");
-        return;
+        setError("Please enter a valid website URL.")
+        return
       }
     }
 
@@ -310,42 +273,42 @@ export function SubmitProjectForm() {
         formData.platforms.length === 0 ||
         !formData.pricing
       ) {
-        setError("Please complete the technical details and categorization.");
-        return;
+        setError("Please complete the technical details and categorization.")
+        return
       }
 
       // Vérifier le nombre de catégories
       if (formData.categories.length > 3) {
-        setError("You can select a maximum of 3 categories.");
-        return;
+        setError("You can select a maximum of 3 categories.")
+        return
       }
 
       // Vérifier le nombre de technologies
       if (formData.techStack.length > 5) {
-        setError("You can add a maximum of 5 technologies.");
-        return;
+        setError("You can add a maximum of 5 technologies.")
+        return
       }
     }
 
     if (currentStep === 3 && !formData.scheduledDate) {
-      setError("Please select a launch date.");
-      return;
+      setError("Please select a launch date.")
+      return
     }
 
-    setCurrentStep((prev) => Math.min(prev + 1, 4));
+    setCurrentStep((prev) => Math.min(prev + 1, 4))
 
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 0);
-  };
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 0)
+  }
 
   const prevStep = () => {
-    setError(null);
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    setError(null)
+    setCurrentStep((prev) => Math.max(prev - 1, 1))
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 0);
-  };
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 0)
+  }
 
   const handleFinalSubmit = async () => {
     if (
@@ -359,48 +322,46 @@ export function SubmitProjectForm() {
       !formData.pricing
     ) {
       setError(
-        "Some required information or images are missing. Please go back and complete all fields."
-      );
-      setIsPending(false);
-      return;
+        "Some required information or images are missing. Please go back and complete all fields.",
+      )
+      setIsPending(false)
+      return
     }
 
     // Vérifier si l'URL est déjà utilisée
-    const urlExists = await checkWebsiteUrl(formData.websiteUrl);
+    const urlExists = await checkWebsiteUrl(formData.websiteUrl)
     if (urlExists) {
-      setError(
-        "This website URL has already been submitted. Please use a different URL."
-      );
-      setIsPending(false);
-      return;
+      setError("This website URL has already been submitted. Please use a different URL.")
+      setIsPending(false)
+      return
     }
 
     if (currentStep === 3 && !formData.scheduledDate) {
-      setError("Please select a launch date.");
-      return;
+      setError("Please select a launch date.")
+      return
     }
 
-    setIsPending(true);
-    setError(null);
+    setIsPending(true)
+    setError(null)
 
     if (formData.techStack.length === 0) {
-      setError("Please enter at least one technology in the Tech Stack.");
-      setIsPending(false);
-      return;
+      setError("Please enter at least one technology in the Tech Stack.")
+      setIsPending(false)
+      return
     }
 
     // Vérifier le nombre de catégories
     if (formData.categories.length > 3) {
-      setError("You can select a maximum of 3 categories.");
-      setIsPending(false);
-      return;
+      setError("You can select a maximum of 3 categories.")
+      setIsPending(false)
+      return
     }
 
     // Vérifier le nombre de technologies
     if (formData.techStack.length > 5) {
-      setError("You can add a maximum of 5 technologies.");
-      setIsPending(false);
-      return;
+      setError("You can add a maximum of 5 technologies.")
+      setIsPending(false)
+      return
     }
 
     try {
@@ -416,42 +377,27 @@ export function SubmitProjectForm() {
         pricing: formData.pricing,
         githubUrl: formData.githubUrl || null,
         twitterUrl: formData.twitterUrl || null,
-      };
-
-      const submissionResult = await submitProject(projectData);
-
-      if (
-        !submissionResult.success ||
-        !submissionResult.projectId ||
-        !submissionResult.slug
-      ) {
-        throw new Error(
-          submissionResult.error || "Failed to submit project data."
-        );
       }
 
-      const projectId = submissionResult.projectId;
-      const projectSlug = submissionResult.slug;
+      const submissionResult = await submitProject(projectData)
+
+      if (!submissionResult.success || !submissionResult.projectId || !submissionResult.slug) {
+        throw new Error(submissionResult.error || "Failed to submit project data.")
+      }
+
+      const projectId = submissionResult.projectId
+      const projectSlug = submissionResult.slug
 
       if (formData.scheduledDate) {
         try {
-          const formattedDate = format(
-            parseISO(formData.scheduledDate),
-            DATE_FORMAT.API
-          );
-          const launchSuccess = await scheduleLaunch(
-            projectId,
-            formattedDate,
-            formData.launchType
-          );
+          const formattedDate = format(parseISO(formData.scheduledDate), DATE_FORMAT.API)
+          const launchSuccess = await scheduleLaunch(projectId, formattedDate, formData.launchType)
 
           if (!launchSuccess) {
             console.error(
-              `Project ${projectId} created but failed to schedule for ${formattedDate}`
-            );
-            throw new Error(
-              "Project created, but failed to schedule the launch."
-            );
+              `Project ${projectId} created but failed to schedule for ${formattedDate}`,
+            )
+            throw new Error("Project created, but failed to schedule the launch.")
           }
 
           try {
@@ -460,55 +406,55 @@ export function SubmitProjectForm() {
               format(parseISO(formData.scheduledDate), DATE_FORMAT.DISPLAY),
               formData.launchType,
               formData.websiteUrl,
-              `${process.env.NEXT_PUBLIC_URL || ""}/projects/${projectSlug}`
-            );
+              `${process.env.NEXT_PUBLIC_URL || ""}/projects/${projectSlug}`,
+            )
           } catch (discordError) {
-            console.error("Failed to send Discord notification:", discordError);
+            console.error("Failed to send Discord notification:", discordError)
           }
         } catch (scheduleError: unknown) {
-          console.error("Error during launch scheduling:", scheduleError);
+          console.error("Error during launch scheduling:", scheduleError)
           setError(
             scheduleError instanceof Error
               ? scheduleError.message
-              : "An error occurred during scheduling."
-          );
-          setIsPending(false);
-          return;
+              : "An error occurred during scheduling.",
+          )
+          setIsPending(false)
+          return
         }
       }
 
       if (formData.launchType === LAUNCH_TYPES.FREE) {
-        router.push(`/projects/${projectSlug}`);
+        router.push(`/projects/${projectSlug}`)
       } else {
         const paymentLink =
           formData.launchType === LAUNCH_TYPES.PREMIUM
             ? PREMIUM_PAYMENT_LINK
-            : PREMIUM_PLUS_PAYMENT_LINK;
+            : PREMIUM_PLUS_PAYMENT_LINK
 
-        const paymentUrl = `${paymentLink}?client_reference_id=${projectId}`;
+        const paymentUrl = `${paymentLink}?client_reference_id=${projectId}`
 
-        window.location.href = paymentUrl;
+        window.location.href = paymentUrl
       }
     } catch (submissionError: unknown) {
-      console.error("Error during final submission:", submissionError);
+      console.error("Error during final submission:", submissionError)
       setError(
         submissionError instanceof Error
           ? submissionError.message
-          : "An unexpected error occurred."
-      );
-      setIsPending(false);
+          : "An unexpected error occurred.",
+      )
+      setIsPending(false)
     }
-  };
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    handleFinalSubmit();
+    event.preventDefault()
+    handleFinalSubmit()
   }
 
   const renderStepper = () => (
     <div className="mb-8 sm:mb-10">
-      <div className="container max-w-3xl mx-auto">
-        <div className="flex items-center justify-between sm:px-4 pt-2 sm:pt-0">
+      <div className="container mx-auto max-w-3xl">
+        <div className="flex items-center justify-between pt-2 sm:px-4 sm:pt-0">
           {[
             { step: 1, label: "Project Info", icon: RiListCheck },
             {
@@ -522,10 +468,10 @@ export function SubmitProjectForm() {
           ].map(({ step, label, shortLabel, icon: Icon }) => (
             <div
               key={`step-${step}`}
-              className="w-[120px] sm:w-[140px] flex flex-col items-center relative"
+              className="relative flex w-[120px] flex-col items-center sm:w-[140px]"
             >
               {step < 3 && (
-                <div className="hidden sm:block absolute left-[calc(50%+1.5rem)] w-[calc(100%-1rem)] h-[2px] top-5 -z-10">
+                <div className="absolute top-5 left-[calc(50%+1.5rem)] -z-10 hidden h-[2px] w-[calc(100%-1rem)] sm:block">
                   <div
                     className={`h-full ${
                       currentStep > step ? "bg-primary" : "bg-muted"
@@ -535,11 +481,11 @@ export function SubmitProjectForm() {
               )}
 
               <div
-                className={`relative h-10 w-10 sm:h-12 sm:w-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+                className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 sm:h-12 sm:w-12 ${
                   currentStep > step
-                    ? "bg-primary text-white ring-4 ring-primary/10"
+                    ? "bg-primary ring-primary/10 text-white ring-4"
                     : currentStep === step
-                      ? "bg-primary text-white ring-4 ring-primary/20"
+                      ? "bg-primary ring-primary/20 text-white ring-4"
                       : "bg-muted/50 text-muted-foreground"
                 }`}
               >
@@ -550,22 +496,18 @@ export function SubmitProjectForm() {
                 )}
 
                 {currentStep === step && (
-                  <span className="absolute inset-0 rounded-full border-2 border-primary animate-pulse" />
+                  <span className="border-primary absolute inset-0 animate-pulse rounded-full border-2" />
                 )}
               </div>
 
-              <div className="mt-3 sm:mt-4 text-center w-full">
+              <div className="mt-3 w-full text-center sm:mt-4">
                 <span
-                  className={`block text-xs sm:text-sm font-medium mb-0.5 ${
-                    currentStep >= step
-                      ? "text-primary"
-                      : "text-muted-foreground"
+                  className={`mb-0.5 block text-xs font-medium sm:text-sm ${
+                    currentStep >= step ? "text-primary" : "text-muted-foreground"
                   }`}
                 >
                   <span className="hidden sm:inline">{label}</span>
-                  <span className="inline sm:hidden">
-                    {shortLabel || label}
-                  </span>
+                  <span className="inline sm:hidden">{shortLabel || label}</span>
                 </span>
               </div>
             </div>
@@ -573,49 +515,48 @@ export function SubmitProjectForm() {
         </div>
       </div>
 
-      <div className="mt-3 sm:mt-6 px-2 sm:px-4">
-        <div className="h-1.5 w-full bg-muted/50 rounded-full overflow-hidden">
+      <div className="mt-3 px-2 sm:mt-6 sm:px-4">
+        <div className="bg-muted/50 h-1.5 w-full overflow-hidden rounded-full">
           <div
-            className="h-full bg-primary rounded-full transition-all duration-300 ease-out"
+            className="bg-primary h-full rounded-full transition-all duration-300 ease-out"
             style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
           />
         </div>
       </div>
     </div>
-  );
+  )
 
   const handleCheckboxChange = (
     field: "categories" | "platforms",
     value: string,
-    checked: boolean
+    checked: boolean,
   ) => {
     setFormData((prev) => {
-      const currentValues = prev[field] || [];
+      const currentValues = prev[field] || []
       if (checked) {
-        return { ...prev, [field]: [...currentValues, value] };
+        return { ...prev, [field]: [...currentValues, value] }
       } else {
         return {
           ...prev,
           [field]: currentValues.filter((item) => item !== value),
-        };
+        }
       }
-    });
-  };
+    })
+  }
 
   const handleRadioChange = (field: "pricing", value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
 
-  const getCategoryName = (id: string) =>
-    categories.find((cat) => cat.id === id)?.name || id;
+  const getCategoryName = (id: string) => categories.find((cat) => cat.id === id)?.name || id
   const getPlatformLabel = (value: string) =>
     Object.entries(platformType)
       .find(([, v]) => v === value)?.[0]
-      ?.toLowerCase() || value;
+      ?.toLowerCase() || value
   const getPricingLabel = (value: string) =>
     Object.entries(pricingType)
       .find(([, v]) => v === value)?.[0]
-      ?.toLowerCase() || value;
+      ?.toLowerCase() || value
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -668,7 +609,7 @@ export function SubmitProjectForm() {
                 Logo (Max 1MB) <span className="text-red-500">*</span>
               </Label>
               {uploadedLogoUrl ? (
-                <div className="p-3 border rounded-md bg-muted/30 relative w-fit">
+                <div className="bg-muted/30 relative w-fit rounded-md border p-3">
                   <Image
                     src={uploadedLogoUrl}
                     alt="Logo preview"
@@ -680,7 +621,7 @@ export function SubmitProjectForm() {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute top-1 right-1 text-muted-foreground hover:text-foreground h-6 w-6"
+                    className="text-muted-foreground hover:text-foreground absolute top-1 right-1 h-6 w-6"
                     onClick={() => setUploadedLogoUrl(null)}
                     aria-label="Remove logo"
                   >
@@ -688,29 +629,29 @@ export function SubmitProjectForm() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 mt-2">
+                <div className="mt-2 flex items-center gap-2">
                   <UploadButton
                     endpoint="projectLogo"
                     onUploadBegin={() => {
-                      console.log("Upload Begin (Logo)");
-                      setIsUploadingLogo(true);
-                      setError(null);
+                      console.log("Upload Begin (Logo)")
+                      setIsUploadingLogo(true)
+                      setError(null)
                     }}
                     onClientUploadComplete={(res) => {
-                      console.log("Upload Response (Logo):", res);
-                      setIsUploadingLogo(false);
+                      console.log("Upload Response (Logo):", res)
+                      setIsUploadingLogo(false)
                       if (res && res.length > 0 && res[0].serverData?.fileUrl) {
-                        setUploadedLogoUrl(res[0].serverData.fileUrl);
-                        console.log("Logo URL set:", res[0].serverData.fileUrl);
+                        setUploadedLogoUrl(res[0].serverData.fileUrl)
+                        console.log("Logo URL set:", res[0].serverData.fileUrl)
                       } else {
-                        console.error("Logo upload failed: No URL", res);
-                        setError("Logo upload failed: No URL returned.");
+                        console.error("Logo upload failed: No URL", res)
+                        setError("Logo upload failed: No URL returned.")
                       }
                     }}
                     onUploadError={(error: Error) => {
-                      console.error("Upload Error (Logo):", error);
-                      setIsUploadingLogo(false);
-                      setError(`Logo upload failed: ${error.message}`);
+                      console.error("Upload Error (Logo):", error)
+                      setIsUploadingLogo(false)
+                      setError(`Logo upload failed: ${error.message}`)
                     }}
                     appearance={{
                       button: `ut-button border border-input bg-background hover:bg-accent hover:text-accent-foreground text-sm h-9 px-3 inline-flex items-center justify-center gap-2 ${isUploadingLogo ? "opacity-50 pointer-events-none" : ""}`,
@@ -718,24 +659,19 @@ export function SubmitProjectForm() {
                     }}
                     content={{
                       button({ ready, isUploading }) {
-                        if (isUploading)
-                          return (
-                            <RiLoader4Line className="animate-spin h-4 w-4" />
-                          );
+                        if (isUploading) return <RiLoader4Line className="h-4 w-4 animate-spin" />
                         if (ready)
                           return (
                             <>
                               <RiImageAddLine className="h-4 w-4" /> Upload Logo
                             </>
-                          );
-                        return "Getting ready...";
+                          )
+                        return "Getting ready..."
                       },
                     }}
                   />
                   {isUploadingLogo && (
-                    <span className="text-xs text-muted-foreground">
-                      Uploading...
-                    </span>
+                    <span className="text-muted-foreground text-xs">Uploading...</span>
                   )}
                 </div>
               )}
@@ -745,7 +681,7 @@ export function SubmitProjectForm() {
                 Cover Image (Max 1MB) <span className="text-red-500">*</span>
               </Label>
               {uploadedCoverImageUrl ? (
-                <div className="p-3 border rounded-md bg-muted/30 relative w-fit">
+                <div className="bg-muted/30 relative w-fit rounded-md border p-3">
                   <Image
                     src={uploadedCoverImageUrl}
                     alt="Cover image preview"
@@ -757,7 +693,7 @@ export function SubmitProjectForm() {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute top-1 right-1 text-muted-foreground hover:text-foreground h-6 w-6"
+                    className="text-muted-foreground hover:text-foreground absolute top-1 right-1 h-6 w-6"
                     onClick={() => setUploadedCoverImageUrl(null)}
                     aria-label="Remove cover image"
                   >
@@ -765,32 +701,29 @@ export function SubmitProjectForm() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 mt-2">
+                <div className="mt-2 flex items-center gap-2">
                   <UploadButton
                     endpoint="projectCoverImage"
                     onUploadBegin={() => {
-                      console.log("Upload Begin (Cover)");
-                      setIsUploadingCover(true);
-                      setError(null);
+                      console.log("Upload Begin (Cover)")
+                      setIsUploadingCover(true)
+                      setError(null)
                     }}
                     onClientUploadComplete={(res) => {
-                      console.log("Upload Response (Cover):", res);
-                      setIsUploadingCover(false);
+                      console.log("Upload Response (Cover):", res)
+                      setIsUploadingCover(false)
                       if (res && res.length > 0 && res[0].serverData?.fileUrl) {
-                        setUploadedCoverImageUrl(res[0].serverData.fileUrl);
-                        console.log(
-                          "Cover URL set:",
-                          res[0].serverData.fileUrl
-                        );
+                        setUploadedCoverImageUrl(res[0].serverData.fileUrl)
+                        console.log("Cover URL set:", res[0].serverData.fileUrl)
                       } else {
-                        console.error("Cover upload failed: No URL", res);
-                        setError("Cover image upload failed: No URL returned.");
+                        console.error("Cover upload failed: No URL", res)
+                        setError("Cover image upload failed: No URL returned.")
                       }
                     }}
                     onUploadError={(error: Error) => {
-                      console.error("Upload Error (Cover):", error);
-                      setIsUploadingCover(false);
-                      setError(`Cover image upload failed: ${error.message}`);
+                      console.error("Upload Error (Cover):", error)
+                      setIsUploadingCover(false)
+                      setError(`Cover image upload failed: ${error.message}`)
                     }}
                     appearance={{
                       button: `ut-button flex items-center w-fit gap-2 border border-input bg-primary hover:bg-primary/90 hover:text-accent-foreground text-sm h-9 px-3 ${isUploadingCover ? "opacity-50 pointer-events-none" : ""}`,
@@ -798,47 +731,41 @@ export function SubmitProjectForm() {
                     }}
                     content={{
                       button({ ready, isUploading }) {
-                        if (isUploading)
-                          return (
-                            <RiLoader4Line className="animate-spin h-4 w-4" />
-                          );
+                        if (isUploading) return <RiLoader4Line className="h-4 w-4 animate-spin" />
                         if (ready)
                           return (
                             <>
-                              <RiImageAddLine className="h-4 w-4" /> Upload
-                              Cover Image
+                              <RiImageAddLine className="h-4 w-4" /> Upload Cover Image
                             </>
-                          );
-                        return "Getting ready...";
+                          )
+                        return "Getting ready..."
                       },
                     }}
                   />
                   {isUploadingCover && (
-                    <span className="text-xs text-muted-foreground">
-                      Uploading...
-                    </span>
+                    <span className="text-muted-foreground text-xs">Uploading...</span>
                   )}
                 </div>
               )}
             </div>
           </div>
-        );
+        )
       case 2:
         return (
           <div className="space-y-8">
             <div>
               <Label className="mb-2 block">
                 Categories <span className="text-red-500">*</span>
-                <span className="ml-2 text-xs text-muted-foreground">
+                <span className="text-muted-foreground ml-2 text-xs">
                   ({formData.categories.length}/3 selected)
                 </span>
               </Label>
               {isLoadingCategories ? (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <RiLoader4Line className="animate-spin h-4 w-4" /> Loading...
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <RiLoader4Line className="h-4 w-4 animate-spin" /> Loading...
                 </div>
               ) : categories.length > 0 ? (
-                <div className="space-y-3 max-h-60 overflow-y-auto border rounded-md p-4">
+                <div className="max-h-60 space-y-3 overflow-y-auto rounded-md border p-4">
                   {categories.map((cat) => (
                     <div key={cat.id} className="flex items-center space-x-2">
                       <Checkbox
@@ -846,29 +773,22 @@ export function SubmitProjectForm() {
                         checked={formData.categories.includes(cat.id)}
                         onCheckedChange={(checked) => {
                           if (checked && formData.categories.length >= 3) {
-                            setError(
-                              "You can select a maximum of 3 categories."
-                            );
-                            return;
+                            setError("You can select a maximum of 3 categories.")
+                            return
                           }
-                          handleCheckboxChange("categories", cat.id, !!checked);
+                          handleCheckboxChange("categories", cat.id, !!checked)
                         }}
                       />
-                      <Label
-                        htmlFor={`cat-${cat.id}`}
-                        className="font-normal cursor-pointer"
-                      >
+                      <Label htmlFor={`cat-${cat.id}`} className="cursor-pointer font-normal">
                         {cat.name}
                       </Label>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  No categories available.
-                </p>
+                <p className="text-muted-foreground text-sm">No categories available.</p>
               )}
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-xs">
                 Select up to 3 relevant categories.
               </p>
             </div>
@@ -876,7 +796,7 @@ export function SubmitProjectForm() {
             <div>
               <Label htmlFor={tagInputId}>
                 Tech Stack <span className="text-red-500">*</span>
-                <span className="ml-2 text-xs text-muted-foreground">
+                <span className="text-muted-foreground ml-2 text-xs">
                   ({formData.techStack.length}/5 technologies)
                 </span>
               </Label>
@@ -885,10 +805,10 @@ export function SubmitProjectForm() {
                 tags={techStackTags}
                 setTags={(newTags) => {
                   if (newTags.length > 5) {
-                    setError("You can add a maximum of 5 technologies.");
-                    return;
+                    setError("You can add a maximum of 5 technologies.")
+                    return
                   }
-                  setTechStackTags(newTags);
+                  setTechStackTags(newTags)
                 }}
                 placeholder="Type a technology and press Enter..."
                 styleClasses={{
@@ -904,9 +824,8 @@ export function SubmitProjectForm() {
                 activeTagIndex={activeTechTagIndex}
                 setActiveTagIndex={setActiveTechTagIndex}
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                Enter up to 5 technologies used, press Enter or comma to add a
-                tag.
+              <p className="text-muted-foreground mt-1 text-xs">
+                Enter up to 5 technologies used, press Enter or comma to add a tag.
               </p>
             </div>
 
@@ -914,7 +833,7 @@ export function SubmitProjectForm() {
               <Label className="mb-2 block">
                 Platforms <span className="text-red-500">*</span>
               </Label>
-              <div className="space-y-3 border rounded-md p-4">
+              <div className="space-y-3 rounded-md border p-4">
                 {Object.entries(platformType).map(([key, value]) => (
                   <div key={value} className="flex items-center space-x-2">
                     <Checkbox
@@ -926,14 +845,14 @@ export function SubmitProjectForm() {
                     />
                     <Label
                       htmlFor={`platform-${value}`}
-                      className="font-normal capitalize cursor-pointer"
+                      className="cursor-pointer font-normal capitalize"
                     >
                       {key.toLowerCase()}
                     </Label>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-xs">
                 Select all platforms your project supports.
               </p>
             </div>
@@ -945,25 +864,23 @@ export function SubmitProjectForm() {
               <RadioGroup
                 value={formData.pricing}
                 onValueChange={(value) => handleRadioChange("pricing", value)}
-                className="flex flex-col sm:flex-row gap-4"
+                className="flex flex-col gap-4 sm:flex-row"
               >
                 {Object.entries(pricingType).map(([key, value]) => (
                   <div key={value} className="flex-1">
                     <Label
                       htmlFor={`pricing-${value}`}
-                      className="flex items-center space-x-2 border rounded-md p-3 cursor-pointer hover:bg-muted/50 transition-colors h-full"
+                      className="hover:bg-muted/50 flex h-full cursor-pointer items-center space-x-2 rounded-md border p-3 transition-colors"
                     >
                       <RadioGroupItem value={value} id={`pricing-${value}`} />
-                      <span className="capitalize font-normal">
-                        {key.toLowerCase()}
-                      </span>
+                      <span className="font-normal capitalize">{key.toLowerCase()}</span>
                     </Label>
                   </div>
                 ))}
               </RadioGroup>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <Label htmlFor="githubUrl">GitHub URL (Optional)</Label>
                 <Input
@@ -988,7 +905,7 @@ export function SubmitProjectForm() {
               </div>
             </div>
           </div>
-        );
+        )
       case 3:
         return (
           <div className="space-y-8">
@@ -997,133 +914,116 @@ export function SubmitProjectForm() {
               <h3 className="text-lg font-medium">Choose Launch Type & Date</h3>
             </div>
 
-            <div className="bg-muted/30 p-3 sm:p-4 rounded-lg border border-muted flex items-start gap-2">
-              <RiInformationLine className="h-5 w-5 flex-shrink-0 mt-0.5" />
+            <div className="bg-muted/30 border-muted flex items-start gap-2 rounded-lg border p-3 sm:p-4">
+              <RiInformationLine className="mt-0.5 h-5 w-5 flex-shrink-0" />
               <div className="text-xs sm:text-sm">
                 <p className="font-medium">Select your launch type and date</p>
                 <p className="text-muted-foreground mt-1">
-                  All launches happen at {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00
-                  UTC. We launch a limited number of projects each day.
+                  All launches happen at {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00 UTC. We launch a
+                  limited number of projects each day.
                 </p>
               </div>
             </div>
 
             <div>
-              <h4 className="text-sm font-medium mb-4">Launch Type</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <h4 className="mb-4 text-sm font-medium">Launch Type</h4>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div
-                  className={`border rounded-lg p-4 cursor-pointer transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.FREE ? "border-primary ring-1 ring-primary bg-primary/5 shadow-sm relative" : "hover:border-foreground/20 hover:bg-muted/50"}`}
+                  className={`cursor-pointer rounded-lg border p-4 transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.FREE ? "border-primary ring-primary bg-primary/5 relative shadow-sm ring-1" : "hover:border-foreground/20 hover:bg-muted/50"}`}
                   onClick={() => handleLaunchTypeChange(LAUNCH_TYPES.FREE)}
                 >
                   {formData.launchType === LAUNCH_TYPES.FREE && (
                     <Badge
                       variant="default"
-                      className="absolute -top-2 -right-2 text-xs bg-primary text-primary-foreground"
+                      className="bg-primary text-primary-foreground absolute -top-2 -right-2 text-xs"
                     >
                       Selected
                     </Badge>
                   )}
-                  <h5 className="font-medium mb-2 flex items-center gap-1.5">
-                    <RiRocketLine className="w-4 h-4" />
+                  <h5 className="mb-2 flex items-center gap-1.5 font-medium">
+                    <RiRocketLine className="h-4 w-4" />
                     Free Launch
                   </h5>
-                  <p className="text-2xl font-bold mb-3">$0</p>
-                  <ul className="text-xs space-y-1.5 text-muted-foreground">
+                  <p className="mb-3 text-2xl font-bold">$0</p>
+                  <ul className="text-muted-foreground space-y-1.5 text-xs">
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-foreground/60 flex-shrink-0" />
+                      <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
                       <span>{LAUNCH_LIMITS.FREE_DAILY_LIMIT} slots/day</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-foreground/60 flex-shrink-0" />
+                      <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
                       <span>Standard visibility</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-foreground/60 flex-shrink-0" />
-                      <span>
-                        Up to {LAUNCH_SETTINGS.MAX_DAYS_AHEAD} days scheduling
-                      </span>
+                      <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
+                      <span>Up to {LAUNCH_SETTINGS.MAX_DAYS_AHEAD} days scheduling</span>
                     </li>
                   </ul>
                 </div>
 
                 <div
-                  className={`border rounded-lg p-4 cursor-pointer transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.PREMIUM ? "border-primary/70 ring-1 ring-primary/70 bg-primary/5 shadow-sm relative" : "hover:border-primary/50 hover:bg-primary/5"}`}
+                  className={`cursor-pointer rounded-lg border p-4 transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.PREMIUM ? "border-primary/70 ring-primary/70 bg-primary/5 relative shadow-sm ring-1" : "hover:border-primary/50 hover:bg-primary/5"}`}
                   onClick={() => handleLaunchTypeChange(LAUNCH_TYPES.PREMIUM)}
                 >
                   {formData.launchType === LAUNCH_TYPES.PREMIUM && (
                     <Badge
                       variant="default"
-                      className="absolute -top-2 -right-2 text-xs bg-primary text-primary-foreground"
+                      className="bg-primary text-primary-foreground absolute -top-2 -right-2 text-xs"
                     >
                       Selected
                     </Badge>
                   )}
-                  <h5 className="font-medium mb-2 flex items-center gap-1.5">
-                    <RiStarLine className="w-4 h-4 text-primary" />
+                  <h5 className="mb-2 flex items-center gap-1.5 font-medium">
+                    <RiStarLine className="text-primary h-4 w-4" />
                     Premium Launch
                   </h5>
-                  <p className="text-2xl font-bold mb-3">
-                    ${LAUNCH_SETTINGS.PREMIUM_PRICE}
-                  </p>
-                  <ul className="text-xs space-y-1.5 text-muted-foreground">
+                  <p className="mb-3 text-2xl font-bold">${LAUNCH_SETTINGS.PREMIUM_PRICE}</p>
+                  <ul className="text-muted-foreground space-y-1.5 text-xs">
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-primary/80 flex-shrink-0" />
-                      <span>
-                        {LAUNCH_LIMITS.PREMIUM_DAILY_LIMIT} premium slots/day
-                      </span>
+                      <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
+                      <span>{LAUNCH_LIMITS.PREMIUM_DAILY_LIMIT} premium slots/day</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-primary/80 flex-shrink-0" />
+                      <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
                       <span>Priority placement</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-primary/80 flex-shrink-0" />
-                      <span>
-                        Up to {LAUNCH_SETTINGS.PREMIUM_MAX_DAYS_AHEAD} days
-                        scheduling
-                      </span>
+                      <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
+                      <span>Up to {LAUNCH_SETTINGS.PREMIUM_MAX_DAYS_AHEAD} days scheduling</span>
                     </li>
                   </ul>
                 </div>
 
                 <div
-                  className={`border rounded-lg p-4 cursor-pointer transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS ? "border-primary ring-1 ring-primary bg-primary/5 shadow-sm relative" : "hover:border-primary hover:bg-primary/5"}`}
-                  onClick={() =>
-                    handleLaunchTypeChange(LAUNCH_TYPES.PREMIUM_PLUS)
-                  }
+                  className={`cursor-pointer rounded-lg border p-4 transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS ? "border-primary ring-primary bg-primary/5 relative shadow-sm ring-1" : "hover:border-primary hover:bg-primary/5"}`}
+                  onClick={() => handleLaunchTypeChange(LAUNCH_TYPES.PREMIUM_PLUS)}
                 >
                   {formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS && (
                     <Badge
                       variant="default"
-                      className="absolute -top-2 -right-2 text-xs bg-primary text-primary-foreground"
+                      className="bg-primary text-primary-foreground absolute -top-2 -right-2 text-xs"
                     >
                       Selected
                     </Badge>
                   )}
-                  <h5 className="font-medium mb-2 flex items-center gap-1.5">
-                    <RiVipCrownLine className="w-4 h-4 text-primary" />
+                  <h5 className="mb-2 flex items-center gap-1.5 font-medium">
+                    <RiVipCrownLine className="text-primary h-4 w-4" />
                     Premium Plus
                   </h5>
-                  <p className="text-2xl font-bold mb-3">
-                    ${LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE}
-                  </p>
-                  <ul className="text-xs space-y-1.5 text-muted-foreground">
+                  <p className="mb-3 text-2xl font-bold">${LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE}</p>
+                  <ul className="text-muted-foreground space-y-1.5 text-xs">
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                      <span>
-                        {LAUNCH_LIMITS.PREMIUM_PLUS_DAILY_LIMIT} exclusive
-                        slots/day
-                      </span>
+                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
+                      <span>{LAUNCH_LIMITS.PREMIUM_PLUS_DAILY_LIMIT} exclusive slots/day</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
                       <span>Homepage feature</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
                       <span>
-                        Up to {LAUNCH_SETTINGS.PREMIUM_PLUS_MAX_DAYS_AHEAD} days
-                        scheduling
+                        Up to {LAUNCH_SETTINGS.PREMIUM_PLUS_MAX_DAYS_AHEAD} days scheduling
                       </span>
                     </li>
                   </ul>
@@ -1132,18 +1032,16 @@ export function SubmitProjectForm() {
             </div>
 
             <div>
-              <h4 className="text-sm font-medium mb-3">
+              <h4 className="mb-3 text-sm font-medium">
                 Launch Date <span className="text-red-500">*</span>
               </h4>
               {isLoadingDates ? (
-                <div className="flex justify-center items-center gap-2 text-muted-foreground py-4">
-                  <RiLoader4Line className="animate-spin h-5 w-5" /> Loading
-                  available dates...
+                <div className="text-muted-foreground flex items-center justify-center gap-2 py-4">
+                  <RiLoader4Line className="h-5 w-5 animate-spin" /> Loading available dates...
                 </div>
               ) : availableDates.length === 0 && !isLoadingDates ? (
-                <p className="text-sm text-muted-foreground p-4 border rounded-md text-center">
-                  No available launch dates found for the selected type in the
-                  allowed range.
+                <p className="text-muted-foreground rounded-md border p-4 text-center text-sm">
+                  No available launch dates found for the selected type in the allowed range.
                 </p>
               ) : (
                 <div>
@@ -1161,36 +1059,32 @@ export function SubmitProjectForm() {
                         <SelectGroup key={group.key}>
                           <SelectLabel>{group.displayName}</SelectLabel>
                           {group.dates.map((date) => {
-                            const dateObj = parseISO(date.date);
-                            let slotsAvailable = 0;
-                            let isDisabled = true;
+                            const dateObj = parseISO(date.date)
+                            let slotsAvailable = 0
+                            let isDisabled = true
                             if (formData.launchType === LAUNCH_TYPES.FREE) {
-                              slotsAvailable = date.freeSlots;
-                              isDisabled = date.freeSlots <= 0;
-                            } else if (
-                              formData.launchType === LAUNCH_TYPES.PREMIUM
-                            ) {
-                              slotsAvailable = date.premiumSlots;
-                              isDisabled = date.premiumSlots <= 0;
-                            } else if (
-                              formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS
-                            ) {
-                              slotsAvailable = date.premiumPlusSlots;
-                              isDisabled = date.premiumPlusSlots <= 0;
+                              slotsAvailable = date.freeSlots
+                              isDisabled = date.freeSlots <= 0
+                            } else if (formData.launchType === LAUNCH_TYPES.PREMIUM) {
+                              slotsAvailable = date.premiumSlots
+                              isDisabled = date.premiumSlots <= 0
+                            } else if (formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS) {
+                              slotsAvailable = date.premiumPlusSlots
+                              isDisabled = date.premiumPlusSlots <= 0
                             }
 
-                            if (date.totalSlots <= 0) isDisabled = true;
+                            if (date.totalSlots <= 0) isDisabled = true
 
-                            const slotsText = `${slotsAvailable} ${formData.launchType === LAUNCH_TYPES.FREE ? "free" : formData.launchType === LAUNCH_TYPES.PREMIUM ? "premium" : "premium+"} slot(s)`;
+                            const slotsText = `${slotsAvailable} ${formData.launchType === LAUNCH_TYPES.FREE ? "free" : formData.launchType === LAUNCH_TYPES.PREMIUM ? "premium" : "premium+"} slot(s)`
 
                             return (
                               <SelectItem
                                 key={date.date}
                                 value={date.date}
                                 disabled={isDisabled}
-                                className="text-sm group"
+                                className="group text-sm"
                               >
-                                <div className="flex items-center justify-between w-full">
+                                <div className="flex w-full items-center justify-between">
                                   <span>{format(dateObj, "EEE, MMM d")}</span>
                                   <span
                                     className={`ml-2 text-xs ${isDisabled ? "text-muted-foreground/50" : "text-muted-foreground group-hover:text-foreground"}`}
@@ -1199,7 +1093,7 @@ export function SubmitProjectForm() {
                                   </span>
                                 </div>
                               </SelectItem>
-                            );
+                            )
                           })}
                         </SelectGroup>
                       ))}
@@ -1207,18 +1101,13 @@ export function SubmitProjectForm() {
                   </Select>
 
                   {formData.scheduledDate && (
-                    <div className="mt-3 flex items-center gap-1.5 px-3 py-2 bg-primary/5 rounded-md border border-primary/10 text-sm w-fit">
-                      <RiCalendarLine className="h-4 w-4 text-primary/80" />
-                      <span className="text-muted-foreground">
-                        Scheduled for{" "}
+                    <div className="bg-primary/5 border-primary/10 mt-3 flex w-fit items-center gap-1.5 rounded-md border px-3 py-2 text-sm">
+                      <RiCalendarLine className="text-primary/80 h-4 w-4" />
+                      <span className="text-muted-foreground">Scheduled for </span>
+                      <span className="text-foreground font-medium">
+                        {format(parseISO(formData.scheduledDate), DATE_FORMAT.DISPLAY)}
                       </span>
-                      <span className="font-medium text-foreground">
-                        {format(
-                          parseISO(formData.scheduledDate),
-                          DATE_FORMAT.DISPLAY
-                        )}
-                      </span>
-                      <span className="text-xs text-muted-foreground/70 ml-1">
+                      <span className="text-muted-foreground/70 ml-1 text-xs">
                         • {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00 UTC
                       </span>
                     </div>
@@ -1227,7 +1116,7 @@ export function SubmitProjectForm() {
               )}
             </div>
           </div>
-        );
+        )
       case 4:
         return (
           <div className="space-y-8">
@@ -1236,10 +1125,10 @@ export function SubmitProjectForm() {
               <h3 className="text-lg font-medium">Review and Submit</h3>
             </div>
 
-            <div className="rounded-lg border bg-card overflow-hidden">
-              <div className="p-6 space-y-6">
+            <div className="bg-card overflow-hidden rounded-lg border">
+              <div className="space-y-6 p-6">
                 <div>
-                  <h4 className="text-base font-semibold mb-3 border-b pb-2">
+                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">
                     Project Information
                   </h4>
                   <div className="space-y-2 text-sm">
@@ -1288,13 +1177,11 @@ export function SubmitProjectForm() {
                 </div>
 
                 <div>
-                  <h4 className="text-base font-semibold mb-3 border-b pb-2">
-                    Details
-                  </h4>
+                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">Details</h4>
                   <div className="space-y-3 text-sm">
                     <div>
                       <strong>Categories:</strong>
-                      <div className="flex flex-wrap gap-2 mt-1">
+                      <div className="mt-1 flex flex-wrap gap-2">
                         {formData.categories.map((catId) => (
                           <Badge key={catId} variant="secondary">
                             {getCategoryName(catId)}
@@ -1304,7 +1191,7 @@ export function SubmitProjectForm() {
                     </div>
                     <div>
                       <strong>Tech Stack:</strong>
-                      <div className="flex flex-wrap gap-2 mt-1">
+                      <div className="mt-1 flex flex-wrap gap-2">
                         {formData.techStack.map((tech) => (
                           <Badge key={tech} variant="outline">
                             {tech}
@@ -1314,13 +1201,9 @@ export function SubmitProjectForm() {
                     </div>
                     <div>
                       <strong>Platforms:</strong>
-                      <div className="flex flex-wrap gap-2 mt-1">
+                      <div className="mt-1 flex flex-wrap gap-2">
                         {formData.platforms.map((plat) => (
-                          <Badge
-                            key={plat}
-                            variant="secondary"
-                            className="capitalize"
-                          >
+                          <Badge key={plat} variant="secondary" className="capitalize">
                             {getPlatformLabel(plat)}
                           </Badge>
                         ))}
@@ -1329,9 +1212,7 @@ export function SubmitProjectForm() {
                     <p>
                       <strong>Pricing:</strong>{" "}
                       <span className="capitalize">
-                        <Badge variant="outline">
-                          {getPricingLabel(formData.pricing)}
-                        </Badge>
+                        <Badge variant="outline">{getPricingLabel(formData.pricing)}</Badge>
                       </span>
                     </p>
                     {formData.githubUrl && (
@@ -1364,12 +1245,10 @@ export function SubmitProjectForm() {
                 </div>
 
                 <div>
-                  <h4 className="text-base font-semibold mb-3 border-b pb-2">
-                    Launch Plan
-                  </h4>
-                  <div className="flex flex-col sm:flex-row gap-4 text-sm">
+                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">Launch Plan</h4>
+                  <div className="flex flex-col gap-4 text-sm sm:flex-row">
                     <div
-                      className={`flex items-center gap-2 px-3 py-2 rounded-md border w-fit ${
+                      className={`flex w-fit items-center gap-2 rounded-md border px-3 py-2 ${
                         formData.launchType === LAUNCH_TYPES.FREE
                           ? "bg-foreground/5 border-foreground/10"
                           : formData.launchType === LAUNCH_TYPES.PREMIUM
@@ -1379,41 +1258,36 @@ export function SubmitProjectForm() {
                     >
                       {formData.launchType === LAUNCH_TYPES.FREE && (
                         <>
-                          <RiRocketLine className="h-4 w-4 text-foreground/70" />{" "}
-                          <span className="font-medium text-foreground/70">
-                            Free Launch
-                          </span>
+                          <RiRocketLine className="text-foreground/70 h-4 w-4" />{" "}
+                          <span className="text-foreground/70 font-medium">Free Launch</span>
                         </>
                       )}
                       {formData.launchType === LAUNCH_TYPES.PREMIUM && (
                         <>
-                          <RiStarLine className="h-4 w-4 text-primary" />{" "}
-                          <span className="font-medium text-primary">
+                          <RiStarLine className="text-primary h-4 w-4" />{" "}
+                          <span className="text-primary font-medium">
                             Premium Launch (${LAUNCH_SETTINGS.PREMIUM_PRICE})
                           </span>
                         </>
                       )}
                       {formData.launchType === LAUNCH_TYPES.PREMIUM_PLUS && (
                         <>
-                          <RiVipCrownLine className="h-4 w-4 text-primary" />{" "}
-                          <span className="font-medium text-primary">
+                          <RiVipCrownLine className="text-primary h-4 w-4" />{" "}
+                          <span className="text-primary font-medium">
                             Premium Plus Launch ($
                             {LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE})
                           </span>
                         </>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-2 bg-muted/30 rounded-md border w-fit">
-                      <RiCalendarLine className="h-4 w-4 text-muted-foreground" />
+                    <div className="bg-muted/30 flex w-fit items-center gap-2 rounded-md border px-3 py-2">
+                      <RiCalendarLine className="text-muted-foreground h-4 w-4" />
                       <span>
                         {formData.scheduledDate
-                          ? format(
-                              parseISO(formData.scheduledDate),
-                              DATE_FORMAT.DISPLAY
-                            )
+                          ? format(parseISO(formData.scheduledDate), DATE_FORMAT.DISPLAY)
                           : "No date selected"}
                         {formData.scheduledDate && (
-                          <span className="text-xs text-muted-foreground/70 ml-1">
+                          <span className="text-muted-foreground/70 ml-1 text-xs">
                             {" "}
                             • {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00 UTC
                           </span>
@@ -1424,18 +1298,17 @@ export function SubmitProjectForm() {
                 </div>
               </div>
 
-              <div className="px-6 py-4 border-t bg-muted/30">
+              <div className="bg-muted/30 border-t px-6 py-4">
                 <div className="flex items-start gap-3">
-                  <RiInformationLine className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm space-y-1">
+                  <RiInformationLine className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-500" />
+                  <div className="space-y-1 text-sm">
                     <p className="font-medium">Ready to submit?</p>
                     <p className="text-muted-foreground text-xs">
-                      Please review all information carefully. Once submitted,
-                      your project will be scheduled for launch.
+                      Please review all information carefully. Once submitted, your project will be
+                      scheduled for launch.
                       {formData.launchType !== LAUNCH_TYPES.FREE && (
-                        <span className="block mt-1">
-                          You will be redirected to the payment page after
-                          submission.
+                        <span className="mt-1 block">
+                          You will be redirected to the payment page after submission.
                         </span>
                       )}
                     </p>
@@ -1444,35 +1317,30 @@ export function SubmitProjectForm() {
               </div>
             </div>
           </div>
-        );
+        )
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {renderStepper()}
 
       {error && (
-        <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-md text-destructive text-sm">
+        <div className="bg-destructive/10 border-destructive/30 text-destructive rounded-md border p-3 text-sm">
           {error}
         </div>
       )}
 
       {renderStepContent()}
 
-      <div className="flex justify-between items-center pt-6 border-t">
+      <div className="flex items-center justify-between border-t pt-6">
         <Button
           type="button"
           variant="outline"
           onClick={prevStep}
-          disabled={
-            currentStep === 1 ||
-            isPending ||
-            isUploadingLogo ||
-            isUploadingCover
-          }
+          disabled={currentStep === 1 || isPending || isUploadingLogo || isUploadingCover}
         >
           <RiArrowLeftLine className="mr-2 h-4 w-4" />
           Previous
@@ -1494,7 +1362,7 @@ export function SubmitProjectForm() {
             disabled={isPending || isUploadingLogo || isUploadingCover}
           >
             {isPending ? (
-              <RiLoader4Line className="animate-spin mr-2 h-4 w-4" />
+              <RiLoader4Line className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <RiRocketLine className="mr-2 h-4 w-4" />
             )}
@@ -1503,5 +1371,5 @@ export function SubmitProjectForm() {
         )}
       </div>
     </form>
-  );
+  )
 }

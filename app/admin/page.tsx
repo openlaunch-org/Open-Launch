@@ -1,47 +1,22 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { admin } from "@/lib/auth-client";
-import { Toaster, toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import {
-  Loader2,
-  RefreshCw,
-  Trash,
-  UserCircle,
   Ban,
+  Loader2,
   LucideRefreshCcw,
   MoreHorizontal,
+  RefreshCw,
   Search,
+  Trash,
+  UserCircle,
   X,
-} from "lucide-react";
+} from "lucide-react"
+import { toast, Toaster } from "sonner"
+
+import { admin } from "@/lib/auth-client"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,42 +26,63 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 // Types
 type User = {
-  id: string;
-  email: string;
-  name: string;
-  role?: string;
-  banned?: boolean | null;
-  createdAt?: string;
-};
+  id: string
+  email: string
+  name: string
+  role?: string
+  banned?: boolean | null
+  createdAt?: string
+}
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState<string | undefined>();
-  const [isUsersLoading, setIsUsersLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [roleFilter, setRoleFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [userToDelete, setUserToDelete] = useState<string | null>(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const router = useRouter()
+  const [users, setUsers] = useState<User[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState<string | undefined>()
+  const [isUsersLoading, setIsUsersLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [roleFilter, setRoleFilter] = useState("all")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [userToDelete, setUserToDelete] = useState<string | null>(null)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   // Fetch users
   const fetchUsers = async () => {
-    setIsUsersLoading(true);
+    setIsUsersLoading(true)
     try {
       const response = await admin.listUsers({
         query: {
@@ -94,192 +90,175 @@ export default function AdminDashboard() {
           sortBy: "createdAt",
           sortDirection: "desc",
         },
-      });
+      })
 
       // Vérification du format de la réponse et extraction des données
       if (response && response.data && Array.isArray(response.data.users)) {
-        setUsers(response.data.users as User[]);
-        setFilteredUsers(response.data.users as User[]);
-        console.log("Users loaded:", response.data.users.length);
+        setUsers(response.data.users as User[])
+        setFilteredUsers(response.data.users as User[])
+        console.log("Users loaded:", response.data.users.length)
       } else {
-        console.error("Unexpected response format:", response);
-        setUsers([]);
-        setFilteredUsers([]);
+        console.error("Unexpected response format:", response)
+        setUsers([])
+        setFilteredUsers([])
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to fetch users"
-      );
-      setUsers([]);
-      setFilteredUsers([]);
+      console.error("Error fetching users:", error)
+      toast.error(error instanceof Error ? error.message : "Failed to fetch users")
+      setUsers([])
+      setFilteredUsers([])
     } finally {
-      setIsUsersLoading(false);
+      setIsUsersLoading(false)
     }
-  };
+  }
 
   // Filter users based on search query, role and status
   useEffect(() => {
-    let result = [...users];
+    let result = [...users]
 
     // Apply search filter
     if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase()
       result = result.filter(
         (user) =>
-          user.name?.toLowerCase().includes(query) ||
-          user.email?.toLowerCase().includes(query)
-      );
+          user.name?.toLowerCase().includes(query) || user.email?.toLowerCase().includes(query),
+      )
     }
 
     // Apply role filter
     if (roleFilter !== "all") {
-      result = result.filter((user) => user.role === roleFilter);
+      result = result.filter((user) => user.role === roleFilter)
     }
 
     // Apply status filter
     if (statusFilter !== "all") {
       if (statusFilter === "banned") {
-        result = result.filter((user) => user.banned === true);
+        result = result.filter((user) => user.banned === true)
       } else if (statusFilter === "active") {
-        result = result.filter((user) => user.banned !== true);
+        result = result.filter((user) => user.banned !== true)
       }
     }
 
-    setFilteredUsers(result);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [searchQuery, roleFilter, statusFilter, users]);
+    setFilteredUsers(result)
+    setCurrentPage(1) // Reset to first page when filters change
+  }, [searchQuery, roleFilter, statusFilter, users])
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetchUsers()
+  }, [])
 
   // Delete user
   const handleDeleteUser = async (id: string) => {
-    setIsLoading(`delete-${id}`);
+    setIsLoading(`delete-${id}`)
     try {
-      await admin.removeUser({ userId: id });
-      toast.success("User deleted successfully");
-      fetchUsers(); // Refresh the list
+      await admin.removeUser({ userId: id })
+      toast.success("User deleted successfully")
+      fetchUsers() // Refresh the list
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to delete user"
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to delete user")
     } finally {
-      setIsLoading(undefined);
-      setUserToDelete(null);
-      setShowDeleteDialog(false);
+      setIsLoading(undefined)
+      setUserToDelete(null)
+      setShowDeleteDialog(false)
     }
-  };
+  }
 
   // Confirm delete dialog
   const openDeleteDialog = (id: string) => {
-    setUserToDelete(id);
-    setShowDeleteDialog(true);
-  };
+    setUserToDelete(id)
+    setShowDeleteDialog(true)
+  }
 
   // Revoke user sessions
   const handleRevokeSessions = async (id: string) => {
-    setIsLoading(`revoke-${id}`);
+    setIsLoading(`revoke-${id}`)
     try {
-      await admin.revokeUserSessions({ userId: id });
-      toast.success("Sessions revoked for user");
+      await admin.revokeUserSessions({ userId: id })
+      toast.success("Sessions revoked for user")
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to revoke sessions"
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to revoke sessions")
     } finally {
-      setIsLoading(undefined);
+      setIsLoading(undefined)
     }
-  };
+  }
 
   // Impersonate user
   const handleImpersonateUser = async (id: string) => {
-    setIsLoading(`impersonate-${id}`);
+    setIsLoading(`impersonate-${id}`)
     try {
-      await admin.impersonateUser({ userId: id });
-      toast.success("Impersonated user");
-      router.push("/dashboard");
+      await admin.impersonateUser({ userId: id })
+      toast.success("Impersonated user")
+      router.push("/dashboard")
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to impersonate user"
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to impersonate user")
     } finally {
-      setIsLoading(undefined);
+      setIsLoading(undefined)
     }
-  };
+  }
 
   // Ban user
   const handleBanUser = async (id: string) => {
-    setIsLoading(`ban-${id}`);
+    setIsLoading(`ban-${id}`)
     try {
       // Ban for 30 days
-      const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+      const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000
       await admin.banUser({
         userId: id,
         banReason: "Admin action",
         banExpiresIn: thirtyDaysInMs,
-      });
-      toast.success("User banned successfully");
-      fetchUsers(); // Refresh the list
+      })
+      toast.success("User banned successfully")
+      fetchUsers() // Refresh the list
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to ban user"
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to ban user")
     } finally {
-      setIsLoading(undefined);
+      setIsLoading(undefined)
     }
-  };
+  }
 
   // Unban user
   const handleUnbanUser = async (id: string) => {
-    setIsLoading(`unban-${id}`);
+    setIsLoading(`unban-${id}`)
     try {
       await admin.unbanUser({
         userId: id,
-      });
-      toast.success("User unbanned successfully");
-      fetchUsers(); // Refresh the list
+      })
+      toast.success("User unbanned successfully")
+      fetchUsers() // Refresh the list
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to unban user"
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to unban user")
     } finally {
-      setIsLoading(undefined);
+      setIsLoading(undefined)
     }
-  };
+  }
 
   // Pagination logic
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const indexOfLastUser = currentPage * itemsPerPage
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser)
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage)
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
   // Get unique roles for filtering
-  const uniqueRoles = Array.from(
-    new Set(users.map((user) => user.role || "user"))
-  );
+  const uniqueRoles = Array.from(new Set(users.map((user) => user.role || "user")))
 
   // Reset all filters
   const resetFilters = () => {
-    setSearchQuery("");
-    setRoleFilter("all");
-    setStatusFilter("all");
-  };
+    setSearchQuery("")
+    setRoleFilter("all")
+    setStatusFilter("all")
+  }
 
   return (
-    <div className="container mx-auto py-4 space-y-4 max-w-5xl">
+    <div className="container mx-auto max-w-5xl space-y-4 py-4">
       <Toaster richColors position="top-center" />
 
-      <Card className="border-0 shadow-md overflow-hidden bg-card">
-        <CardHeader className="px-6 py-4 border-b bg-card/80 space-y-2">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <Card className="bg-card overflow-hidden border-0 shadow-md">
+        <CardHeader className="bg-card/80 space-y-2 border-b px-6 py-4">
+          <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
             <div>
-              <CardTitle className="text-xl font-medium tracking-tight">
-                User Management
-              </CardTitle>
+              <CardTitle className="text-xl font-medium tracking-tight">User Management</CardTitle>
               <CardDescription className="text-sm">
                 Manage users and their permissions
               </CardDescription>
@@ -288,7 +267,7 @@ export default function AdminDashboard() {
               size="sm"
               variant="outline"
               onClick={() => fetchUsers()}
-              className="h-9 px-3 flex items-center"
+              className="flex h-9 items-center px-3"
             >
               <RefreshCw className="mr-2 h-3.5 w-3.5" />
               <span className="text-xs">Refresh</span>
@@ -298,23 +277,23 @@ export default function AdminDashboard() {
 
         <CardContent className="p-0">
           {/* Filters Section */}
-          <div className="px-6 pb-6 border-b ">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="border-b px-6 pb-6">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {/* Search */}
               <div className="relative sm:col-span-2">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Search className="text-muted-foreground absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 transform" />
                 <Input
                   placeholder="Search by name or email..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 h-9 text-xs"
+                  className="h-9 pl-9 text-xs"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 transform"
                   >
-                    <X className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                    <X className="text-muted-foreground hover:text-foreground h-3.5 w-3.5" />
                   </button>
                 )}
               </div>
@@ -351,13 +330,11 @@ export default function AdminDashboard() {
               </div>
 
               {/* Reset Filters - only shown when filters are active */}
-              {(searchQuery ||
-                roleFilter !== "all" ||
-                statusFilter !== "all") && (
+              {(searchQuery || roleFilter !== "all" || statusFilter !== "all") && (
                 <Button
                   variant="ghost"
                   onClick={resetFilters}
-                  className="h-9 mt-2 sm:mt-0 sm:col-span-1 lg:col-span-4 sm:justify-self-start lg:justify-self-end text-xs"
+                  className="mt-2 h-9 text-xs sm:col-span-1 sm:mt-0 sm:justify-self-start lg:col-span-4 lg:justify-self-end"
                 >
                   <X className="mr-1 h-3.5 w-3.5" />
                   Reset
@@ -368,8 +345,8 @@ export default function AdminDashboard() {
 
           {/* User Table */}
           {isUsersLoading ? (
-            <div className="flex justify-center items-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="text-primary h-8 w-8 animate-spin" />
             </div>
           ) : (
             <>
@@ -377,19 +354,19 @@ export default function AdminDashboard() {
                 <Table className="w-full">
                   <TableHeader>
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="w-[40%] sm:w-[30%] pl-6 py-3 text-xs font-medium text-muted-foreground">
+                      <TableHead className="text-muted-foreground w-[40%] py-3 pl-6 text-xs font-medium sm:w-[30%]">
                         User
                       </TableHead>
-                      <TableHead className="hidden md:table-cell py-3 text-xs font-medium text-muted-foreground">
+                      <TableHead className="text-muted-foreground hidden py-3 text-xs font-medium md:table-cell">
                         Email
                       </TableHead>
-                      <TableHead className="text-center py-3 text-xs font-medium text-muted-foreground">
+                      <TableHead className="text-muted-foreground py-3 text-center text-xs font-medium">
                         Role
                       </TableHead>
-                      <TableHead className="text-center py-3 text-xs font-medium text-muted-foreground">
+                      <TableHead className="text-muted-foreground py-3 text-center text-xs font-medium">
                         Status
                       </TableHead>
-                      <TableHead className="w-[60px] text-right pr-6 py-3 text-xs font-medium text-muted-foreground">
+                      <TableHead className="text-muted-foreground w-[60px] py-3 pr-6 text-right text-xs font-medium">
                         Actions
                       </TableHead>
                     </TableRow>
@@ -397,57 +374,52 @@ export default function AdminDashboard() {
                   <TableBody>
                     {currentUsers.length === 0 ? (
                       <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="h-24 text-center text-muted-foreground"
-                        >
+                        <TableCell colSpan={5} className="text-muted-foreground h-24 text-center">
                           No users found
                         </TableCell>
                       </TableRow>
                     ) : (
                       currentUsers.map((user) => (
                         <TableRow key={user.id} className="group">
-                          <TableCell className="pl-6 py-3">
+                          <TableCell className="py-3 pl-6">
                             <div className="flex flex-col">
-                              <span className="text-sm font-medium truncate">
+                              <span className="truncate text-sm font-medium">
                                 {user.name || "—"}
                               </span>
-                              <span className="text-xs text-muted-foreground md:hidden mt-0.5 truncate">
+                              <span className="text-muted-foreground mt-0.5 truncate text-xs md:hidden">
                                 {user.email}
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell py-3 text-xs text-muted-foreground truncate">
+                          <TableCell className="text-muted-foreground hidden truncate py-3 text-xs md:table-cell">
                             {user.email}
                           </TableCell>
-                          <TableCell className="text-center py-3">
+                          <TableCell className="py-3 text-center">
                             <Badge
-                              variant={
-                                user.role === "admin" ? "secondary" : "outline"
-                              }
-                              className="text-xs font-normal px-2 py-0.5"
+                              variant={user.role === "admin" ? "secondary" : "outline"}
+                              className="px-2 py-0.5 text-xs font-normal"
                             >
                               {user.role || "user"}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-center py-3">
+                          <TableCell className="py-3 text-center">
                             {user.banned ? (
                               <Badge
                                 variant="destructive"
-                                className="text-xs font-normal px-2 py-0.5"
+                                className="px-2 py-0.5 text-xs font-normal"
                               >
                                 Banned
                               </Badge>
                             ) : (
                               <Badge
                                 variant="outline"
-                                className="text-xs font-normal px-2 py-0.5 bg-green-50 dark:bg-emerald-950/20 text-green-600 dark:text-emerald-400 border-green-200 dark:border-emerald-600/30"
+                                className="border-green-200 bg-green-50 px-2 py-0.5 text-xs font-normal text-green-600 dark:border-emerald-600/30 dark:bg-emerald-950/20 dark:text-emerald-400"
                               >
                                 Active
                               </Badge>
                             )}
                           </TableCell>
-                          <TableCell className="text-right pr-6 py-3">
+                          <TableCell className="py-3 pr-6 text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button
@@ -465,10 +437,8 @@ export default function AdminDashboard() {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   onClick={() => handleImpersonateUser(user.id)}
-                                  disabled={
-                                    isLoading === `impersonate-${user.id}`
-                                  }
-                                  className="text-xs cursor-pointer"
+                                  disabled={isLoading === `impersonate-${user.id}`}
+                                  className="cursor-pointer text-xs"
                                 >
                                   {isLoading === `impersonate-${user.id}` ? (
                                     <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
@@ -480,7 +450,7 @@ export default function AdminDashboard() {
                                 <DropdownMenuItem
                                   onClick={() => handleRevokeSessions(user.id)}
                                   disabled={isLoading === `revoke-${user.id}`}
-                                  className="text-xs cursor-pointer"
+                                  className="cursor-pointer text-xs"
                                 >
                                   {isLoading === `revoke-${user.id}` ? (
                                     <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
@@ -493,7 +463,7 @@ export default function AdminDashboard() {
                                   <DropdownMenuItem
                                     onClick={() => handleBanUser(user.id)}
                                     disabled={isLoading === `ban-${user.id}`}
-                                    className="text-xs cursor-pointer"
+                                    className="cursor-pointer text-xs"
                                   >
                                     {isLoading === `ban-${user.id}` ? (
                                       <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
@@ -506,7 +476,7 @@ export default function AdminDashboard() {
                                   <DropdownMenuItem
                                     onClick={() => handleUnbanUser(user.id)}
                                     disabled={isLoading === `unban-${user.id}`}
-                                    className="text-xs cursor-pointer"
+                                    className="cursor-pointer text-xs"
                                   >
                                     {isLoading === `unban-${user.id}` ? (
                                       <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
@@ -518,10 +488,10 @@ export default function AdminDashboard() {
                                 )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                  className="text-xs cursor-pointer"
+                                  className="cursor-pointer text-xs"
                                   onClick={() => openDeleteDialog(user.id)}
                                 >
-                                  <Trash className="mr-2 h-3.5 w-3.5 text-destructive" />
+                                  <Trash className="text-destructive mr-2 h-3.5 w-3.5" />
                                   Delete
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
@@ -535,39 +505,31 @@ export default function AdminDashboard() {
               </div>
 
               {/* Pagination Controls */}
-              <div className="flex items-center justify-between px-6 py-3 border-t bg-card/50">
-                <div className="text-xs text-muted-foreground">
-                  Showing{" "}
-                  <span className="font-medium">{indexOfFirstUser + 1}</span> to{" "}
+              <div className="bg-card/50 flex items-center justify-between border-t px-6 py-3">
+                <div className="text-muted-foreground text-xs">
+                  Showing <span className="font-medium">{indexOfFirstUser + 1}</span> to{" "}
                   <span className="font-medium">
                     {Math.min(indexOfLastUser, filteredUsers.length)}
                   </span>{" "}
-                  of <span className="font-medium">{filteredUsers.length}</span>{" "}
-                  users
+                  of <span className="font-medium">{filteredUsers.length}</span> users
                 </div>
 
                 <div className="flex items-center gap-4">
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-muted-foreground">
-                      Per page
-                    </span>
+                    <span className="text-muted-foreground text-xs">Per page</span>
                     <Select
                       value={itemsPerPage.toString()}
                       onValueChange={(value) => {
-                        setItemsPerPage(Number(value));
-                        setCurrentPage(1);
+                        setItemsPerPage(Number(value))
+                        setCurrentPage(1)
                       }}
                     >
-                      <SelectTrigger className="h-8 w-[70px] text-xs border-muted bg-background">
+                      <SelectTrigger className="border-muted bg-background h-8 w-[70px] text-xs">
                         <SelectValue placeholder={itemsPerPage} />
                       </SelectTrigger>
                       <SelectContent>
                         {[5, 10, 20, 50].map((size) => (
-                          <SelectItem
-                            key={size}
-                            value={size.toString()}
-                            className="text-xs"
-                          >
+                          <SelectItem key={size} value={size.toString()} className="text-xs">
                             {size}
                           </SelectItem>
                         ))}
@@ -575,24 +537,21 @@ export default function AdminDashboard() {
                     </Select>
                   </div>
 
-                  <div className="flex items-center rounded-md border border-input bg-background overflow-hidden">
+                  <div className="border-input bg-background flex items-center overflow-hidden rounded-md border">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => {
-                        if (currentPage > 1) paginate(currentPage - 1);
+                        if (currentPage > 1) paginate(currentPage - 1)
                       }}
                       disabled={currentPage === 1}
                       className="h-8 w-8 rounded-none border-r"
                     >
-                      <PaginationPrevious
-                        className="h-4 w-4"
-                        aria-hidden="true"
-                      />
+                      <PaginationPrevious className="h-4 w-4" aria-hidden="true" />
                       <span className="sr-only">Previous page</span>
                     </Button>
 
-                    <div className="flex items-center justify-center min-w-[40px] h-8 text-xs font-medium">
+                    <div className="flex h-8 min-w-[40px] items-center justify-center text-xs font-medium">
                       {currentPage}
                     </div>
 
@@ -600,7 +559,7 @@ export default function AdminDashboard() {
                       variant="ghost"
                       size="icon"
                       onClick={() => {
-                        if (currentPage < totalPages) paginate(currentPage + 1);
+                        if (currentPage < totalPages) paginate(currentPage + 1)
                       }}
                       disabled={currentPage === totalPages || totalPages === 0}
                       className="h-8 w-8 rounded-none border-l"
@@ -620,18 +579,14 @@ export default function AdminDashboard() {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg">
-              Are you sure?
-            </AlertDialogTitle>
+            <AlertDialogTitle className="text-lg">Are you sure?</AlertDialogTitle>
             <AlertDialogDescription className="text-sm">
-              This action cannot be undone and will permanently delete the user
-              and all associated data.
+              This action cannot be undone and will permanently delete the user and all associated
+              data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-0">
-            <AlertDialogCancel className="text-xs mt-0">
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel className="mt-0 text-xs">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => userToDelete && handleDeleteUser(userToDelete)}
               disabled={isLoading === `delete-${userToDelete}`}
@@ -648,5 +603,5 @@ export default function AdminDashboard() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
+  )
 }

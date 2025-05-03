@@ -1,12 +1,8 @@
-import { Badge } from "@/components/ui/badge";
-import {
-  GoldMedal,
-  SilverMedal,
-  BronzeMedal,
-} from "@/components/icons/medal-icons";
+import { Badge } from "@/components/ui/badge"
+import { BronzeMedal, GoldMedal, SilverMedal } from "@/components/icons/medal-icons"
 
 interface RankingBadgeProps {
-  ranking: number;
+  ranking: number
 }
 
 export function RankingBadge({ ranking }: RankingBadgeProps) {
@@ -14,41 +10,37 @@ export function RankingBadge({ ranking }: RankingBadgeProps) {
   const getMedalIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <GoldMedal className="w-8 h-8" />;
+        return <GoldMedal className="h-8 w-8" />
       case 2:
-        return <SilverMedal className="w-8 h-8" />;
+        return <SilverMedal className="h-8 w-8" />
       case 3:
-        return <BronzeMedal className="w-8 h-8" />;
+        return <BronzeMedal className="h-8 w-8" />
       default:
-        return <GoldMedal className="w-8 h-8" />;
+        return <GoldMedal className="h-8 w-8" />
     }
-  };
+  }
 
-  const medalIcon = getMedalIcon(ranking);
+  const medalIcon = getMedalIcon(ranking)
 
   return (
     <Badge
       variant="outline"
-      className="flex items-center overflow-visible px-3 py-1.5 
-      bg-white dark:bg-muted
-      border-primary/90 dark:border-zinc-800
-      text-primary dark:text-zinc-200
-      rounded-lg shadow-sm"
+      className="dark:bg-muted border-primary/90 text-primary flex items-center overflow-visible rounded-lg bg-white px-3 py-1.5 shadow-sm dark:border-zinc-800 dark:text-zinc-200"
       title={`Top ${ranking} Project`}
     >
       <div className="flex items-center">
-        <div className="w-9 h-9 -ml-1 mr-1 flex-shrink-0 flex items-center justify-center">
+        <div className="mr-1 -ml-1 flex h-9 w-9 flex-shrink-0 items-center justify-center">
           {medalIcon}
         </div>
         <div className="flex flex-col">
-          <span className="uppercase text-[10px] tracking-wide font-bold text-primary dark:text-zinc-400">
+          <span className="text-primary text-[10px] font-bold tracking-wide uppercase dark:text-zinc-400">
             Open-Launch
           </span>
-          <span className="font-bold text-primary dark:text-zinc-200 text-sm -mt-0.5">
+          <span className="text-primary -mt-0.5 text-sm font-bold dark:text-zinc-200">
             #{ranking} Project of the Day
           </span>
         </div>
       </div>
     </Badge>
-  );
+  )
 }

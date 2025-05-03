@@ -1,100 +1,94 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useRef } from "react";
-import { SearchResult } from "@/app/api/search/route";
+import { useEffect, useRef, useState } from "react"
+
+import { SearchResult } from "@/app/api/search/route"
 
 interface UseSearchOptions {
-  debounceMs?: number;
-  minLength?: number;
+  debounceMs?: number
+  minLength?: number
 }
 
 interface UseSearchResult {
-  query: string;
-  setQuery: (query: string) => void;
-  results: SearchResult[];
-  isLoading: boolean;
-  error: string | null;
+  query: string
+  setQuery: (query: string) => void
+  results: SearchResult[]
+  isLoading: boolean
+  error: string | null
 }
 
 // Interface pour la validation des résultats
 interface ResultValidation {
-  id: string;
-  name: string;
-  type: string;
-  [key: string]: unknown;
+  id: string
+  name: string
+  type: string
+  [key: string]: unknown
 }
 
 // Interface pour les erreurs API
 interface ApiError {
-  error: string;
-  message: string;
-  reset?: number;
+  error: string
+  message: string
+  reset?: number
 }
 
 export function useSearch({
   debounceMs = 300,
   minLength = 2,
 }: UseSearchOptions = {}): UseSearchResult {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("")
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Référence pour le timeout de debounce
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     // Annuler le timeout précédent
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+      clearTimeout(timeoutRef.current)
     }
 
     // Réinitialiser les résultats si la requête est trop courte
     if (!query || query.length < minLength) {
-      setResults([]);
-      setIsLoading(false);
-      return;
+      setResults([])
+      setIsLoading(false)
+      return
     }
 
     // Définir un nouveau timeout pour le debounce
-    setIsLoading(true);
+    setIsLoading(true)
     timeoutRef.current = setTimeout(async () => {
       try {
-        console.log(`[useSearch] Searching for: "${query}"`);
+        console.log(`[useSearch] Searching for: "${query}"`)
 
         // Appeler l'API de recherche
-        const response = await fetch(
-          `/api/search?q=${encodeURIComponent(query)}`
-        );
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
 
-        const data = await response.json();
+        const data = await response.json()
 
         if (!response.ok) {
           // Gérer les erreurs API de manière structurée
-          const apiError = data as ApiError;
+          const apiError = data as ApiError
 
           if (response.status === 429) {
             // Rate limit - ce n'est pas une erreur critique, juste une limitation
-            console.log(`[useSearch] Rate limit reached: ${apiError.message}`);
-            setError(
-              apiError.message ||
-                `Too many requests. Please wait before trying again.`
-            );
+            console.log(`[useSearch] Rate limit reached: ${apiError.message}`)
+            setError(apiError.message || `Too many requests. Please wait before trying again.`)
           } else {
             // Autres erreurs
-            throw new Error(
-              apiError.message || `Search request failed (${response.status})`
-            );
+            throw new Error(apiError.message || `Search request failed (${response.status})`)
           }
 
-          setResults([]);
-          return;
+          setResults([])
+          return
         }
 
-        console.log("[useSearch] Results received:", data);
+        console.log("[useSearch] Results received:", data)
 
         if (data && data.results && Array.isArray(data.results)) {
-          console.log(`[useSearch] ${data.results.length} results found`);
+          console.log(`[useSearch] ${data.results.length} results found`)
 
           // Vérifier que chaque résultat a les propriétés requises
           const validResults = data.results.filter(
@@ -103,39 +97,37 @@ export function useSearch({
               typeof result === "object" &&
               "id" in result &&
               "name" in result &&
-              "type" in result
-          );
+              "type" in result,
+          )
 
-          console.log(
-            `[useSearch] ${validResults.length} valid results after filtering`
-          );
-          setResults(validResults as SearchResult[]);
-          setError(null);
+          console.log(`[useSearch] ${validResults.length} valid results after filtering`)
+          setResults(validResults as SearchResult[])
+          setError(null)
         } else {
-          console.warn("[useSearch] Results are not an array:", data);
-          setResults([]);
+          console.warn("[useSearch] Results are not an array:", data)
+          setResults([])
         }
       } catch (err) {
-        console.error("[useSearch] Search error:", err);
+        console.error("[useSearch] Search error:", err)
         // Afficher le message d'erreur spécifique ou un message générique
         setError(
           err instanceof Error
             ? err.message
-            : "An error occurred while searching. Please try again later."
-        );
-        setResults([]);
+            : "An error occurred while searching. Please try again later.",
+        )
+        setResults([])
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    }, debounceMs);
+    }, debounceMs)
 
     // Nettoyer le timeout lors du démontage
     return () => {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+        clearTimeout(timeoutRef.current)
       }
-    };
-  }, [query, debounceMs, minLength]);
+    }
+  }, [query, debounceMs, minLength])
 
   return {
     query,
@@ -143,5 +135,5 @@ export function useSearch({
     results,
     isLoading,
     error,
-  };
+  }
 }

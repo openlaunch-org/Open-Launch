@@ -9,33 +9,33 @@
  * @returns Texte extrait du contenu
  */
 export function extractTextFromContent(content: any): string {
-  if (!content) return "";
+  if (!content) return ""
 
   // Fonction récursive pour extraire le texte
   const extractText = (node: any): string => {
-    if (typeof node === "string") return node;
-    if (!node) return "";
+    if (typeof node === "string") return node
+    if (!node) return ""
 
     // Si c'est un nœud texte
-    if (node.text) return node.text;
+    if (node.text) return node.text
 
     // Si c'est un nœud image
     if (node.type === "image") {
-      return "[Image]";
+      return "[Image]"
     }
 
     // Si c'est une mention
     if (node.type === "mention") {
-      return `@${node.attrs?.label || node.attrs?.id || "unknown"}`;
+      return `@${node.attrs?.label || node.attrs?.id || "unknown"}`
     }
 
     // Récursion pour les contenus imbriqués
     if (node.content && Array.isArray(node.content)) {
-      return node.content.map(extractText).join("");
+      return node.content.map(extractText).join("")
     }
 
-    return "";
-  };
+    return ""
+  }
 
-  return extractText(content);
+  return extractText(content)
 }

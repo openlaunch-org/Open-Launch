@@ -1,34 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/drizzle/db";
-import { project, launchStatus, upvote } from "@/drizzle/db/schema";
-import { eq, and, lt, gte, lte, count, desc, inArray } from "drizzle-orm";
-import { startOfDay, endOfDay, subDays, subHours } from "date-fns";
+import { NextRequest, NextResponse } from "next/server"
+
+import { db } from "@/drizzle/db"
+import { launchStatus, project, upvote } from "@/drizzle/db/schema"
+import { endOfDay, startOfDay, subDays, subHours } from "date-fns"
+import { and, count, desc, eq, gte, inArray, lt, lte } from "drizzle-orm"
 
 // Clé API pour sécuriser l'endpoint
-const API_KEY = process.env.CRON_API_KEY;
+const API_KEY = process.env.CRON_API_KEY
 
 export async function GET(request: NextRequest) {
   try {
     // Vérification de la clé API
-    const authHeader = request.headers.get("authorization");
-    const providedKey = authHeader?.replace("Bearer ", "");
+    const authHeader = request.headers.get("authorization")
+    const providedKey = authHeader?.replace("Bearer ", "")
 
     if (!API_KEY || providedKey !== API_KEY) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     // Date actuelle en UTC
-    const now = new Date();
-    const today = startOfDay(now);
-    const yesterday = subDays(today, 1);
+    const now = new Date()
+    const today = startOfDay(now)
+    const yesterday = subDays(today, 1)
 
     // Date limite pour les paiements abandonnés (24 heures)
-    const paymentDeadline = subHours(now, 24);
+    const paymentDeadline = subHours(now, 24)
 
     // Déclarer rankGroups ici pour qu'il soit accessible plus tard
-    let rankGroups: Array<
-      Array<{ projectId: string; projectName: string; upvoteCount: number }>
-    > = [];
+    let rankGroups: Array<Array<{ projectId: string; projectName: string; upvoteCount: number }>> =
+      []
 
     // 1. Update SCHEDULED -> ONGOING
     const scheduledToOngoing = await db
@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
         and(
           eq(project.launchStatus, launchStatus.SCHEDULED),
           gte(project.scheduledLaunchDate, today),
-          lt(project.scheduledLaunchDate, endOfDay(today))
-        )
+          lt(project.scheduledLaunchDate, endOfDay(today)),
+        ),
       )
-      .returning({ id: project.id, name: project.name });
+      .returning({ id: project.id, name: project.name })
 
     // 2. Update ONGOING -> LAUNCHED
     const ongoingToLaunched = await db
@@ -57,17 +57,17 @@ export async function GET(request: NextRequest) {
         and(
           eq(project.launchStatus, launchStatus.ONGOING),
           gte(project.scheduledLaunchDate, yesterday),
-          lt(project.scheduledLaunchDate, today)
-        )
+          lt(project.scheduledLaunchDate, today),
+        ),
       )
-      .returning({ id: project.id, name: project.name });
+      .returning({ id: project.id, name: project.name })
 
     // 3. Calculer les 3 projets les plus populaires
-    const justLaunchedProjectIds = ongoingToLaunched.map((p) => p.id);
+    const justLaunchedProjectIds = ongoingToLaunched.map((p) => p.id)
     console.log(
       `Projets passés à LAUNCHED: ${justLaunchedProjectIds.length}`,
-      justLaunchedProjectIds
-    );
+      justLaunchedProjectIds,
+    )
 
     if (justLaunchedProjectIds.length > 0) {
       // Utiliser inArray pour la requête d'upvotes
@@ -80,61 +80,59 @@ export async function GET(request: NextRequest) {
         .where(inArray(upvote.projectId, justLaunchedProjectIds))
         .groupBy(upvote.projectId)
         .orderBy(desc(count(upvote.id)))
-        .execute();
+        .execute()
 
       const projectsWithUpvotes = ongoingToLaunched
         .map((proj) => {
-          const upvoteData = projectUpvotes.find(
-            (uv) => uv.projectId === proj.id
-          );
+          const upvoteData = projectUpvotes.find((uv) => uv.projectId === proj.id)
           return {
             projectId: proj.id,
             projectName: proj.name,
             upvoteCount: upvoteData ? Number(upvoteData.count) : 0,
-          };
+          }
         })
-        .sort((a, b) => b.upvoteCount - a.upvoteCount);
+        .sort((a, b) => b.upvoteCount - a.upvoteCount)
 
-      console.log("Projets avec des upvotes (triés):", projectsWithUpvotes);
+      console.log("Projets avec des upvotes (triés):", projectsWithUpvotes)
 
       // Réinitialiser rankGroups ici car il est déclaré à l'extérieur
-      rankGroups = [];
-      let currentCount = -1;
+      rankGroups = []
+      let currentCount = -1
       let currentGroup: Array<{
-        projectId: string;
-        projectName: string;
-        upvoteCount: number;
-      }> = [];
+        projectId: string
+        projectName: string
+        upvoteCount: number
+      }> = []
 
       for (const projectData of projectsWithUpvotes) {
-        if (projectData.upvoteCount === 0) continue;
+        if (projectData.upvoteCount === 0) continue
 
         if (projectData.upvoteCount !== currentCount) {
           if (currentGroup.length > 0) {
-            rankGroups.push(currentGroup);
+            rankGroups.push(currentGroup)
           }
-          currentCount = projectData.upvoteCount;
-          currentGroup = [projectData];
+          currentCount = projectData.upvoteCount
+          currentGroup = [projectData]
         } else {
-          currentGroup.push(projectData);
+          currentGroup.push(projectData)
         }
       }
 
       if (currentGroup.length > 0) {
-        rankGroups.push(currentGroup);
+        rankGroups.push(currentGroup)
       }
 
-      console.log(`Groupes de classement formés: ${rankGroups.length} groupes`);
+      console.log(`Groupes de classement formés: ${rankGroups.length} groupes`)
 
-      let currentRank = 1;
-      let projectsRanked = 0;
+      let currentRank = 1
+      let projectsRanked = 0
 
       for (const group of rankGroups) {
-        if (currentRank > 3) break;
+        if (currentRank > 3) break
 
         console.log(
-          `Groupe ${currentRank}: ${group.length} projets avec ${group[0].upvoteCount} upvotes chacun`
-        );
+          `Groupe ${currentRank}: ${group.length} projets avec ${group[0].upvoteCount} upvotes chacun`,
+        )
 
         for (const projectData of group) {
           await db
@@ -143,17 +141,17 @@ export async function GET(request: NextRequest) {
               dailyRanking: currentRank,
               updatedAt: now,
             })
-            .where(eq(project.id, projectData.projectId));
+            .where(eq(project.id, projectData.projectId))
 
           console.log(
-            `Classé #${currentRank}: ${projectData.projectName} (${projectData.projectId}) avec ${projectData.upvoteCount} upvotes [ex-aequo: ${group.length > 1 ? "oui" : "non"}]`
-          );
+            `Classé #${currentRank}: ${projectData.projectName} (${projectData.projectId}) avec ${projectData.upvoteCount} upvotes [ex-aequo: ${group.length > 1 ? "oui" : "non"}]`,
+          )
 
-          projectsRanked++;
+          projectsRanked++
         }
-        currentRank++;
+        currentRank++
       }
-      console.log(`Total de projets classés: ${projectsRanked}`);
+      console.log(`Total de projets classés: ${projectsRanked}`)
     }
 
     // 4. Clean up abandoned PAYMENT_PENDING
@@ -162,37 +160,31 @@ export async function GET(request: NextRequest) {
       .where(
         and(
           eq(project.launchStatus, launchStatus.PAYMENT_PENDING),
-          lte(project.updatedAt, paymentDeadline)
-        )
+          lte(project.updatedAt, paymentDeadline),
+        ),
       )
-      .returning({ id: project.id, name: project.name });
+      .returning({ id: project.id, name: project.name })
 
     // Ajouter les types explicites pour reduce
     const totalRanked = rankGroups.reduce(
       (
         sum: number,
         group: Array<{
-          projectId: string;
-          projectName: string;
-          upvoteCount: number;
-        }>
+          projectId: string
+          projectName: string
+          upvoteCount: number
+        }>,
       ) => sum + group.length,
-      0
-    );
+      0,
+    )
 
-    console.log(`[${now.toISOString()}] Launch updates completed`);
+    console.log(`[${now.toISOString()}] Launch updates completed`)
+    console.log(`- ${scheduledToOngoing.length} projects changed from SCHEDULED to ONGOING`)
+    console.log(`- ${ongoingToLaunched.length} projects changed from ONGOING to LAUNCHED`)
     console.log(
-      `- ${scheduledToOngoing.length} projects changed from SCHEDULED to ONGOING`
-    );
-    console.log(
-      `- ${ongoingToLaunched.length} projects changed from ONGOING to LAUNCHED`
-    );
-    console.log(
-      `- Top ${rankGroups.length > 0 ? Math.min(3, totalRanked) : 0} calculated from ${justLaunchedProjectIds.length} projects launched yesterday`
-    );
-    console.log(
-      `- ${abandonedPayments.length} abandoned payments deleted for projects`
-    );
+      `- Top ${rankGroups.length > 0 ? Math.min(3, totalRanked) : 0} calculated from ${justLaunchedProjectIds.length} projects launched yesterday`,
+    )
+    console.log(`- ${abandonedPayments.length} abandoned payments deleted for projects`)
 
     return NextResponse.json({
       message: "Launch statuses updated successfully.",
@@ -203,12 +195,9 @@ export async function GET(request: NextRequest) {
         totalLaunchedYesterday: justLaunchedProjectIds.length,
         abandonedPaymentsDeleted: abandonedPayments.length,
       },
-    });
+    })
   } catch (error) {
-    console.error("Error updating launch statuses:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    console.error("Error updating launch statuses:", error)
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }

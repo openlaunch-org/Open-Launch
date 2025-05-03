@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import { Turnstile } from "@marsidev/react-turnstile";
-import { useRef } from "react";
+import { useRef } from "react"
+
+import { Turnstile } from "@marsidev/react-turnstile"
 
 interface TurnstileCaptchaProps {
-  onVerify: (token: string) => void;
+  onVerify: (token: string) => void
 }
 
 export function TurnstileCaptcha({ onVerify }: TurnstileCaptchaProps) {
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  const ref = useRef(null);
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  const ref = useRef(null)
 
   if (!siteKey) {
-    console.error("Turnstile site key is not defined");
-    return null;
+    console.error("Turnstile site key is not defined")
+    return null
   }
 
   return (
@@ -29,5 +30,5 @@ export function TurnstileCaptcha({ onVerify }: TurnstileCaptchaProps) {
         }}
       />
     </div>
-  );
+  )
 }

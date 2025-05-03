@@ -1,20 +1,16 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { DayPicker } from "react-day-picker";
-import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
+import * as React from "react"
 
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"
+import { DayPicker } from "react-day-picker"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 
-function Calendar({
-  className,
-  classNames,
-  showOutsideDays = true,
-  ...props
-}: CalendarProps) {
+export type CalendarProps = React.ComponentProps<typeof DayPicker>
+
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -30,16 +26,14 @@ function Calendar({
         button_next: cn(
           buttonVariants({
             variant: "outline",
-            className:
-              "absolute right-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-          })
+            className: "absolute right-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          }),
         ),
         button_previous: cn(
           buttonVariants({
             variant: "outline",
-            className:
-              "absolute left-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-          })
+            className: "absolute left-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          }),
         ),
         nav: "flex items-start",
         month_grid: "mt-4",
@@ -47,7 +41,7 @@ function Calendar({
         day: "p-0 size-8 text-sm flex-1 flex items-center justify-center has-[button]:hover:!bg-accent rounded-md has-[button]:hover:aria-selected:!bg-primary has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
-          "size-8 p-0 font-normal transition-none hover:bg-transparent hover:text-inherit aria-selected:opacity-100"
+          "size-8 p-0 font-normal transition-none hover:bg-transparent hover:text-inherit aria-selected:opacity-100",
         ),
         range_start: "day-range-start rounded-s-md",
         range_end: "day-range-end rounded-e-md",
@@ -64,15 +58,14 @@ function Calendar({
       }}
       components={{
         Chevron: ({ orientation }) => {
-          const Icon =
-            orientation === "left" ? RiArrowLeftSLine : RiArrowRightSLine;
-          return <Icon className="h-4 w-4" />;
+          const Icon = orientation === "left" ? RiArrowLeftSLine : RiArrowRightSLine
+          return <Icon className="h-4 w-4" />
         },
       }}
       {...props}
     />
-  );
+  )
 }
-Calendar.displayName = "Calendar";
+Calendar.displayName = "Calendar"
 
-export { Calendar };
+export { Calendar }

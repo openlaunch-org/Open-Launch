@@ -2,28 +2,28 @@
  * Utility for sending notifications to Discord via webhook
  */
 
-import { db } from "@/drizzle/db";
-import { project, user } from "@/drizzle/db/schema";
-import { eq } from "drizzle-orm";
+import { db } from "@/drizzle/db"
+import { project, user } from "@/drizzle/db/schema"
+import { eq } from "drizzle-orm"
 
 interface DiscordEmbed {
-  title: string;
-  color: number;
-  description: string;
-  url?: string;
+  title: string
+  color: number
+  description: string
+  url?: string
   fields: {
-    name: string;
-    value: string;
-    inline: boolean;
-  }[];
+    name: string
+    value: string
+    inline: boolean
+  }[]
   footer: {
-    text: string;
-  };
-  timestamp: string;
+    text: string
+  }
+  timestamp: string
 }
 
 interface DiscordMessage {
-  embeds: DiscordEmbed[];
+  embeds: DiscordEmbed[]
 }
 
 /**
@@ -35,60 +35,54 @@ interface DiscordMessage {
 export async function sendDiscordCommentNotification(
   projectId: string,
   userId: string,
-  commentText: string
+  commentText: string,
 ): Promise<boolean> {
   try {
-    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL
 
     if (!webhookUrl) {
-      console.error(
-        "DISCORD_WEBHOOK_URL is not defined in environment variables"
-      );
-      return false;
+      console.error("DISCORD_WEBHOOK_URL is not defined in environment variables")
+      return false
     }
 
     // Retrieve user information
-    let userInfo = { email: userId, name: "Unknown User" };
+    let userInfo = { email: userId, name: "Unknown User" }
     try {
       const userResult = await db
         .select({ email: user.email, name: user.name })
         .from(user)
         .where(eq(user.id, userId))
-        .limit(1);
+        .limit(1)
 
       if (userResult.length > 0) {
-        userInfo = userResult[0];
+        userInfo = userResult[0]
       }
     } catch (error) {
-      console.error("Error retrieving user information:", error);
+      console.error("Error retrieving user information:", error)
     }
 
     // Retrieve project information
-    let projectInfo = { slug: projectId, name: "Unknown Project" };
+    let projectInfo = { slug: projectId, name: "Unknown Project" }
     try {
       const projectResult = await db
         .select({ slug: project.slug, name: project.name })
         .from(project)
         .where(eq(project.id, projectId))
-        .limit(1);
+        .limit(1)
 
       if (projectResult.length > 0) {
-        projectInfo = projectResult[0];
+        projectInfo = projectResult[0]
       }
     } catch (error) {
-      console.error("Error retrieving project information:", error);
+      console.error("Error retrieving project information:", error)
     }
 
     // Build project URL
-    const projectUrl = `${process.env.NEXT_PUBLIC_URL || ""}/projects/${
-      projectInfo.slug
-    }`;
+    const projectUrl = `${process.env.NEXT_PUBLIC_URL || ""}/projects/${projectInfo.slug}`
 
     // Truncate comment text if it's too long
     const truncatedText =
-      commentText.length > 1500
-        ? commentText.substring(0, 1500) + "..."
-        : commentText;
+      commentText.length > 1500 ? commentText.substring(0, 1500) + "..." : commentText
 
     // Create message to send to Discord
     const message: DiscordMessage = {
@@ -116,7 +110,7 @@ export async function sendDiscordCommentNotification(
           timestamp: new Date().toISOString(),
         },
       ],
-    };
+    }
 
     // Send request to Discord webhook
     const response = await fetch(webhookUrl, {
@@ -125,19 +119,17 @@ export async function sendDiscordCommentNotification(
         "Content-Type": "application/json",
       },
       body: JSON.stringify(message),
-    });
+    })
 
     if (!response.ok) {
-      console.error(
-        `Error sending to Discord: ${response.status} ${response.statusText}`
-      );
-      return false;
+      console.error(`Error sending to Discord: ${response.status} ${response.statusText}`)
+      return false
     }
 
-    return true;
+    return true
   } catch (error) {
-    console.error("Error sending Discord notification:", error);
-    return false;
+    console.error("Error sending Discord notification:", error)
+    return false
   }
 }
 
@@ -154,28 +146,28 @@ export async function notifyDiscordLaunch(
   launchDate: string,
   launchType: string,
   websiteUrl: string,
-  projectUrl: string
+  projectUrl: string,
 ): Promise<boolean> {
   try {
-    const webhookUrl = process.env.DISCORD_LAUNCH_WEBHOOK_URL;
+    const webhookUrl = process.env.DISCORD_LAUNCH_WEBHOOK_URL
 
     if (!webhookUrl) {
-      console.error("Discord webhook URL is not defined");
-      return false;
+      console.error("Discord webhook URL is not defined")
+      return false
     }
 
     // Format the launch type for display
     const formattedLaunchType = launchType
       .split("_")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
+      .join(" ")
 
     // Determine color based on launch type
-    let color = 0x00ff00; // Default green
+    let color = 0x00ff00 // Default green
     if (launchType === "PREMIUM") {
-      color = 0xff9900; // Orange for premium
+      color = 0xff9900 // Orange for premium
     } else if (launchType === "PREMIUM_PLUS") {
-      color = 0xff0000; // Red for premium plus
+      color = 0xff0000 // Red for premium plus
     }
 
     // Create message to send to Discord
@@ -214,7 +206,7 @@ export async function notifyDiscordLaunch(
           timestamp: new Date().toISOString(),
         },
       ],
-    };
+    }
 
     // Send request to Discord webhook
     const response = await fetch(webhookUrl, {
@@ -223,18 +215,16 @@ export async function notifyDiscordLaunch(
         "Content-Type": "application/json",
       },
       body: JSON.stringify(message),
-    });
+    })
 
     if (!response.ok) {
-      console.error(
-        `Error sending to Discord: ${response.status} ${response.statusText}`
-      );
-      return false;
+      console.error(`Error sending to Discord: ${response.status} ${response.statusText}`)
+      return false
     }
 
-    return true;
+    return true
   } catch (error) {
-    console.error("Error sending Discord notification:", error);
-    return false;
+    console.error("Error sending Discord notification:", error)
+    return false
   }
 }

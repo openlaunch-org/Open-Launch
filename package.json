@@ -3,15 +3,56 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "dev": "next dev --turbopack",
+    "lint": "next lint",
+    "prepare": "npx simple-git-hooks",
+    "start": "next start",
     "update-launches": "bash ./scripts/update-launches.sh"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged --verbose",
+    "commit-msg": "npx commitlint --edit $1"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "package.json": "sort-package-json"
+  },
+  "prettier": {
+    "importOrder": [
+      "<BUILTIN_MODULES>",
+      "",
+      "^react/(.*)$|^react$",
+      "^next/(.*)$|^next$",
+      "",
+      "<THIRD_PARTY_MODULES>",
+      "",
+      "^@/types/(.*)$",
+      "^@/config/(.*)$",
+      "^@/lib/(.*)$",
+      "^@/hooks/(.*)$",
+      "^@/db/(.*)$",
+      "^@/components/ui/(.*)$",
+      "^@/components/(.*)$",
+      "^@/app/(.*)$",
+      "",
+      "^[./]"
+    ],
+    "plugins": [
+      "@ianvs/prettier-plugin-sort-imports",
+      "prettier-plugin-tailwindcss"
+    ],
+    "printWidth": 100,
+    "semi": false
   },
   "dependencies": {
     "@better-auth/stripe": "^1.2.7",
@@ -91,7 +132,10 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@eslint/eslintrc": "^3.3.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@types/node": "^20.17.31",
     "@types/pg": "^8.11.14",
     "@types/react": "^19.1.2",
@@ -99,6 +143,11 @@
     "drizzle-kit": "^0.30.6",
     "eslint": "^9.25.1",
     "eslint-config-next": "15.1.7",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "simple-git-hooks": "^2.13.0",
+    "sort-package-json": "^3.1.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }

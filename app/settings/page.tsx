@@ -1,18 +1,22 @@
-"use client";
+"use client"
+
+import { useState } from "react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 import {
-  useSession,
-  updateUser,
-  changePassword,
-  signOut,
-} from "@/lib/auth-client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+  RiEditLine,
+  RiLockPasswordLine,
+  RiLogoutCircleLine,
+  RiShieldUserLine,
+  RiUserLine,
+} from "@remixicon/react"
+import { Loader2, X } from "lucide-react"
+import { toast } from "sonner"
+
+import { changePassword, signOut, updateUser, useSession } from "@/lib/auth-client"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -21,49 +25,40 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Loader2, X } from "lucide-react";
-import { toast } from "sonner";
-import {
-  RiEditLine,
-  RiLockPasswordLine,
-  RiUserLine,
-  RiLogoutCircleLine,
-  RiShieldUserLine,
-} from "@remixicon/react";
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export default function Settings() {
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { data: session } = useSession()
+  const router = useRouter()
 
   if (!session) {
-    return null;
+    return null
   }
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 min-h-screen">
-      <div className="pb-6 border-b dark:border-zinc-800 mb-8">
-        <h1 className="text-3xl font-heading font-bold">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences.
-        </p>
+    <div className="mx-auto min-h-screen max-w-6xl px-4 py-10">
+      <div className="mb-8 border-b pb-6 dark:border-zinc-800">
+        <h1 className="font-heading text-3xl font-bold">Settings</h1>
+        <p className="text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
       <div className="space-y-10">
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-primary/10 p-2.5 rounded-lg">
-              <RiUserLine className="h-5 w-5 text-primary" />
+          <div className="mb-6 flex items-center gap-3">
+            <div className="bg-primary/10 rounded-lg p-2.5">
+              <RiUserLine className="text-primary h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-heading font-semibold">Profile</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="font-heading text-lg font-semibold">Profile</h2>
+              <p className="text-muted-foreground text-sm">
                 Update your personal information and profile picture.
               </p>
             </div>
           </div>
 
-          <div className="bg-card rounded-xl p-6 border dark:border-zinc-800 shadow-sm">
+          <div className="bg-card rounded-xl border p-6 shadow-sm dark:border-zinc-800">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Avatar className="h-14 w-14">
@@ -77,8 +72,8 @@ export default function Settings() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium text-lg">{session.user.name}</p>
-                  <p className="text-sm text-muted-foreground truncate max-w-[170px]">
+                  <p className="text-lg font-medium">{session.user.name}</p>
+                  <p className="text-muted-foreground max-w-[170px] truncate text-sm">
                     {session.user.email}
                   </p>
                 </div>
@@ -89,21 +84,21 @@ export default function Settings() {
         </section>
 
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-primary/10 p-2.5 rounded-lg">
-              <RiShieldUserLine className="h-5 w-5 text-primary" />
+          <div className="mb-6 flex items-center gap-3">
+            <div className="bg-primary/10 rounded-lg p-2.5">
+              <RiShieldUserLine className="text-primary h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-heading font-semibold">Security</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="font-heading text-lg font-semibold">Security</h2>
+              <p className="text-muted-foreground text-sm">
                 Manage your password and account security.
               </p>
             </div>
           </div>
 
-          <div className="bg-card rounded-xl p-6 border dark:border-zinc-800 shadow-sm">
-            <h3 className="text-base font-medium mb-1">Password</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+          <div className="bg-card rounded-xl border p-6 shadow-sm dark:border-zinc-800">
+            <h3 className="mb-1 text-base font-medium">Password</h3>
+            <p className="text-muted-foreground mb-4 text-sm">
               Change your password to keep your account secure.
             </p>
             <ChangePasswordDialog />
@@ -111,36 +106,36 @@ export default function Settings() {
         </section>
 
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-primary/10 p-2.5 rounded-lg">
-              <RiLogoutCircleLine className="h-5 w-5 text-primary" />
+          <div className="mb-6 flex items-center gap-3">
+            <div className="bg-primary/10 rounded-lg p-2.5">
+              <RiLogoutCircleLine className="text-primary h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-heading font-semibold">Session</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="font-heading text-lg font-semibold">Session</h2>
+              <p className="text-muted-foreground text-sm">
                 Manage your current session and sign out.
               </p>
             </div>
           </div>
 
-          <div className="bg-card rounded-xl p-6 border dark:border-zinc-800 shadow-sm">
+          <div className="bg-card rounded-xl border p-6 shadow-sm dark:border-zinc-800">
             <div>
-              <h3 className="text-base font-medium mb-1">Current Session</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <h3 className="mb-1 text-base font-medium">Current Session</h3>
+              <p className="text-muted-foreground mb-4 text-sm">
                 Sign out from your current session.
               </p>
               <Button
                 variant="destructive"
-                className="gap-2 cursor-pointer hover:bg-destructive/90"
+                className="hover:bg-destructive/90 cursor-pointer gap-2"
                 onClick={() => {
                   signOut({
                     fetchOptions: {
                       onSuccess: () => {
-                        router.push("/");
-                        router.refresh();
+                        router.push("/")
+                        router.refresh()
                       },
                     },
-                  });
+                  })
                 }}
               >
                 <RiLogoutCircleLine className="h-4 w-4" />
@@ -151,58 +146,50 @@ export default function Settings() {
         </section>
       </div>
     </div>
-  );
+  )
 }
 
 function EditProfileDialog() {
-  const { data: session } = useSession();
-  const router = useRouter();
-  const [name, setName] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const { data: session } = useSession()
+  const router = useRouter()
+  const [name, setName] = useState<string>("")
+  const [image, setImage] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
+      setImage(file)
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   async function convertImageToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          className="gap-2 cursor-pointer hover:bg-primary/5"
-        >
-          <RiEditLine className="h-4 w-4 text-primary" />
-          <span className="hidden md:block hover:text-primary">
-            Edit Profile
-          </span>
+        <Button size="sm" variant="outline" className="hover:bg-primary/5 cursor-pointer gap-2">
+          <RiEditLine className="text-primary h-4 w-4" />
+          <span className="hover:text-primary hidden md:block">Edit Profile</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border dark:border-zinc-800 rounded-xl">
+      <DialogContent className="rounded-xl border sm:max-w-[425px] dark:border-zinc-800">
         <DialogHeader>
-          <DialogTitle className="text-xl font-heading font-semibold">
-            Edit Profile
-          </DialogTitle>
+          <DialogTitle className="font-heading text-xl font-semibold">Edit Profile</DialogTitle>
           <DialogDescription>Update your profile information</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-2">
@@ -224,16 +211,11 @@ function EditProfileDialog() {
             </Label>
             <div className="flex items-end gap-4">
               {imagePreview && (
-                <div className="relative w-16 h-16 rounded-md overflow-hidden border-2 border-primary/10">
-                  <Image
-                    src={imagePreview}
-                    alt="Profile preview"
-                    layout="fill"
-                    objectFit="cover"
-                  />
+                <div className="border-primary/10 relative h-16 w-16 overflow-hidden rounded-md border-2">
+                  <Image src={imagePreview} alt="Profile preview" layout="fill" objectFit="cover" />
                 </div>
               )}
-              <div className="flex items-center gap-2 w-full">
+              <div className="flex w-full items-center gap-2">
                 <Input
                   id="image"
                   type="file"
@@ -243,10 +225,10 @@ function EditProfileDialog() {
                 />
                 {imagePreview && (
                   <X
-                    className="cursor-pointer hover:text-destructive"
+                    className="hover:text-destructive cursor-pointer"
                     onClick={() => {
-                      setImage(null);
-                      setImagePreview(null);
+                      setImage(null)
+                      setImagePreview(null)
                     }}
                   />
                 )}
@@ -258,63 +240,55 @@ function EditProfileDialog() {
           <Button
             disabled={isLoading}
             onClick={async () => {
-              setIsLoading(true);
+              setIsLoading(true)
               try {
                 await updateUser({
                   name: name || undefined,
                   image: image ? await convertImageToBase64(image) : undefined,
-                });
-                toast.success("Profile updated successfully");
-                router.refresh();
-                setOpen(false);
+                })
+                toast.success("Profile updated successfully")
+                router.refresh()
+                setOpen(false)
               } catch {
-                toast.error("Failed to update profile");
+                toast.error("Failed to update profile")
               }
-              setIsLoading(false);
-              setName("");
-              setImage(null);
-              setImagePreview(null);
+              setIsLoading(false)
+              setName("")
+              setImage(null)
+              setImagePreview(null)
             }}
-            className="cursor-pointer bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 cursor-pointer"
           >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              "Save changes"
-            )}
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save changes"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 function ChangePasswordDialog() {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="max-w-fit justify-start cursor-pointer gap-2 hover:bg-primary/5 hover:text-primary"
+          className="hover:bg-primary/5 hover:text-primary max-w-fit cursor-pointer justify-start gap-2"
         >
-          <RiLockPasswordLine className="h-4 w-4 text-primary" />
+          <RiLockPasswordLine className="text-primary h-4 w-4" />
           Change Password
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border dark:border-zinc-800 rounded-xl">
+      <DialogContent className="rounded-xl border sm:max-w-[425px] dark:border-zinc-800">
         <DialogHeader>
-          <DialogTitle className="text-xl font-heading font-semibold">
-            Change Password
-          </DialogTitle>
-          <DialogDescription>
-            Enter your current password and choose a new one
-          </DialogDescription>
+          <DialogTitle className="font-heading text-xl font-semibold">Change Password</DialogTitle>
+          <DialogDescription>Enter your current password and choose a new one</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
@@ -359,39 +333,35 @@ function ChangePasswordDialog() {
             disabled={loading}
             onClick={async () => {
               if (newPassword !== confirmPassword) {
-                toast.error("Passwords do not match");
-                return;
+                toast.error("Passwords do not match")
+                return
               }
               if (newPassword.length < 8) {
-                toast.error("Password must be at least 8 characters");
-                return;
+                toast.error("Password must be at least 8 characters")
+                return
               }
-              setLoading(true);
+              setLoading(true)
               try {
                 await changePassword({
                   currentPassword,
                   newPassword,
-                });
-                toast.success("Password changed successfully");
-                setOpen(false);
+                })
+                toast.success("Password changed successfully")
+                setOpen(false)
               } catch {
-                toast.error("Failed to change password");
+                toast.error("Failed to change password")
               }
-              setLoading(false);
-              setCurrentPassword("");
-              setNewPassword("");
-              setConfirmPassword("");
+              setLoading(false)
+              setCurrentPassword("")
+              setNewPassword("")
+              setConfirmPassword("")
             }}
-            className="cursor-pointer bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 cursor-pointer"
           >
-            {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              "Change Password"
-            )}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Change Password"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
