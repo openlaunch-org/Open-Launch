@@ -109,7 +109,7 @@ export default async function Home() {
                     )}
                   >
                     <span className="text-sm hover:underline">{category.name}</span>
-                    <span className="text-muted-foreground bg-secondary -mx-2 rounded-full px-2 py-0.5 text-xs">
+                    <span className="text-muted-foreground bg-secondary rounded-full px-2 py-0.5 text-xs">
                       {category.count} projects
                     </span>
                   </Link>
