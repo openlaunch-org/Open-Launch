@@ -70,7 +70,7 @@ export function ProjectCard({
 
         <div className="min-w-0 flex-grow">
           <div className="flex flex-col">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <Link href={projectPageUrl}>
                 <h3 className="group-hover:text-primary line-clamp-1 text-sm font-medium transition-colors sm:text-base">
                   {typeof index === "number" ? `${index + 1}. ` : ""}
@@ -82,7 +82,7 @@ export function ProjectCard({
                   href={websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group-hover:text-primary mb-px inline-flex items-center transition-opacity"
+                  className="hover:text-primary mb-px inline-flex items-center transition-opacity"
                   onClick={(e) => {
                     e.stopPropagation()
                   }}
