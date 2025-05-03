@@ -82,7 +82,7 @@ export function ProjectCard({
                   href={websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary mb-px inline-flex items-center transition-opacity"
+                  className="group-hover:text-primary mb-px inline-flex items-center transition-opacity"
                   onClick={(e) => {
                     e.stopPropagation()
                   }}
