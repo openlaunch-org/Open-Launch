@@ -60,6 +60,9 @@ npm run db:generate
 npm run db:migrate
 npm run db:push
 
+# Seed the categories
+bun scripts/categories.ts
+
 # Start the development server
 npm run dev
 ```
