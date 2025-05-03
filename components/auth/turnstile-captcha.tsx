@@ -17,6 +17,8 @@ export function TurnstileCaptcha({ onVerify }: TurnstileCaptchaProps) {
     return null
   }
 
+  if (process.env.NODE_ENV === "development") return null
+
   return (
     <div className="flex justify-center">
       <Turnstile

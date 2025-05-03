@@ -53,12 +53,15 @@ cd open-launch
 npm install
 
 # Set up environment variables
-cp .env.example .env.local
+cp .env.example .env
 
 # Initialize the database
 npm run db:generate
 npm run db:migrate
 npm run db:push
+
+# Seed the categories
+bun scripts/categories.ts
 
 # Start the development server
 npm run dev
