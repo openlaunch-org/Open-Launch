@@ -1,21 +1,38 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { MoreHorizontal, Ban, UserCog, Trash2, Search, Users, Shield, RefreshCw, Filter } from "lucide-react"
+import { MouseEvent, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+
+import {
+  Ban,
+  Filter,
+  MoreHorizontal,
+  RefreshCw,
+  Search,
+  Shield,
+  Trash2,
+  UserCog,
+  Users,
+} from "lucide-react"
+import { toast } from "sonner"
+
+import { admin } from "@/lib/auth-client"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { getAdminStatsAndUsers } from "@/app/actions/projects"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
-import { admin } from "@/lib/auth-client"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import {
+  addNewCategory,
+  deleteCategory,
+  getAdminStatsAndUsers,
+  getAllCategories,
+} from "@/app/actions/projects"
 
 type User = {
   id: string
@@ -28,15 +45,24 @@ type User = {
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([])
+  const [categories, setCategories] = useState<
+    { id: string; name: string; createdAt: Date; updatedAt: Date }[]
+  >([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [roleFilter, setRoleFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
-  const [stats, setStats] = useState<{ totalLaunches: number; premiumLaunches: number; premiumPlusLaunches: number; totalUsers: number }>({ totalLaunches: 0, premiumLaunches: 0, premiumPlusLaunches: 0, totalUsers: 0 })
+  const [stats, setStats] = useState<{
+    totalLaunches: number
+    premiumLaunches: number
+    premiumPlusLaunches: number
+    totalUsers: number
+  }>({ totalLaunches: 0, premiumLaunches: 0, premiumPlusLaunches: 0, totalUsers: 0 })
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState<string | undefined>()
+  const [newCategory, setNewCategory] = useState("")
   const router = useRouter()
   useIsMobile()
 
@@ -45,7 +71,9 @@ export default function AdminDashboard() {
     setLoading(true)
     try {
       const { users, stats } = await getAdminStatsAndUsers()
-      const mappedUsers = users.map(u => ({
+      const categories = await getAllCategories()
+
+      const mappedUsers = users.map((u) => ({
         ...u,
         role: u.role ?? undefined,
         createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : undefined,
@@ -53,10 +81,12 @@ export default function AdminDashboard() {
       setUsers(mappedUsers)
       setFilteredUsers(mappedUsers)
       setStats(stats)
+      setCategories(categories)
     } catch {
       setUsers([])
       setFilteredUsers([])
       setStats({ totalLaunches: 0, premiumLaunches: 0, premiumPlusLaunches: 0, totalUsers: 0 })
+      setCategories([])
     }
     setLoading(false)
   }
@@ -96,54 +126,92 @@ export default function AdminDashboard() {
 
   const uniqueRoles = Array.from(new Set(users.map((user) => user.role || "user")))
 
+  const addCategoryHandler = async () => {
+    if (!newCategory) return
+    setIsLoading("add-category")
+    try {
+      await addNewCategory(newCategory)
+      toast.success("Category added successfully")
+      setNewCategory("")
+      fetchUsersAndStats()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to add category")
+    } finally {
+      setIsLoading(undefined)
+    }
+  }
+
+  const deleteCategoryHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+    const categoryId = e.currentTarget.getAttribute("data-category-id")
+    if (!categoryId) return
+    setIsLoading("delete-category")
+    try {
+      await deleteCategory(categoryId)
+      toast.success("Category deleted successfully")
+      fetchUsersAndStats()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to delete category")
+    } finally {
+      setIsLoading(undefined)
+    }
+  }
+
   return (
-    <div className="max-w-5xl mx-auto pt-8 pb-16 px-2 sm:px-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">Admin dashboard</h1>
-      <div className="grid grid-cols-2 sm:flex sm:flex-row items-stretch justify-between gap-0 rounded-md border bg-card overflow-hidden mb-6 sm:divide-x divide-border">
-        <div className="flex flex-col items-center justify-center flex-1 py-2 px-1 sm:py-3 sm:px-2">
-          <span className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Users</span>
-          <span className="font-bold text-base sm:text-xl">{stats.totalUsers}</span>
+    <div className="mx-auto max-w-5xl space-y-6 px-2 pt-8 pb-16 sm:px-6">
+      <h1 className="mb-4 text-2xl font-bold">Admin dashboard</h1>
+      <div className="bg-card divide-border mb-6 grid grid-cols-2 items-stretch justify-between gap-0 overflow-hidden rounded-md border sm:flex sm:flex-row sm:divide-x">
+        <div className="flex flex-1 flex-col items-center justify-center px-1 py-2 sm:px-2 sm:py-3">
+          <span className="text-muted-foreground mb-0.5 text-[10px] sm:mb-1 sm:text-xs">Users</span>
+          <span className="text-base font-bold sm:text-xl">{stats.totalUsers}</span>
         </div>
-        <div className="flex flex-col items-center justify-center flex-1 py-2 px-1 sm:py-3 sm:px-2  ">
-          <span className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Projects</span>
-          <span className="font-bold text-base sm:text-xl">{stats.totalLaunches}</span>
+        <div className="flex flex-1 flex-col items-center justify-center px-1 py-2 sm:px-2 sm:py-3">
+          <span className="text-muted-foreground mb-0.5 text-[10px] sm:mb-1 sm:text-xs">
+            Projects
+          </span>
+          <span className="text-base font-bold sm:text-xl">{stats.totalLaunches}</span>
         </div>
-        <div className="flex flex-col items-center justify-center flex-1 py-2 px-1 sm:py-3 sm:px-2 ">
-          <span className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Premium</span>
-          <span className="font-bold text-base sm:text-xl">{stats.premiumLaunches}</span>
+        <div className="flex flex-1 flex-col items-center justify-center px-1 py-2 sm:px-2 sm:py-3">
+          <span className="text-muted-foreground mb-0.5 text-[10px] sm:mb-1 sm:text-xs">
+            Premium
+          </span>
+          <span className="text-base font-bold sm:text-xl">{stats.premiumLaunches}</span>
         </div>
-        <div className="flex flex-col items-center justify-center flex-1 py-2 px-1 sm:py-3 sm:px-2 ">
-          <span className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Premium Plus</span>
-          <span className="font-bold text-base sm:text-xl">{stats.premiumPlusLaunches}</span>
+        <div className="flex flex-1 flex-col items-center justify-center px-1 py-2 sm:px-2 sm:py-3">
+          <span className="text-muted-foreground mb-0.5 text-[10px] sm:mb-1 sm:text-xs">
+            Premium Plus
+          </span>
+          <span className="text-base font-bold sm:text-xl">{stats.premiumPlusLaunches}</span>
         </div>
       </div>
-      <div className="flex gap-1 mb-2 sm:gap-2">
-        <div className="flex-1 min-w-0">
+      <div className="mb-2 flex gap-1 sm:gap-2">
+        <div className="min-w-0 flex-1">
           <div className="relative">
             <input
               type="text"
               placeholder="Search"
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="h-8 pl-8 pr-2 rounded-md border text-xs w-24 max-w-[110px] sm:w-64 sm:max-w-full"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-8 w-24 max-w-[110px] rounded-md border pr-2 pl-8 text-xs sm:w-64 sm:max-w-full"
             />
-            <Search className="absolute left-2 top-2 h-4 w-4 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute top-2 left-2 h-4 w-4" />
           </div>
         </div>
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="h-8 w-8 p-0 rounded-md flex items-center justify-center text-xs [&>svg:last-child]:hidden">
-            <Users className="h-5 w-5 text-muted-foreground" />
+          <SelectTrigger className="flex h-8 w-8 items-center justify-center rounded-md p-0 text-xs [&>svg:last-child]:hidden">
+            <Users className="text-muted-foreground h-5 w-5" />
           </SelectTrigger>
           <SelectContent className="rounded-md">
             <SelectItem value="all">All roles</SelectItem>
-            {uniqueRoles.map(role => (
-              <SelectItem key={role} value={role}>{role}</SelectItem>
+            {uniqueRoles.map((role) => (
+              <SelectItem key={role} value={role}>
+                {role}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="h-8 w-8 p-0 rounded-md flex items-center justify-center text-xs [&>svg:last-child]:hidden">
-            <Shield className="h-5 w-5 text-muted-foreground" />
+          <SelectTrigger className="flex h-8 w-8 items-center justify-center rounded-md p-0 text-xs [&>svg:last-child]:hidden">
+            <Shield className="text-muted-foreground h-5 w-5" />
           </SelectTrigger>
           <SelectContent className="rounded-md">
             <SelectItem value="all">All statuses</SelectItem>
@@ -151,9 +219,15 @@ export default function AdminDashboard() {
             <SelectItem value="banned">Banned</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={String(itemsPerPage)} onValueChange={v => { setItemsPerPage(Number(v)); setCurrentPage(1) }}>
-          <SelectTrigger className="h-8 w-8 p-0 rounded-md flex items-center justify-center text-xs [&>svg:last-child]:hidden">
-            <Filter className="h-5 w-5 text-muted-foreground" />
+        <Select
+          value={String(itemsPerPage)}
+          onValueChange={(v) => {
+            setItemsPerPage(Number(v))
+            setCurrentPage(1)
+          }}
+        >
+          <SelectTrigger className="flex h-8 w-8 items-center justify-center rounded-md p-0 text-xs [&>svg:last-child]:hidden">
+            <Filter className="text-muted-foreground h-5 w-5" />
           </SelectTrigger>
           <SelectContent className="rounded-md">
             <SelectItem value="5">5 / page</SelectItem>
@@ -162,49 +236,79 @@ export default function AdminDashboard() {
             <SelectItem value="50">50 / page</SelectItem>
           </SelectContent>
         </Select>
-        <Button size="sm" variant="outline" onClick={fetchUsersAndStats} className="h-8 w-8 p-0 rounded-md flex items-center justify-center">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={fetchUsersAndStats}
+          className="flex h-8 w-8 items-center justify-center rounded-md p-0"
+        >
           <RefreshCw className="h-5 w-5" />
         </Button>
       </div>
       {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <svg className="animate-spin h-8 w-8 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        <div className="flex items-center justify-center py-12">
+          <svg
+            className="text-muted-foreground h-8 w-8 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            ></path>
           </svg>
         </div>
       ) : (
         <>
           <div className="hidden sm:block">
-            <div className="rounded-md overflow-hidden border">
-              <table className="min-w-full text-sm bg-card">
+            <div className="overflow-hidden rounded-md border">
+              <table className="bg-card min-w-full text-sm">
                 <thead className="bg-muted/40 rounded-t-md">
                   <tr>
-                    <th className="p-2 text-left font-semibold rounded-tl-md">User</th>
+                    <th className="rounded-tl-md p-2 text-left font-semibold">User</th>
                     <th className="p-2 text-left font-semibold">Email</th>
                     <th className="p-2 text-center font-semibold">Role</th>
                     <th className="p-2 text-center font-semibold">Status</th>
-                    <th className="p-2 text-right font-semibold rounded-tr-md">Actions</th>
+                    <th className="rounded-tr-md p-2 text-right font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-card">
-                  {currentUsers.map(user => (
-                    <tr key={user.id} className="border-t hover:bg-muted/10">
-                      <td className="p-2 font-medium truncate max-w-[120px]">{user.name || "—"}</td>
-                      <td className="p-2 text-muted-foreground truncate max-w-[180px]">{user.email}</td>
+                  {currentUsers.map((user) => (
+                    <tr key={user.id} className="hover:bg-muted/10 border-t">
+                      <td className="max-w-[120px] truncate p-2 font-medium">{user.name || "—"}</td>
+                      <td className="text-muted-foreground max-w-[180px] truncate p-2">
+                        {user.email}
+                      </td>
                       <td className="p-2 text-center">
-                        <Badge variant={user.role === "admin" ? "secondary" : "outline"}>{user.role || "user"}</Badge>
+                        <Badge variant={user.role === "admin" ? "secondary" : "outline"}>
+                          {user.role || "user"}
+                        </Badge>
                       </td>
                       <td className="p-2 text-center">
                         {user.banned ? (
                           <Badge variant="destructive">Banned</Badge>
                         ) : (
-                          <Badge variant="outline" className="border-green-200 bg-green-50 text-green-600">Active</Badge>
+                          <Badge
+                            variant="outline"
+                            className="border-green-200 bg-green-50 text-green-600"
+                          >
+                            Active
+                          </Badge>
                         )}
                       </td>
                       <td className="p-2 text-right">
-                        <DropdownMenuUserActions 
-                          user={user} 
+                        <DropdownMenuUserActions
+                          user={user}
                           onRefresh={fetchUsersAndStats}
                           router={router}
                           setIsLoading={setIsLoading}
@@ -217,27 +321,32 @@ export default function AdminDashboard() {
               </table>
             </div>
           </div>
-          <div className="sm:hidden divide-y rounded-md border bg-card overflow-hidden text-xs">
-            <div className="flex font-semibold bg-muted/40 text-muted-foreground">
+          <div className="bg-card divide-y overflow-hidden rounded-md border text-xs sm:hidden">
+            <div className="bg-muted/40 text-muted-foreground flex font-semibold">
               <div className="w-1/3 px-2 py-2">User</div>
               <div className="w-1/3 px-2 py-2">Email</div>
               <div className="w-1/4 px-2 py-2 text-center">Status</div>
               <div className="w-1/6 px-2 py-2 text-right">Actions</div>
             </div>
-            {currentUsers.map(user => (
+            {currentUsers.map((user) => (
               <div key={user.id} className="flex items-center">
-                <div className="w-1/3 px-2 py-2 truncate font-medium">{user.name || "—"}</div>
-                <div className="w-1/3 px-2 py-2 truncate text-muted-foreground">{user.email}</div>
+                <div className="w-1/3 truncate px-2 py-2 font-medium">{user.name || "—"}</div>
+                <div className="text-muted-foreground w-1/3 truncate px-2 py-2">{user.email}</div>
                 <div className="w-1/4 px-2 py-2 text-center">
                   {user.banned ? (
                     <Badge variant="destructive">Banned</Badge>
                   ) : (
-                    <Badge variant="outline" className="border-green-200 bg-green-50 text-green-600">Active</Badge>
+                    <Badge
+                      variant="outline"
+                      className="border-green-200 bg-green-50 text-green-600"
+                    >
+                      Active
+                    </Badge>
                   )}
                 </div>
                 <div className="w-1/6 px-2 py-2 text-right">
-                  <DropdownMenuUserActions 
-                    user={user} 
+                  <DropdownMenuUserActions
+                    user={user}
                     onRefresh={fetchUsersAndStats}
                     router={router}
                     setIsLoading={setIsLoading}
@@ -249,30 +358,92 @@ export default function AdminDashboard() {
           </div>
         </>
       )}
-      <div className="flex justify-center items-center mt-4 gap-2">
-        <Button size="sm" variant="outline" onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
           Previous
         </Button>
         <span className="text-xs font-medium">{currentPage}</span>
-        <Button size="sm" variant="outline" onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages || totalPages === 0}>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages || totalPages === 0}
+        >
           Next
         </Button>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-bold">Categories</h2>
+        <div className="overflow-hidden rounded-md border">
+          <table className="bg-card min-w-full text-sm">
+            <thead className="bg-muted/40 rounded-t-md">
+              <tr>
+                <th className="rounded-tl-md p-2 text-left font-semibold">Category</th>
+                <th className="p-2 text-left font-semibold">Created At</th>
+                <th className="p-2 text-left font-semibold">Updated At</th>
+                <th className="rounded-tr-md p-2 text-right font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-card">
+              {categories.map((category) => (
+                <tr key={category.id} className="hover:bg-muted/10 border-t">
+                  <td className="max-w-[120px] truncate p-2 font-medium">{category.name}</td>
+                  <td className="text-muted-foreground max-w-[180px] truncate p-2">
+                    {new Date(category.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="text-muted-foreground max-w-[180px] truncate p-2">
+                    {new Date(category.updatedAt).toLocaleDateString()}
+                  </td>
+                  <td className="p-2 text-right">
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={deleteCategoryHandler}
+                      data-category-id={category.id}
+                      disabled={isLoading === "delete-category"}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 flex gap-2">
+          <input
+            type="text"
+            placeholder="New category"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            className="h-8 w-full max-w-sm rounded-md border pr-2 pl-2 text-sm"
+          />
+          <Button size="sm" onClick={addCategoryHandler} disabled={isLoading === "add-category"}>
+            Add
+          </Button>
+        </div>
       </div>
     </div>
   )
 }
 
-function DropdownMenuUserActions({ 
-  user, 
+function DropdownMenuUserActions({
+  user,
   onRefresh,
   router,
   setIsLoading,
-  isLoading
-}: { 
-  user: User,
-  onRefresh: () => Promise<void>,
-  router: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  setIsLoading: (value: string | undefined) => void,
+  isLoading,
+}: {
+  user: User
+  onRefresh: () => Promise<void>
+  router: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  setIsLoading: (value: string | undefined) => void
   isLoading: string | undefined
 }) {
   // Ban user
@@ -338,7 +509,7 @@ function DropdownMenuUserActions({
       setIsLoading(undefined)
     }
   }
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -347,28 +518,30 @@ function DropdownMenuUserActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44 rounded-md">
-        <DropdownMenuItem 
-          onClick={() => user.banned ? handleUnbanUser(user.id) : handleBanUser(user.id)}
-          disabled={isLoading?.startsWith(`ban-${user.id}`) || isLoading?.startsWith(`unban-${user.id}`)}
+        <DropdownMenuItem
+          onClick={() => (user.banned ? handleUnbanUser(user.id) : handleBanUser(user.id))}
+          disabled={
+            isLoading?.startsWith(`ban-${user.id}`) || isLoading?.startsWith(`unban-${user.id}`)
+          }
           className="focus:bg-accent focus:text-accent-foreground group rounded-md"
         >
-          <Ban className="mr-2 h-4 w-4 group-focus:text-white group-hover:text-white text-muted-foreground transition-colors" />
-          <span>{user.banned ? 'Unban' : 'Ban'} User</span>
+          <Ban className="text-muted-foreground mr-2 h-4 w-4 transition-colors group-hover:text-white group-focus:text-white" />
+          <span>{user.banned ? "Unban" : "Ban"} User</span>
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => handleImpersonateUser(user.id)}
           disabled={isLoading === `impersonate-${user.id}`}
           className="focus:bg-accent focus:text-accent-foreground group rounded-md"
         >
-          <UserCog className="mr-2 h-4 w-4 group-focus:text-white group-hover:text-white text-muted-foreground transition-colors" />
+          <UserCog className="text-muted-foreground mr-2 h-4 w-4 transition-colors group-hover:text-white group-focus:text-white" />
           <span>Impersonate</span>
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => handleDeleteUser(user.id)}
           disabled={isLoading === `delete-${user.id}`}
           className="text-destructive focus:bg-destructive/10 focus:text-destructive group rounded-md"
         >
-          <Trash2 className="mr-2 h-4 w-4 group-focus:text-destructive group-hover:text-destructive text-muted-foreground transition-colors" />
+          <Trash2 className="group-focus:text-destructive group-hover:text-destructive text-muted-foreground mr-2 h-4 w-4 transition-colors" />
           <span>Delete User</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

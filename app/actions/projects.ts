@@ -73,6 +73,58 @@ export async function getTopCategories(limit = 5) {
   return topCategories
 }
 
+export async function addNewCategory(name: string) {
+  const session = await getSession()
+  if (!session?.user) {
+    return { success: false, error: "Authentication required" }
+  }
+  try {
+    const existingCategory = await db.query.category.findFirst({
+      where: eq(categoryTable.name, name),
+    })
+
+    if (existingCategory) {
+      return { success: false, error: "Category already exists" }
+    }
+
+    const [newCategory] = await db
+      .insert(categoryTable)
+      .values({
+        id: crypto.randomUUID(),
+        name,
+      })
+      .returning({ id: categoryTable.id, name: categoryTable.name })
+
+    return { success: true, categoryId: newCategory.id }
+  } catch (error) {
+    console.error("Error adding new category:", error)
+    return { success: false, error: "Failed to add new category" }
+  }
+}
+
+export async function deleteCategory(id: string) {
+  const session = await getSession()
+  if (!session?.user) {
+    return { success: false, error: "Authentication required" }
+  }
+  try {
+    const existingCategory = await db.query.category.findFirst({
+      where: eq(categoryTable.id, id),
+    })
+
+    if (!existingCategory) {
+      return { success: false, error: "Category not found" }
+    }
+
+    await db.delete(categoryTable).where(eq(categoryTable.id, id))
+
+    return { success: true }
+  } catch (error) {
+    console.error("Error deleting category:", error)
+    return { success: false, error: "Failed to delete category" }
+  }
+}
+
 // Get user's upvoted projects
 export async function getUserUpvotedProjects() {
   const session = await getSession()

@@ -33,6 +33,7 @@ const TECH_PROJECT_CATEGORIES = [
   { id: "finance-tech", name: "Finance & FinTech" },
   { id: "ecommerce", name: "E-commerce" },
   { id: "analytics", name: "Business Analytics" },
+  { id: "online-community", name: "Online Community" },
 
   // Hardware & IoT
   { id: "hardware", name: "Hardware" },
