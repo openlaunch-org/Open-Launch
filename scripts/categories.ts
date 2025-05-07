@@ -47,6 +47,7 @@ const TECH_PROJECT_CATEGORIES = [
   { id: "edtech", name: "Education Tech" },
   { id: "healthtech", name: "Health Tech" },
   { id: "greentech", name: "Green Tech" },
+  { id: "online-community", name: "Online Community" },
 
   // Platforms & Infrastructure
   { id: "platform", name: "Platforms" },
