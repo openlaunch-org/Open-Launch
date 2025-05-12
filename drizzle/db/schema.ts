@@ -43,6 +43,8 @@ export const platformType = {
   MOBILE: "mobile",
   DESKTOP: "desktop",
   API: "api",
+  WHATSAPP: "whatsapp",
+  TELEGRAM: "telegram",
   OTHER: "other",
 } as const
 
@@ -55,6 +57,8 @@ export const user = pgTable("user", {
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
   stripeCustomerId: text("stripe_customer_id"),
+  discordUserId: text("discord_user_id"),
+  discordUsername: text("discord_username"),
   role: text("role"),
   banned: boolean("banned"),
   banReason: text("ban_reason"),
@@ -114,9 +118,10 @@ export const project = pgTable(
     coverImageUrl: text("cover_image_url").notNull(),
     githubUrl: text("github_url"),
     twitterUrl: text("twitter_url"),
-    techStack: text("tech_stack").array(), // Array des technologies
+    linkedinUrl: text("linkedin_url"),
+    techStack: text("tech_stack").array(),
     pricing: text("pricing").notNull().default(pricingType.FREE),
-    platforms: text("platforms").array(), // Array des plateformes supportées
+    platforms: text("platforms").array(),
     launchStatus: text("launch_status").notNull().default(launchStatus.SCHEDULED),
     scheduledLaunchDate: timestamp("scheduled_launch_date"),
     launchType: text("launch_type").default(launchType.FREE),

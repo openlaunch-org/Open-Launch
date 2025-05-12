@@ -39,7 +39,7 @@ export const metadata: Metadata = {
         alt: "Open Launch - Discover the Best Tech Products",
       },
     ],
-    locale: "en_US",
+    locale: "pt_BR",
     type: "website",
   },
   twitter: {
@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt" suppressHydrationWarning>
       <head>
         <PlausibleProvider
           domain="open-launch.com"

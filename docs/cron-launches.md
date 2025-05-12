@@ -1,66 +1,66 @@
-# Configuration de la mise à jour automatique des lancements
+# Configuração da atualização automática dos lançamentos
 
-Ce document explique comment configurer la tâche planifiée pour mettre à jour automatiquement les statuts de lancement des chaînes à 8h00 UTC chaque jour.
+Este documento explica como configurar a tarefa agendada para atualizar automaticamente os status de lançamento dos canais às 8h00 UTC todos os dias.
 
-## Fonctionnement
+## Funcionamento
 
-Le système de lancement fonctionne comme suit :
+O sistema de lançamento funciona da seguinte forma:
 
-- Les chaînes sont initialement en statut `SCHEDULED` avec une date de lancement programmée
-- À 8h00 UTC le jour du lancement, le statut passe à `ONGOING`
-- À 8h00 UTC le lendemain, le statut passe à `LAUNCHED`
+- Os canais estão inicialmente com o status `SCHEDULED` com uma data de lançamento programada
+- Às 8h00 UTC no dia do lançamento, o status muda para `ONGOING`
+- Às 8h00 UTC no dia seguinte, o status muda para `LAUNCHED`
 
-## Configuration sur Coolify
+## Configuração no Coolify
 
-### 1. Ajouter les variables d'environnement
+### 1. Adicionar as variáveis de ambiente
 
-Ajoutez les variables d'environnement suivantes à votre application sur Coolify :
+Adicione as seguintes variáveis de ambiente à sua aplicação no Coolify:
 
 ```
-CRON_API_KEY=votre_clé_secrète_ici
-APP_URL=https://votre-domaine.com
+CRON_API_KEY=sua_chave_secreta_aqui
+APP_URL=https://seu-dominio.com
 ```
 
-- `CRON_API_KEY` : Une clé secrète pour sécuriser l'API (générez une chaîne aléatoire complexe)
-- `APP_URL` : L'URL de base de votre application
+- `CRON_API_KEY`: Uma chave secreta para proteger a API (gere uma sequência aleatória complexa)
+- `APP_URL`: A URL base da sua aplicação
 
-### 2. Configurer la tâche planifiée
+### 2. Configurar a tarefa agendada
 
-Dans Coolify, créez une nouvelle tâche planifiée avec les paramètres suivants :
+No Coolify, crie uma nova tarefa agendada com os seguintes parâmetros:
 
-- **Nom** : `update-launches`
-- **Commande** : `/app/scripts/update-launches.sh`
-- **Fréquence** : `0 8 * * *` (tous les jours à 8h00 UTC)
-- **Nom du conteneur** : Le nom de votre conteneur d'application
+- **Nome**: `update-launches`
+- **Comando**: `/app/scripts/update-launches.sh`
+- **Frequência**: `0 8 * * *` (todos os dias às 8h00 UTC)
+- **Nome do contêiner**: O nome do contêiner da sua aplicação
 
-### 3. Rendre le script exécutable
+### 3. Tornar o script executável
 
-Assurez-vous que le script est exécutable en exécutant cette commande dans le conteneur :
+Certifique-se de que o script é executável executando este comando no contêiner:
 
 ```bash
 chmod +x /app/scripts/update-launches.sh
 ```
 
-## Test manuel
+## Teste manual
 
-Pour tester manuellement la mise à jour des lancements, vous pouvez exécuter :
+Para testar manualmente a atualização dos lançamentos, você pode executar:
 
 ```bash
 curl -X GET \
-  -H "Authorization: Bearer votre_clé_secrète_ici" \
+  -H "Authorization: Bearer sua_chave_secreta_aqui" \
   -H "Content-Type: application/json" \
-  "https://votre-domaine.com/api/cron/update-launches"
+  "https://seu-dominio.com/api/cron/update-launches"
 ```
 
-## Journalisation
+## Logs
 
-Les logs de la tâche planifiée sont disponibles dans Coolify sous l'onglet "Logs" de la tâche planifiée.
+Os logs da tarefa agendada estão disponíveis no Coolify na aba "Logs" da tarefa agendada.
 
-## Dépannage
+## Solução de problemas
 
-Si la tâche planifiée échoue, vérifiez les points suivants :
+Se a tarefa agendada falhar, verifique os seguintes pontos:
 
-1. Les variables d'environnement `CRON_API_KEY` et `APP_URL` sont correctement définies
-2. Le script `/app/scripts/update-launches.sh` est exécutable
-3. L'API `/api/cron/update-launches` est accessible
-4. Les logs de l'application pour voir les erreurs potentielles
+1. As variáveis de ambiente `CRON_API_KEY` e `APP_URL` estão corretamente definidas
+2. O script `/app/scripts/update-launches.sh` é executável
+3. A API `/api/cron/update-launches` está acessível
+4. Os logs da aplicação para verificar possíveis erros

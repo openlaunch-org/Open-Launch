@@ -3,55 +3,60 @@ import { category } from "@/drizzle/db/schema"
 
 const TECH_PROJECT_CATEGORIES = [
   // Development & IT
-  { id: "developer-tools", name: "Developer Tools" },
-  { id: "api", name: "APIs & Integrations" },
-  { id: "open-source", name: "Open Source" },
-  { id: "web-dev", name: "Web Development" },
-  { id: "mobile-dev", name: "Mobile Development" },
-  { id: "devops", name: "DevOps & Cloud" },
-  { id: "databases", name: "Databases" },
-  { id: "testing-qa", name: "Testing & QA" },
-  { id: "cms", name: "CMS & No-Code" },
+  { id: "developer-tools", name: "Ferramentas de Desenvolvimento" },
+  { id: "api", name: "APIs e Integrações" },
+  { id: "open-source", name: "Código Aberto" },
+  { id: "web-dev", name: "Desenvolvimento web" },
+  { id: "mobile-dev", name: "Desenvolvimento mobile" },
+  { id: "devops", name: "DevOps e Cloud" },
+  { id: "databases", name: "Bancos de Dados" },
+  { id: "testing-qa", name: "Testes e QA" },
+  { id: "crm", name: "CRM" },
+  { id: "cms", name: "CMS" },
+  { id: "no-code", name: "No-Code" },
 
   // AI & Data Science
-  { id: "ai", name: "Artificial Intelligence" },
+  { id: "ai", name: "Inteligência Artificial" },
   { id: "machine-learning", name: "Machine Learning" },
-  { id: "data-science", name: "Data Science & Analytics" },
-  { id: "nlp", name: "Natural Language Processing" },
+  { id: "data-science", name: "Ciência de Dados" },
+  { id: "data-analytics", name: "Análise de Dados" },
+  { id: "nlp", name: "Processamento de Linguagem Natural" },
 
   // Design & UX
-  { id: "design-tools", name: "Design Tools" },
+  { id: "design-tools", name: "Ferramentas de Design" },
   { id: "ui-ux", name: "UI/UX" },
-  { id: "prototyping", name: "Prototyping" },
-  { id: "graphics", name: "Graphics & Illustration" },
+  { id: "prototyping", name: "Prototipação" },
+  { id: "graphics", name: "Gráficos e Ilustrações" },
 
   // Business & Marketing
   { id: "saas", name: "SaaS" },
-  { id: "marketing-tools", name: "Marketing Tools" },
-  { id: "sales-tools", name: "Sales Tools" },
-  { id: "productivity", name: "Productivity" },
-  { id: "finance-tech", name: "Finance & FinTech" },
+  { id: "microsaas", name: "Micro-SaaS" },
+  { id: "marketing-tools", name: "Ferramentas de Marketing" },
+  { id: "sales-tools", name: "Ferramentas de Vendas" },
+  { id: "productivity", name: "Produtividade e Colaboração" },
   { id: "ecommerce", name: "E-commerce" },
-  { id: "analytics", name: "Business Analytics" },
+  { id: "analytics", name: "Análise e BI" },
 
   // Hardware & IoT
   { id: "hardware", name: "Hardware" },
   { id: "iot", name: "Internet of Things (IoT)" },
-  { id: "robotics", name: "Robotics" },
+  { id: "robotics", name: "Robótica" },
   { id: "wearables", name: "Wearables" },
 
   // Niche & Emerging Tech
-  { id: "blockchain", name: "Blockchain & Crypto" },
+  { id: "blockchain", name: "Blockchain e Criptomoedas" },
   { id: "ar-vr", name: "AR/VR" },
-  { id: "gaming", name: "Gaming Tech" },
-  { id: "edtech", name: "Education Tech" },
-  { id: "healthtech", name: "Health Tech" },
-  { id: "greentech", name: "Green Tech" },
+  { id: "gaming", name: "Jogos e Entretenimento" },
+  { id: "edtech", name: "Educação" },
+  { id: "healthtech", name: "Saúde" },
+  { id: "agritech", name: "Agricultura" },
+  { id: "fintech", name: "Finanças e Investimentos" },
+  { id: "legaltech", name: "Jurídico" },
 
   // Platforms & Infrastructure
-  { id: "platform", name: "Platforms" },
+  { id: "platform", name: "Platformas" },
   { id: "serverless", name: "Serverless" },
-  { id: "security", name: "Security" },
+  { id: "security", name: "Segurança da Informação" },
 ]
 
 const initializeCategories = async () => {
@@ -64,7 +69,7 @@ const initializeCategories = async () => {
 
 try {
   initializeCategories().then(() => {
-    console.log("✅ Initialisation des catégories technologiques réussie !")
+    console.log("✅ Inicialização das categorias bem-sucedida!")
   })
 } catch (error) {
   console.error("❌ Erreur lors de l'initialisation des catégories :", error)
