@@ -1372,7 +1372,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                             <div>
                               Premium Plus (${LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE}){" "}
                               <span className="text-muted-foreground text-xs line-through">
-                                $25
+                                R$ 50
                               </span>
                             </div>
                             <span className="bg-primary/10 text-primary inline-block rounded-full px-2 py-0.5 text-xs">

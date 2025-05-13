@@ -19,11 +19,13 @@ export async function sendEmail(payload: EmailPayload) {
 
   try {
     const data = await resend.emails.send({
-      from: process.env.NEXT_PUBLIC_APP_NAME + " <noreply@productlaunch.com.br>",
+      from: `${process.env.NEXT_PUBLIC_APP_NAME} <noreply@productlaunch.com.br>`,
       to,
       subject,
       html,
     })
+
+    console.log("Email sent successfully:", data)
 
     return { success: true, data }
   } catch (error) {

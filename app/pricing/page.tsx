@@ -107,11 +107,11 @@ export default function PricingPage() {
                   <div className="flex items-baseline text-3xl font-bold">
                     {t("premiumPlusLaunch.price", { price: LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE })}
                     <span className="text-muted-foreground ml-2 text-base font-normal line-through">
-                      {t("premiumPlusLaunch.discountedPrice", { discountedPrice: 25 })}
+                      {t("premiumPlusLaunch.discountedPrice", { discountedPrice: 50 })}
                     </span>
                   </div>
                   <span className="bg-primary/10 text-primary w-fit rounded-full px-2 py-0.5 text-xs font-medium">
-                    {t("premiumPlusLaunch.discountCode", { code: "OPENLAUNCH" })}
+                    {t("premiumPlusLaunch.discountCode", { code: "PRODUCTBUILDER" })}
                   </span>
                 </div>
                 <p className="text-muted-foreground mb-6 text-xs">

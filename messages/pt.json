@@ -30,6 +30,20 @@
     "dailyWinners": "Vencedores Anteriores",
     "bestOfMonth": "Melhores do Mês"
   },
+  "navMenu": {
+    "explore": "Explorar",
+    "pricing": "Preços",
+    "submitProject": "Enviar Projeto",
+    "dashboard": "Dashboard",
+    "trendingNow": "Tendências do Momento",
+    "trendingDescription": "Descubra os projetos mais populares",
+    "dailyWinners": "Vencedores Anteriores",
+    "dailyWinnersDescription": "Veja os melhores projetos do dia",
+    "bestOfMonth": "Melhores do Mês",
+    "bestOfMonthDescription": "Os melhores projetos do mês",
+    "categories": "Categorias",
+    "categoriesDescription": "Explore projetos por categoria"
+  },
   "nav": {
     "menu": "Menu",
     "home": "Início",
@@ -83,6 +97,7 @@
   },
   "search": {
     "search": "Pesquisar",
+    "dashboard": "Dashboard",
     "searchElipses": "Pesquisar...",
     "searching": "Pesquisando...",
     "placeholder": "Pesquisar projetos, categorias ou tags...",
@@ -169,6 +184,11 @@
     "description": "Te enviamos um link de verificação para o seu endereço de e-mail. Por favor, verifique sua caixa de entrada e a pasta de spam.",
     "expireMessage": "O link de verificação irá expirar em 24 horas. Se você não encontrar o e-mail, você pode solicitar um novo envio.",
     "backToSignIn": "Voltar para Entrar"
+  },
+  "verifyEmailSuccess": {
+    "title": "Email Verificado",
+    "description": "Seu email foi verificado com sucesso. Agora você pode entrar na sua conta.",
+    "continueToSignIn": "Continuar para Entrar"
   },
   "terms": {
     "metaTitle": "Termos de Serviço - Product Launch",
@@ -260,7 +280,7 @@
     "metaTitle": "Preços - Product Launch",
     "metaDescription": "Escolha o plano perfeito para o lançamento do seu projeto",
     "title": "Escolha Seu Plano de Lançamento",
-    "description": "Dê a visibilidade que seu projeto merece com nossas opções flexíveis de lançamento. Todos os lançamentos acontecem às 8:00 AM UTC.",
+    "description": "Dê a visibilidade que seu projeto merece com nossas opções flexíveis de lançamento. Todos os lançamentos acontecem às 8h (horário de Brasília).",
     "freeLaunch": {
       "title": "Lançamento Gratuito",
       "price": "R$ 0 / lançamento",

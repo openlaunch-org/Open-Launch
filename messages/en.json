@@ -30,6 +30,20 @@
     "dailyWinners": "Daily Winners",
     "bestOfMonth": "Best of Month"
   },
+  "navMenu": {
+    "explore": "Explore",
+    "pricing": "Pricing",
+    "submitProject": "Submit Project",
+    "dashboard": "Dashboard",
+    "trendingNow": "Trending Now",
+    "trendingDescription": "Discover the most popular projects",
+    "dailyWinners": "Daily Winners",
+    "dailyWinnersDescription": "See the best projects of the day",
+    "bestOfMonth": "Best of Month",
+    "bestOfMonthDescription": "See the best projects of the month",
+    "categories": "Categories",
+    "categoriesDescription": "Browse projects by category"
+  },
   "nav": {
     "menu": "Menu",
     "home": "Home",
@@ -83,6 +97,7 @@
   },
   "search": {
     "search": "Search",
+    "dashboard": "Dashboard",
     "searchElipses": "Search...",
     "searching": "Searching...",
     "placeholder": "Search projects, categories or tags...",
@@ -169,6 +184,11 @@
     "description": "We've sent you a verification link to your email address. Please check your inbox and spam folder.",
     "expireMessage": "The verification link will expire in 24 hours. If you don't see the email, you can request a new one.",
     "backToSignIn": "Back to Sign in"
+  },
+  "verifyEmailSuccess": {
+    "title": "Email Verified",
+    "description": "Your email has been successfully verified. You can now sign in to your account.",
+    "continueToSignIn": "Continue to Sign in"
   },
   "terms": {
     "metaTitle": "Terms of Service - Product Launch",

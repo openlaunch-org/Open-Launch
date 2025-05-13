@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 
+import { useTranslations } from "next-intl"
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,12 +15,14 @@ import {
 } from "@/components/ui/navigation-menu"
 
 export function NavMenu() {
+  const t = useTranslations("navMenu")
+
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList className="gap-1">
         <NavigationMenuItem>
           <NavigationMenuTrigger className="h-9 cursor-pointer px-3 text-sm">
-            Explore
+            {t("explore")}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[280px] gap-1 p-2">
@@ -28,9 +32,9 @@ export function NavMenu() {
                     href="/trending"
                     className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
-                    <div className="mb-1 font-medium">Trending Now</div>
+                    <div className="mb-1 font-medium">{t("trendingNow")}</div>
                     <p className="text-muted-foreground text-xs leading-tight">
-                      Discover the most popular projects
+                      {t("trendingDescription")}
                     </p>
                   </Link>
                 </NavigationMenuLink>
@@ -41,9 +45,9 @@ export function NavMenu() {
                     href="/winners"
                     className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
-                    <div className="mb-1 font-medium">Daily Winners</div>
+                    <div className="mb-1 font-medium">{t("dailyWinners")}</div>
                     <p className="text-muted-foreground text-xs leading-tight">
-                      See the best projects of the day
+                      {t("dailyWinnersDescription")}
                     </p>
                   </Link>
                 </NavigationMenuLink>
@@ -54,9 +58,9 @@ export function NavMenu() {
                     href="/trending?filter=month"
                     className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
-                    <div className="mb-1 font-medium">Best of Month</div>
+                    <div className="mb-1 font-medium">{t("bestOfMonth")}</div>
                     <p className="text-muted-foreground text-xs leading-tight">
-                      See the best projects of the month
+                      {t("bestOfMonthDescription")}
                     </p>
                   </Link>
                 </NavigationMenuLink>
@@ -67,9 +71,9 @@ export function NavMenu() {
                     href="/categories"
                     className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
-                    <div className="mb-1 font-medium">Categories</div>
+                    <div className="mb-1 font-medium">{t("categories")}</div>
                     <p className="text-muted-foreground text-xs leading-tight">
-                      Browse projects by category
+                      {t("categoriesDescription")}
                     </p>
                   </Link>
                 </NavigationMenuLink>
@@ -81,7 +85,7 @@ export function NavMenu() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link href="/dashboard" className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}>
-              Dashboard
+              {t("dashboard")}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
@@ -92,7 +96,7 @@ export function NavMenu() {
               href="/projects/submit"
               className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}
             >
-              Submit Project
+              {t("submitProject")}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
@@ -100,7 +104,7 @@ export function NavMenu() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link href="/pricing" className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}>
-              Pricing
+              {t("pricing")}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
