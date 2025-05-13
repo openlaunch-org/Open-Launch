@@ -3,7 +3,7 @@ import Link from "next/link"
 import { RiFilePaper2Line, RiShieldUserLine } from "@remixicon/react"
 
 export const metadata = {
-  title: "Legal Information - " + process.env.NEXT_PUBLIC_APP_NAME,
+  title: `Legal Information - ${process.env.NEXT_PUBLIC_APP_NAME}`,
   description: "Legal information and policies for Open-Launch platform",
 }
 

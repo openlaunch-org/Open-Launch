@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { headers } from "next/headers"
 import Link from "next/link"
 
-import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
 import { auth } from "@/lib/auth"
 import { PROJECT_LIMITS_VARIABLES } from "@/lib/constants"
@@ -28,9 +28,13 @@ interface ProjectSummary {
   categories?: { id: string; name: string }[]
 }
 
-export const metadata = {
-  title: "Trending - " + process.env.NEXT_PUBLIC_APP_NAME,
-  description: "Discover trending tech products on Open-Launch",
+export async function generateMetadata() {
+  const t = await getTranslations("trending")
+
+  return {
+    title: `${t("title")} - ${process.env.NEXT_PUBLIC_APP_NAME}`,
+    description: t("description"),
+  }
 }
 
 // Composant Skeleton principal
@@ -74,24 +78,26 @@ function TrendingDataSkeleton() {
 async function TrendingData({
   filter,
   isAuthenticated,
+  t,
 }: {
   filter: string
   isAuthenticated: boolean
+  t: (key: string) => string
 }) {
   let projects: ProjectSummary[] = [] // Utiliser le type défini
   let title
 
   if (filter === "today") {
     projects = await getTodayProjects(PROJECT_LIMITS_VARIABLES.VIEW_ALL_PAGE_TODAY_YESTERDAY_LIMIT)
-    title = "Today's Launches"
+    title = t("trending.today")
   } else if (filter === "yesterday") {
     projects = await getYesterdayProjects(
       PROJECT_LIMITS_VARIABLES.VIEW_ALL_PAGE_TODAY_YESTERDAY_LIMIT,
     )
-    title = "Yesterday's Launches"
+    title = t("trending.yesterday")
   } else {
     projects = await getMonthBestProjects(PROJECT_LIMITS_VARIABLES.VIEW_ALL_PAGE_MONTH_LIMIT)
-    title = "Best of the Month"
+    title = t("trending.thisMonth")
   }
 
   return (
@@ -102,7 +108,7 @@ async function TrendingData({
 
       {projects.length === 0 ? (
         <div className="text-muted-foreground border-border bg-card rounded-lg border border-dashed py-8 text-center text-sm">
-          No projects found for this period.
+          {t("trending.noProjectFound")}
         </div>
       ) : (
         <div className="-mx-3 flex flex-col sm:-mx-4">
@@ -130,7 +136,7 @@ export default async function TrendingPage({
 }: {
   searchParams: Promise<{ filter?: string }>
 }) {
-  const t = useTranslations("common")
+  const t = await getTranslations()
 
   const params = await searchParams
   const filter = params.filter || "today"
@@ -153,7 +159,7 @@ export default async function TrendingPage({
           {/* Contenu principal */}
           <div className="space-y-6 sm:space-y-8 lg:col-span-2">
             <Suspense fallback={<TrendingDataSkeleton />}>
-              <TrendingData filter={filter} isAuthenticated={isAuthenticated} />
+              <TrendingData filter={filter} isAuthenticated={isAuthenticated} t={t} />
             </Suspense>
           </div>
 
@@ -161,21 +167,21 @@ export default async function TrendingPage({
           <div className="top-24">
             {/* Quick Stats */}
             <div className="space-y-3 py-5 pt-0">
-              <h3 className="flex items-center gap-2 font-semibold">Live Now</h3>
+              <h3 className="flex items-center gap-2 font-semibold">{t("home.liveNow")}</h3>
               <Link
                 href="/trending"
                 className="bg-secondary/30 hover:bg-secondary/50 border-primary block rounded-md border-l-4 px-5 py-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-colors"
               >
                 <div className="flex items-center gap-4">
                   <div className="text-primary text-2xl font-bold">{ongoingLaunches}</div>
-                  <div className="text-sm font-medium">{t("activeLaunches")}</div>
+                  <div className="text-sm font-medium">{t("common.activeLaunches")}</div>
                 </div>
               </Link>
             </div>
 
             {/* Time Filters */}
             <div className="space-y-3 py-5">
-              <h3 className="flex items-center gap-2 font-semibold">Time Range</h3>
+              <h3 className="flex items-center gap-2 font-semibold">{t("trending.timeRange")}</h3>
               <div className="space-y-2">
                 <Link
                   href="/trending?filter=today"
@@ -183,7 +189,7 @@ export default async function TrendingPage({
                     filter === "today" ? "bg-muted font-medium" : "hover:bg-muted/40"
                   }`}
                 >
-                  Today&apos;s Launches
+                  {t("trending.today")}
                 </Link>
                 <Link
                   href="/trending?filter=yesterday"
@@ -191,7 +197,7 @@ export default async function TrendingPage({
                     filter === "yesterday" ? "bg-muted font-medium" : "hover:bg-muted/40"
                   }`}
                 >
-                  Yesterday&apos;s Launches
+                  {t("trending.yesterday")}
                 </Link>
                 <Link
                   href="/trending?filter=month"
@@ -199,26 +205,28 @@ export default async function TrendingPage({
                     filter === "month" ? "bg-muted font-medium" : "hover:bg-muted/40"
                   }`}
                 >
-                  This Month&apos;s Best
+                  {t("trending.thisMonth")}
                 </Link>
               </div>
             </div>
 
             {/* Quick Access */}
             <div className="space-y-3 py-5">
-              <h3 className="flex items-center gap-2 font-semibold">Quick Access</h3>
+              <h3 className="flex items-center gap-2 font-semibold">
+                {t("categories.quickAccess")}
+              </h3>
               <div className="space-y-2">
                 <Link
                   href="/winners"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Daily Winners
+                  {t("home.dailyWinners")}
                 </Link>
                 <Link
                   href="/categories"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Browse Categories
+                  {t("categories.browseCategories")}
                 </Link>
               </div>
             </div>
@@ -226,10 +234,10 @@ export default async function TrendingPage({
             {/* Categories */}
             <div className="space-y-3 py-5">
               <div className="flex items-center justify-between">
-                <h3 className="flex items-center gap-2 font-semibold">Top Categories</h3>
+                <h3 className="flex items-center gap-2 font-semibold">{t("home.topCategories")}</h3>
                 <Button variant="ghost" size="sm" className="text-sm" asChild>
                   <Link href="/categories" className="flex items-center gap-1">
-                    View all
+                    {t("common.viewAll", { gender: "female" })}
                   </Link>
                 </Button>
               </div>

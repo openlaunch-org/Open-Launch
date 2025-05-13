@@ -21,9 +21,11 @@ const fontHeading = FontHeading({
   variable: "--font-heading",
 })
 
+const appUrl = new URL(process.env.NEXT_PUBLIC_APP_URL!)
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
-  title: "Open Launch - Discover the Best Tech Products",
+  metadataBase: appUrl,
+  title: `${process.env.NEXT_PUBLIC_APP_NAME} - Discover the Best Tech Products`,
   description:
     "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
   openGraph: {
@@ -61,12 +63,12 @@ export default function RootLayout({
     <html lang="pt" suppressHydrationWarning>
       <head>
         <PlausibleProvider
-          domain="open-launch.com"
-          customDomain="https://plausible.dailypings.com"
+          domain={appUrl.hostname}
+          customDomain={process.env.NEXT_PUBLIC_PLAUSIBLE_URL}
           selfHosted={true}
           trackOutboundLinks={true}
           scriptProps={{
-            src: "https://plausible.dailypings.com/js/script.js",
+            src: `${process.env.NEXT_PUBLIC_PLAUSIBLE_URL}/js/script.js`,
           }}
           enabled={process.env.NODE_ENV === "production"}
         />

@@ -2,7 +2,7 @@
 import Link from "next/link"
 
 export const metadata = {
-  title: "Terms of Service - " + process.env.NEXT_PUBLIC_APP_NAME,
+  title: `Terms of Service - ${process.env.NEXT_PUBLIC_APP_NAME}`,
   description: "Terms of Service for Open-Launch platform",
 }
 

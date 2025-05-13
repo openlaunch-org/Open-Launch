@@ -3,6 +3,8 @@
     "loading": "Carregando...",
     "error": "Ocorreu um erro ao carregar os dados.",
     "noData": "Nenhum dado encontrado.",
+    "previous": "Previous",
+    "next": "Next",
     "seeMore": "Ver mais",
     "seeLess": "Ver menos",
     "viewAll": "Ver {gender, select, female {Todas} male {Todos} other {Tudo}}",
@@ -22,7 +24,7 @@
     "visitorsLast7Days": "Visitantes (últimos 7 Dias)",
     "liveNow": "Lançamentos Recentes",
     "topCategories": "Principais Categorias",
-    "sponsorTitle": "Gostaria de Ver Produto Aqui?",
+    "sponsorTitle": "Gostaria de ver seu produto aqui?",
     "sponsorDescription": "Torne-se um patrocinador!",
     "trendingNow": "Tendências do Momento",
     "dailyWinners": "Vencedores Anteriores",
@@ -45,12 +47,38 @@
     "signUp": "Cadastrar",
     "dashboard": "Dashboard"
   },
+  "categories": {
+    "title": "Categorias",
+    "description": "Navegue por produtos de tecnologia por categoria no Product Launch.",
+    "categoryNotFound": "Categoria não encontrada.",
+    "mostRecent": "Mais Recentes",
+    "mostUpvotes": "Mais Upvotes",
+    "alphabetical": "Alfabética",
+    "mostComments": "Mais Comentários",
+    "noProjects": "Nenhum projeto nesta categoria ainda.",
+    "checkOtherCategories": "Verifique outras categorias ou volte mais tarde.",
+    "selectCategory": "Selecione uma Categoria",
+    "browseCategories": "Navegue por Categorias",
+    "quickAccess": "Acesso Rápido",
+    "trendingNow": "Tendências do Momento",
+    "bestOfMonth": "Melhores do Mês",
+    "projectsCount": "{count, plural, =0 {Nenhum projeto} one {# projeto} other {# projetos}}"
+  },
+  "trending": {
+    "title": "Tendências",
+    "description": "Descubra os produtos e lançamentos mais quentes no Product Launch.",
+    "today": "Lançamentos de Hoje",
+    "yesterday": "Lançamentos de Ontem",
+    "thisMonth": "Melhores do Mês",
+    "timeRange": "Período",
+    "noProjectFound": "Nenhum projeto encontrado para este período."
+  },
   "projects": {
     "noProjectFound": "Nenhum projeto encontrado para {title}"
   },
   "banner": {
     "welcome": "Bem-vindo ao Product Launch!",
-    "description": "Descubra e apoie os melhores novos produtos de tecnologia.",
+    "description": "Descubra e apoie os mais novos e melhores produtos tech do mercado brasileiro.",
     "submitProject": "Enviar um Projeto"
   },
   "search": {

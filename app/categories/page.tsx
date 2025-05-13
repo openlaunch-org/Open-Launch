@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import Link from "next/link"
 
 import { RiArrowDownSLine, RiFilterLine } from "@remixicon/react"
+import { getTranslations } from "next-intl/server"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +20,13 @@ import {
   getTopCategories,
 } from "@/app/actions/projects"
 
-export const metadata = {
-  title: "Categories - " + process.env.NEXT_PUBLIC_APP_NAME,
-  description: "Browse tech products by category on " + process.env.NEXT_PUBLIC_APP_NAME,
+export async function generateMetadata() {
+  const t = await getTranslations("categories")
+
+  return {
+    title: `${t("title")} - ${process.env.NEXT_PUBLIC_APP_NAME}`,
+    description: t("description"),
+  }
 }
 
 // Composant Skeleton pour le chargement des chaînes
@@ -76,10 +81,12 @@ async function CategoryData({
   categoryId,
   sort = "recent",
   page = 1,
+  t,
 }: {
   categoryId: string
   sort?: string
   page?: number
+  t: (msg: string) => string
 }) {
   const ITEMS_PER_PAGE = 10
   const currentPage = Math.max(1, page)
@@ -98,7 +105,7 @@ async function CategoryData({
   if (!categoryData) {
     return (
       <div className="py-12 text-center">
-        <p className="text-muted-foreground">Category not found.</p>
+        <p className="text-muted-foreground">{t("categoryNotFound")}</p>
       </div>
     )
   }
@@ -108,12 +115,12 @@ async function CategoryData({
   const getSortLabel = () => {
     switch (sort) {
       case "upvotes":
-        return "Most Upvotes"
+        return t("mostUpvotes")
       case "alphabetical":
         return "A-Z"
       case "recent":
       default:
-        return "Most Recent"
+        return t("mostRecent")
     }
   }
 
@@ -135,7 +142,7 @@ async function CategoryData({
                 href={`/categories?category=${categoryId}&sort=recent&page=1`}
                 className={sort === "recent" || !sort ? "bg-muted/50 font-medium" : ""}
               >
-                Most Recent
+                {t("mostRecent")}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
@@ -143,7 +150,7 @@ async function CategoryData({
                 href={`/categories?category=${categoryId}&sort=upvotes&page=1`}
                 className={sort === "upvotes" ? "bg-muted/50 font-medium" : ""}
               >
-                Most Upvotes
+                {t("mostUpvotes")}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
@@ -151,7 +158,7 @@ async function CategoryData({
                 href={`/categories?category=${categoryId}&sort=alphabetical&page=1`}
                 className={sort === "alphabetical" ? "bg-muted/50 font-medium" : ""}
               >
-                Alphabetical
+                {t("alphabetical")}
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -160,8 +167,8 @@ async function CategoryData({
 
       {totalCount === 0 ? (
         <div className="text-muted-foreground border-border bg-card rounded-lg border border-dashed py-8 text-center text-sm">
-          No projects in this category yet.
-          <p className="mt-2">Check other categories or come back later.</p>
+          {t("noProjects")}
+          <p className="mt-2">{t("checkOtherCategories")}</p>
         </div>
       ) : (
         <div className="-mx-3 flex flex-col sm:-mx-4">
@@ -230,6 +237,7 @@ export default async function CategoriesPage({
 }: {
   searchParams: Promise<{ category?: string; sort?: string; page?: string }>
 }) {
+  const t = await getTranslations("categories")
   const categories = await getAllCategories()
   const categoriesWithCount = await getTopCategories(100)
 
@@ -247,7 +255,7 @@ export default async function CategoriesPage({
     <main className="bg-secondary/20">
       <div className="container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
         <div className="mb-6 flex flex-col">
-          <h1 className="text-2xl font-bold">Categories</h1>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
 
           <MobileCategorySelector
             categories={categories}
@@ -260,10 +268,15 @@ export default async function CategoriesPage({
           <div className="space-y-6 sm:space-y-8 lg:col-span-2">
             <Suspense fallback={<CategoryDataSkeleton />}>
               {selectedCategoryId ? (
-                <CategoryData categoryId={selectedCategoryId} sort={sortParam} page={pageParam} />
+                <CategoryData
+                  categoryId={selectedCategoryId}
+                  sort={sortParam}
+                  page={pageParam}
+                  t={t}
+                />
               ) : (
                 <div className="py-12 text-center">
-                  <p className="text-muted-foreground">Please select a category.</p>
+                  <p className="text-muted-foreground">{t("selectCategory")}</p>
                 </div>
               )}
             </Suspense>
@@ -272,7 +285,7 @@ export default async function CategoriesPage({
           <div className="top-24 hidden lg:block">
             <div className="space-y-3 py-5 pt-0">
               <div className="flex items-center justify-between">
-                <h3 className="flex items-center gap-2 font-semibold">Browse Categories</h3>
+                <h3 className="flex items-center gap-2 font-semibold">{t("browseCategories")}</h3>
               </div>
               <div className="-mx-2 max-h-[520px] space-y-2 overflow-y-auto pr-2">
                 {categories.map((category) => (
@@ -287,7 +300,7 @@ export default async function CategoriesPage({
                   >
                     <span className="text-sm">{category.name}</span>
                     <span className="text-muted-foreground bg-secondary rounded-full px-2 py-0.5 text-xs">
-                      {countMap.get(category.id) || 0} projects
+                      {t("projectsCount", { count: countMap.get(category.id) || 0 })}
                     </span>
                   </Link>
                 ))}
@@ -295,19 +308,19 @@ export default async function CategoriesPage({
             </div>
 
             <div className="space-y-3 py-5">
-              <h3 className="flex items-center gap-2 font-semibold">Quick Access</h3>
+              <h3 className="flex items-center gap-2 font-semibold">{t("quickAccess")}</h3>
               <div className="space-y-2">
                 <Link
                   href="/trending"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Trending Now
+                  {t("trendingNow")}
                 </Link>
                 <Link
                   href="/trending?filter=month"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Best of Month
+                  {t("bestOfMonth")}
                 </Link>
               </div>
             </div>

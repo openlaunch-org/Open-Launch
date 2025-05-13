@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation"
 
+import { useTranslations } from "next-intl"
+
 import {
   Select,
   SelectContent,
@@ -27,6 +29,7 @@ export function MobileCategorySelector({
   sortParam = "",
 }: MobileCategorySelectorProps) {
   const router = useRouter()
+  const t = useTranslations("categories")
 
   // Trouver le nom de la catégorie sélectionnée
   const selectedCategory = categories.find((cat) => cat.id === selectedCategoryId)
@@ -40,7 +43,7 @@ export function MobileCategorySelector({
         }}
       >
         <SelectTrigger className="w-full text-sm">
-          <SelectValue placeholder={selectedCategory?.name || "Sélectionner une catégorie"} />
+          <SelectValue placeholder={selectedCategory?.name || t("selectCategory")} />
         </SelectTrigger>
         <SelectContent className="max-h-[60vh]">
           {categories.map((cat) => (

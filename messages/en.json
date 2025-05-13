@@ -3,6 +3,8 @@
     "loading": "Loading...",
     "error": "There was an error loading the data.",
     "noData": "No data found.",
+    "previous": "Previous",
+    "next": "Next",
     "seeMore": "See more",
     "seeLess": "See less",
     "viewAll": "View All",
@@ -44,6 +46,32 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "dashboard": "Dashboard"
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Browse tech products by category on Product Hunt.",
+    "categoryNotFound": "Category not found.",
+    "mostRecent": "Most Recent",
+    "mostUpvotes": "Most Upvotes",
+    "alphabetical": "Alphabetical",
+    "mostComments": "Most Comments",
+    "noProjects": "No projects in this category yet.",
+    "checkOtherCategories": "Check other categories or come back later.",
+    "selectCategory": "Select a Category",
+    "browseCategories": "Browse Categories",
+    "quickAccess": "Quick Access",
+    "trendingNow": "Trending Now",
+    "bestOfMonth": "Best of Month",
+    "projectsCount": "{count} projects"
+  },
+  "trending": {
+    "title": "Tendências",
+    "description": "Descubra os produtos e lançamentos mais quentes no Product Launch.",
+    "today": "Lançamentos de Hoje",
+    "yesterday": "Lançamentos de Ontem",
+    "thisMonth": "Melhores do Mês",
+    "timeRange": "Período",
+    "noProjectFound": "Nenhum projeto encontrado para este período."
   },
   "projects": {
     "noProjectFound": "No projects found for {title}"
