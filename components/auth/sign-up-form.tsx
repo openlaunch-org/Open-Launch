@@ -34,7 +34,7 @@ export function SignUpForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(signUpSchema(t)),
   })
 
   const [generalError, setGeneralError] = useState<string | null>(null)

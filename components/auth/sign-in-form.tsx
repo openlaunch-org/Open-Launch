@@ -21,6 +21,8 @@ import { TurnstileCaptcha } from "./turnstile-captcha"
 
 export function SignInForm() {
   const router = useRouter()
+  const t = useTranslations("auth")
+
   const [loadingButtons, setLoadingButtons] = useState({
     google: false,
     email: false,
@@ -33,7 +35,7 @@ export function SignInForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(signInSchema(t)),
   })
 
   const [generalError, setGeneralError] = useState<string | null>(null)
@@ -99,8 +101,6 @@ export function SignInForm() {
       },
     })
   }, [])
-
-  const t = useTranslations("auth")
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 sm:px-0">

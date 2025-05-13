@@ -18,7 +18,7 @@ export const {
   baseURL: process.env.BETTER_AUTH_URL!,
   trustedOrigins: [
     process.env.NODE_ENV !== "development"
-      ? "https://www.open-launch.com"
+      ? "https://www.productlaunch.com"
       : "http://localhost:3000",
   ],
   plugins: [

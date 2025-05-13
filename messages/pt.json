@@ -97,7 +97,23 @@
     "sending": "Enviando...",
     "sendResetLink": "Enviar link de redefinição",
     "rememberPassword": "Lembrou sua senha?",
-    "and": "e"
+    "and": "e",
+    "nameRule": "O nome deve conter ao menos 2 caracteres",
+    "emailRule": "Por favor, insira um endereço de email válido",
+    "passwordRule": "A senha deve conter ao menos 8 caracteres",
+    "passwordUppercaseRule": "A senha deve conter ao menos uma letra maiúscula",
+    "passwordLowercaseRule": "A senha deve conter ao menos uma letra minúscula",
+    "passwordNumberRule": "A senha deve conter ao menos um número",
+    "resetPassword": "Redefinir Senha",
+    "resettingPassword": "Redefinindo senha...",
+    "confirmNewPassword": "Confirmar Nova Senha",
+    "confirmNewPasswordPlaceholder": "Confirme sua nova senha",
+    "passwordsDontMatch": "As senhas não coincidem",
+    "passwordReset": "Redefinição de Senha",
+    "enterPasswordBelow": "Digite sua nova senha abaixo",
+    "missingToken": "Token de redefinição inválido ou ausente",
+    "resetPasswordError": "Falha ao redefinir a senha. Por favor, tente novamente.",
+    "resetPasswordSuccess": "Senha redefinida com sucesso. Você pode entrar agora."
   },
   "footer": {
     "pricing": "Preços",
@@ -119,5 +135,11 @@
     "resources": "Recursos",
     "legal": "Legal",
     "connect": "Conecte-se"
+  },
+  "verifyEmail": {
+    "title": "Verifique seu email",
+    "description": "Te enviamos um link de verificação para o seu endereço de e-mail. Por favor, verifique sua caixa de entrada e a pasta de spam.",
+    "expireMessage": "O link de verificação irá expirar em 24 horas. Se você não encontrar o e-mail, você pode solicitar um novo envio.",
+    "backToSignIn": "Voltar para Entrar"
   }
 }

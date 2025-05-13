@@ -1,25 +1,29 @@
 import * as z from "zod"
 
-export const signInSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-})
+type TranslateFunction = (msg: string) => string
+export type SignInFormData = { email: string; password: string }
+export type SignUpFormData = { name: string } & SignInFormData
+export type ForgotPasswordFormData = { email: string }
 
-export const signUpSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number"),
-})
+export const signInSchema = (t: TranslateFunction) =>
+  z.object({
+    email: z.string().email(t("emailRule")),
+    password: z.string().min(8, t("passwordRule")),
+  })
 
-export const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-})
+export const signUpSchema = (t: TranslateFunction) =>
+  z.object({
+    name: z.string().min(2, t("nameRule")),
+    email: z.string().email(t("emailRule")),
+    password: z
+      .string()
+      .min(8, t("passwordRule"))
+      .regex(/[A-Z]/, t("passwordUppercaseRule"))
+      .regex(/[a-z]/, t("passwordLowercaseRule"))
+      .regex(/[0-9]/, t("passwordNumberRule")),
+  })
 
-export type SignInFormData = z.infer<typeof signInSchema>
-export type SignUpFormData = z.infer<typeof signUpSchema>
-export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>
+export const forgotPasswordSchema = (t: TranslateFunction) =>
+  z.object({
+    email: z.string().email(t("emailRule")),
+  })

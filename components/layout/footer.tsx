@@ -1,20 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link"
 
-import { RiGithubFill, RiTwitterXFill } from "@remixicon/react"
+import { RiInstagramFill, RiLinkedinFill } from "@remixicon/react"
 import { useTranslations } from "next-intl"
 
 // Liens pour la nouvelle colonne "Connect"
 const connectLinkItems = [
   {
-    href: "https://github.com/drdruide/open-launch",
-    icon: RiGithubFill,
-    label: "GitHub",
+    href: "https://instagram.com/productlaunch",
+    icon: RiInstagramFill,
+    label: "Instagram",
   },
   {
-    href: "https://twitter.com/Ericbn09",
-    icon: RiTwitterXFill,
-    label: "Twitter / X",
+    href: "https://linkedin.com/company/productlaunch",
+    icon: RiLinkedinFill,
+    label: "LinkedIn",
   },
 ]
 
