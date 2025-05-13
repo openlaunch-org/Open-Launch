@@ -45,7 +45,7 @@ export function ShareButton({ name, slug, variant = "default", className }: Shar
 
   const shareOnSocial = (platform: string) => {
     const url = shareUrl
-    const title = `Check out ${name} on Open-Launch`
+    const title = `Check out ${name} on ` + process.env.NEXT_PUBLIC_APP_NAME
 
     let socialShareUrl = ""
     switch (platform) {

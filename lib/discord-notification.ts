@@ -78,7 +78,7 @@ export async function sendDiscordCommentNotification(
     }
 
     // Build project URL
-    const projectUrl = `${process.env.NEXT_PUBLIC_URL || ""}/projects/${projectInfo.slug}`
+    const projectUrl = `${process.env.NEXT_PUBLIC_APP_URL || ""}/projects/${projectInfo.slug}`
 
     // Truncate comment text if it's too long
     const truncatedText =

@@ -16,11 +16,7 @@ export const {
   admin,
 } = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL!,
-  trustedOrigins: [
-    process.env.NODE_ENV !== "development"
-      ? "https://www.productlaunch.com"
-      : "http://localhost:3000",
-  ],
+  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL!],
   plugins: [
     stripeClient({
       subscription: true, //if you want to enable subscription management

@@ -29,7 +29,7 @@ interface ProjectSummary {
 }
 
 export const metadata = {
-  title: "Trending - Open-Launch",
+  title: "Trending - " + process.env.NEXT_PUBLIC_APP_NAME,
   description: "Discover trending tech products on Open-Launch",
 }
 

@@ -34,7 +34,7 @@ export function RankingBadge({ ranking }: RankingBadgeProps) {
         </div>
         <div className="flex flex-col">
           <span className="text-primary text-[10px] font-bold tracking-wide uppercase dark:text-zinc-400">
-            Open-Launch
+            {process.env.NEXT_PUBLIC_APP_NAME}
           </span>
           <span className="text-primary -mt-0.5 text-sm font-bold dark:text-zinc-200">
             #{ranking} Project of the Day

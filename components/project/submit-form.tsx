@@ -473,7 +473,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
               format(parseISO(formData.scheduledDate), DATE_FORMAT.DISPLAY),
               formData.launchType,
               formData.websiteUrl,
-              `${process.env.NEXT_PUBLIC_URL || ""}/projects/${projectSlug}`,
+              `${process.env.NEXT_PUBLIC_APP_URL || ""}/projects/${projectSlug}`,
             )
           } catch (discordError) {
             console.error("Failed to send Discord notification:", discordError)

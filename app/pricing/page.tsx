@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "Pricing - Open-Launch",
+  title: "Pricing - " + process.env.NEXT_PUBLIC_APP_NAME,
   description: "Choose the perfect plan for your project launch",
 }
 

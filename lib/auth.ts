@@ -67,11 +67,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: [
-    process.env.NODE_ENV !== "development"
-      ? "https://www.productlaunch.com"
-      : "http://localhost:3000",
-  ],
+  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL!],
   plugins: [
     stripe({
       stripeClient,

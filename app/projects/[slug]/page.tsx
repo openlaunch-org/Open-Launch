@@ -55,10 +55,10 @@ export async function generateMetadata(
   const previousImages = (await parent).openGraph?.images || []
 
   return {
-    title: `${projectData.name} | Open-Launch`,
+    title: `${projectData.name} | ` + process.env.NEXT_PUBLIC_APP_NAME,
     description: projectData.description,
     openGraph: {
-      title: `${projectData.name} on Open-Launch`,
+      title: `${projectData.name} on ` + process.env.NEXT_PUBLIC_APP_NAME,
       description: projectData.description,
       images: [projectData.coverImageUrl || projectData.logoUrl, ...previousImages],
     },
@@ -178,16 +178,25 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                       <a
                         href={`/projects/${projectData.slug}`}
                         target="_blank"
-                        title={`Open-Launch Top ${projectData.dailyRanking} Daily Winner`}
+                        title={
+                          process.env.NEXT_PUBLIC_APP_NAME +
+                          ` Top ${projectData.dailyRanking} Daily Winner`
+                        }
                       >
                         <img
                           src={`/images/badges/top${projectData.dailyRanking}-light.svg`}
-                          alt={`Open-Launch Top ${projectData.dailyRanking} Daily Winner`}
+                          alt={
+                            process.env.NEXT_PUBLIC_APP_NAME +
+                            ` Top ${projectData.dailyRanking} Daily Winner`
+                          }
                           className="h-auto w-[195px] dark:hidden"
                         />
                         <img
                           src={`/images/badges/top${projectData.dailyRanking}-dark.svg`}
-                          alt={`Open-Launch Top ${projectData.dailyRanking} Daily Winner`}
+                          alt={
+                            process.env.NEXT_PUBLIC_APP_NAME +
+                            ` Top ${projectData.dailyRanking} Daily Winner`
+                          }
                           className="hidden h-auto w-[195px] dark:block"
                         />
                       </a>
@@ -227,16 +236,25 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     <a
                       href={`/projects/${projectData.slug}`}
                       target="_blank"
-                      title={`Open-Launch Top ${projectData.dailyRanking} Daily Winner`}
+                      title={
+                        process.env.NEXT_PUBLIC_APP_NAME +
+                        ` Top ${projectData.dailyRanking} Daily Winner`
+                      }
                     >
                       <img
                         src={`/images/badges/top${projectData.dailyRanking}-light.svg`}
-                        alt={`Open-Launch Top ${projectData.dailyRanking} Daily Winner`}
+                        alt={
+                          process.env.NEXT_PUBLIC_APP_NAME +
+                          ` Top ${projectData.dailyRanking} Daily Winner`
+                        }
                         className="h-auto w-[195px] dark:hidden"
                       />
                       <img
                         src={`/images/badges/top${projectData.dailyRanking}-dark.svg`}
-                        alt={`Open-Launch Top ${projectData.dailyRanking} Daily Winner`}
+                        alt={
+                          process.env.NEXT_PUBLIC_APP_NAME +
+                          ` Top ${projectData.dailyRanking} Daily Winner`
+                        }
                         className="hidden h-auto w-[195px] dark:block"
                       />
                     </a>

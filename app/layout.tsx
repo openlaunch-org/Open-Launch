@@ -22,7 +22,7 @@ const fontHeading = FontHeading({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_URL!),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
   title: "Open Launch - Discover the Best Tech Products",
   description:
     "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "Open Launch - Discover the Best Tech Products",
     description:
       "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
-    url: process.env.NEXT_PUBLIC_URL,
+    url: process.env.NEXT_PUBLIC_APP_URL,
     siteName: "Open Launch",
     images: [
       {

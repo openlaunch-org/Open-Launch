@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 export const metadata = {
-  title: "Privacy Policy - Open-Launch",
+  title: "Privacy Policy - " + process.env.NEXT_PUBLIC_APP_NAME,
   description: "Privacy Policy for Open-Launch platform",
 }
 

@@ -12,13 +12,13 @@
 **The first complete open source alternative to Product Hunt. Built with modern web technologies.**
 
 <div align="center">
-  <a href="https://open-launch.com" target="_blank">
+  <a href="https://productlaunch.com.br" target="_blank">
     <img src="https://img.shields.io/badge/Launch_Your_Project_NOW-2563EB?style=for-the-badge&logo=&logoColor=white" alt="Launch Your Project NOW" />
   </a>
 </div>
 
 <div align="center">
-  <img src="https://open-launch.com/og.png" alt="Open Launch Screenshot" width="800px" />
+  <img src="https://productlaunch.com.br/og.png" alt="Open Launch Screenshot" width="800px" />
 </div>
 
 ## 📋 Table of Contents

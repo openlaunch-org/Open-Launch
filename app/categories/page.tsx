@@ -20,8 +20,8 @@ import {
 } from "@/app/actions/projects"
 
 export const metadata = {
-  title: "Categories - Open-Launch",
-  description: "Browse tech products by category on Open-Launch",
+  title: "Categories - " + process.env.NEXT_PUBLIC_APP_NAME,
+  description: "Browse tech products by category on " + process.env.NEXT_PUBLIC_APP_NAME,
 }
 
 // Composant Skeleton pour le chargement des chaînes
