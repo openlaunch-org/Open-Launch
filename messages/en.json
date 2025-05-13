@@ -169,5 +169,149 @@
     "description": "We've sent you a verification link to your email address. Please check your inbox and spam folder.",
     "expireMessage": "The verification link will expire in 24 hours. If you don't see the email, you can request a new one.",
     "backToSignIn": "Back to Sign in"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated",
+    "returnToHome": "Return to Home",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "paragraph1": "Welcome to Open Launch. These Terms of Service govern your use of our platform, which focuses on discovering and supporting projects.",
+        "paragraph2": "By using Open Launch, you agree to these terms. If you don't agree, please don't use our services."
+      },
+      "usingService": {
+        "title": "2. Using Our Service",
+        "ageRequirements": {
+          "title": "Age Requirements:",
+          "description": "You must be at least 13 years old to use Open Launch."
+        },
+        "accountResponsibility": {
+          "title": "Account Responsibility:",
+          "description": "If you create an account, you're responsible for maintaining its security and for all activities under your account."
+        },
+        "acceptableUse": {
+          "title": "Acceptable Use:",
+          "description": "When using Open Launch, you agree not to:",
+          "items": {
+            "illegalContent": "Post content that's illegal, harmful, or violates others' rights",
+            "misrepresentation": "Misrepresent yourself or your affiliation with others",
+            "interference": "Interfere with the platform's operation or security",
+            "dataCollection": "Collect user data without permission",
+            "unauthorizedCommercial": "Use the service for unauthorized commercial purposes"
+          }
+        }
+      },
+      "content": {
+        "title": "3. Content",
+        "yourContent": "Your Content:",
+        "yourContentDescription": "When you submit projects, comments, or other content on Open Launch, you retain ownership, but grant us permission to display and use that content on our platform.",
+        "responsibility": "Responsibility:",
+        "responsibilityDescription": "You're responsible for the content you submit. Make sure you have the right to share it and that it doesn't violate any laws or these terms.",
+        "ourRights": "Our Rights:",
+        "ourRightsDescription": "We can remove any content at our discretion if we believe it violates these terms or might harm our platform, users, or third parties."
+      },
+      "intellectualProperty": {
+        "title": "4. Intellectual Property",
+        "description1": "Open Launch is an open source project licensed under the MIT License. The source code is available on",
+        "description2": "While the core platform is open source, certain features or services may be proprietary. The MIT License allows you to:",
+        "list": {
+          "use": "Use, copy, and modify the software",
+          "distribute": "Distribute the software",
+          "sublicense": "Sublicense the software"
+        },
+        "description3": "You must include the original copyright notice and license in any substantial portions of the software.",
+        "description4": "User-submitted content remains the property of the respective users, who grant Open Launch a license to display and use that content on our platform."
+      },
+      "thirdPartyContent": {
+        "title": "5. Third-Party Content",
+        "description1": "Open Launch may contain links to third-party websites or services, including projects. We're not responsible for the content, policies, or practices of these third parties.",
+        "description2": "Your interactions with third-party services are between you and that third party."
+      },
+      "termination": {
+        "title": "6. Termination",
+        "description1": "We can suspend or terminate your access to Open Launch at any time for any reason, particularly if you violate these terms.",
+        "description2": "If your account is terminated, you'll no longer have access to your content or account information."
+      },
+      "disclaimers": {
+        "title": "7. Disclaimers",
+        "description1": "Open Launch is provided 'as is' without warranties of any kind. We don't guarantee that the service will be uninterrupted, secure, or error-free.",
+        "description2": "We're not responsible for the accuracy or reliability of any content posted by users or third parties."
+      },
+      "limitationOfLiability": {
+        "title": "8. Limitation of Liability",
+        "description": "To the extent permitted by law, Open Launch and its team will not be liable for any indirect, incidental, special, or consequential damages resulting from your use of or inability to use our service."
+      },
+      "changesToTerms": {
+        "title": "9. Changes to These Terms",
+        "description1": "We may update these terms from time to time. We'll notify you of significant changes, but it's your responsibility to review these terms periodically.",
+        "description2": "Your continued use of Open Launch after changes means you accept the updated terms."
+      },
+      "contactUs": {
+        "title": "10. Contact Us",
+        "description1": "If you have questions about these terms, please contact us at:",
+        "description2": "mailto:{email}"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Choose Your Launch Plan",
+    "description": "Get the visibility your project deserves with our flexible launch options. All launches happen at 8:00 AM UTC.",
+    "freeLaunch": {
+      "title": "Free Launch",
+      "price": "$0 /launch",
+      "description": "Standard launch with up to {days} days scheduling window.",
+      "features": [
+        "{slots} slots available daily",
+        "Standard launch queue",
+        "Featured on homepage",
+        "Dofollow Backlink if Top 3 daily"
+      ],
+      "button": "Launch for Free"
+    },
+    "premiumLaunch": {
+      "title": "Premium Launch",
+      "price": "${price} /launch",
+      "description": "Priority scheduling with faster launch dates.",
+      "features": {
+        "queue": "Skip the Free Queue - Priority access",
+        "backlink": "Guaranteed Dofollow Backlink",
+        "slots": "{slots} premium slots daily",
+        "earlyDates": "Earlier launch dates",
+        "highlight": "Featured on homepage"
+      },
+      "button": "Get Premium"
+    },
+    "premiumPlusLaunch": {
+      "title": "Premium Plus",
+      "price": "${price}",
+      "discountedPrice": "${discountedPrice}",
+      "discountCode": "-50% with code: {code}",
+      "description": "Ultimate visibility with special homepage spot",
+      "features": {
+        "highlight": "Premium Spotlight Placement: Most visible position on our platform",
+        "slots": "Exclusive Daily Spots: Only {slots} projects per day",
+        "earlyDates": "Fastest Launch Dates: Top priority for your project",
+        "backlink": "Guaranteed Dofollow Backlink: Valuable SEO boost for your site"
+      },
+      "button": "Get Premium Plus"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "question1": {
+          "title": "When do launches happen?",
+          "content": "All launches happen at 8:00 AM UTC. We launch a limited number of projects each day to ensure quality visibility."
+        },
+        "question2": {
+          "title": "How many projects are launched each day?",
+          "content": "We launch up to {free} free projects, {premium} premium projects, and {premiumPlus} premium plus projects daily."
+        },
+        "question3": {
+          "title": "How far in advance can I schedule my launch?",
+          "content": "Free users can schedule up to {freeDays} days in advance, Premium users up to {premiumDays} days, and Premium Plus users up to {premiumPlusDays} days."
+        }
+      }
+    }
   }
 }

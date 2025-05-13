@@ -169,5 +169,149 @@
     "description": "Te enviamos um link de verificação para o seu endereço de e-mail. Por favor, verifique sua caixa de entrada e a pasta de spam.",
     "expireMessage": "O link de verificação irá expirar em 24 horas. Se você não encontrar o e-mail, você pode solicitar um novo envio.",
     "backToSignIn": "Voltar para Entrar"
+  },
+  "terms": {
+    "title": "Termos de Serviço",
+    "lastUpdated": "Última atualização",
+    "returnToHome": "Voltar para a Página Inicial",
+    "sections": {
+      "introduction": {
+        "title": "1. Introdução",
+        "paragraph1": "Bem-vindo ao Product Launch. Estes Termos de Serviço regem o uso da nossa plataforma, que se concentra em descobrir e apoiar projetos.",
+        "paragraph2": "Ao usar o Product Launch, você concorda com estes termos. Se você não concorda, por favor, não utilize nossos serviços."
+      },
+      "usingService": {
+        "title": "2. Uso do Serviço",
+        "ageRequirements": {
+          "title": "Requisitos de Idade:",
+          "description": "Você deve ter pelo menos 13 anos para usar o Product Launch."
+        },
+        "accountResponsibility": {
+          "title": "Responsabilidade da Conta:",
+          "description": "Se você criar uma conta, é responsável por manter sua segurança e por todas as atividades realizadas nela."
+        },
+        "acceptableUse": {
+          "title": "Uso Aceitável:",
+          "description": "Ao usar o Product Launch, você concorda em não:",
+          "items": {
+            "illegalContent": "Publicar conteúdo ilegal, prejudicial ou que viole os direitos de terceiros",
+            "misrepresentation": "Fazer-se passar por outra pessoa ou falsificar sua afiliação com outros",
+            "interference": "Interferir na operação ou segurança da plataforma",
+            "dataCollection": "Coletar dados de usuários sem permissão",
+            "unauthorizedCommercial": "Usar o serviço para fins comerciais não autorizados"
+          }
+        }
+      },
+      "content": {
+        "title": "3. Conteúdo",
+        "yourContent": "Seu Conteúdo:",
+        "yourContentDescription": "Ao enviar projetos, comentários ou outros conteúdos no Product Launch, você mantém a propriedade, mas nos concede permissão para exibir e usar esse conteúdo em nossa plataforma.",
+        "responsibility": "Responsabilidade:",
+        "responsibilityDescription": "Você é responsável pelo conteúdo que envia. Certifique-se de que tem o direito de compartilhá-lo e que ele não viola nenhuma lei ou estes termos.",
+        "ourRights": "Nossos Direitos:",
+        "ourRightsDescription": "Podemos remover qualquer conteúdo a nosso critério se acreditarmos que ele viola estes termos ou pode prejudicar nossa plataforma, usuários ou terceiros."
+      },
+      "intellectualProperty": {
+        "title": "4. Propriedade Intelectual",
+        "description1": "O Product Launch é um projeto de código aberto licenciado sob a Licença MIT. O código-fonte está disponível no",
+        "description2": "Embora a plataforma principal seja de código aberto, certos recursos ou serviços podem ser proprietários. A Licença MIT permite que você:",
+        "list": {
+          "use": "Usar, copiar e modificar o software",
+          "distribute": "Distribuir o software",
+          "sublicense": "Sublicenciar o software"
+        },
+        "description3": "Você deve incluir o aviso de copyright original e a licença em quaisquer partes substanciais do software.",
+        "description4": "O conteúdo enviado pelos usuários permanece propriedade dos respectivos usuários, que concedem ao Product Launch uma licença para exibir e usar esse conteúdo em nossa plataforma."
+      },
+      "thirdPartyContent": {
+        "title": "5. Conteúdo de Terceiros",
+        "description1": "O Product Launch pode conter links para sites ou serviços de terceiros, incluindo projetos. Não somos responsáveis pelo conteúdo, políticas ou práticas desses terceiros.",
+        "description2": "Suas interações com serviços de terceiros são entre você e o terceiro."
+      },
+      "termination": {
+        "title": "6. Rescisão",
+        "description1": "Podemos suspender ou encerrar seu acesso ao Product Launch a qualquer momento, por qualquer motivo, especialmente se você violar estes termos.",
+        "description2": "Se sua conta for encerrada, você não terá mais acesso ao seu conteúdo ou às informações da conta."
+      },
+      "disclaimers": {
+        "title": "7. Isenções de Responsabilidade",
+        "description1": "O Product Launch é fornecido 'como está', sem garantias de qualquer tipo. Não garantimos que o serviço será ininterrupto, seguro ou livre de erros.",
+        "description2": "Não somos responsáveis pela precisão ou confiabilidade de qualquer conteúdo postado por usuários ou terceiros."
+      },
+      "limitationOfLiability": {
+        "title": "8. Limitação de Responsabilidade",
+        "description": "Na medida permitida por lei, o Product Launch e sua equipe não serão responsáveis por quaisquer danos indiretos, incidentais, especiais ou consequenciais resultantes do uso ou da incapacidade de usar nosso serviço."
+      },
+      "changesToTerms": {
+        "title": "9. Alterações a Estes Termos",
+        "description1": "Podemos atualizar estes termos periodicamente. Notificaremos você sobre mudanças significativas, mas é sua responsabilidade revisar estes termos periodicamente.",
+        "description2": "Seu uso contínuo do Product Launch após as alterações significa que você aceita os termos atualizados."
+      },
+      "contactUs": {
+        "title": "10. Fale Conosco",
+        "description1": "Se você tiver dúvidas sobre estes termos, entre em contato conosco em:",
+        "description2": "mailto:{email}"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Escolha Seu Plano de Lançamento",
+    "description": "Dê a visibilidade que seu projeto merece com nossas opções flexíveis de lançamento. Todos os lançamentos acontecem às 8:00 AM UTC.",
+    "freeLaunch": {
+      "title": "Lançamento Gratuito",
+      "price": "R$ 0 / lançamento",
+      "description": "Lançamento padrão com até {days} dias de agendamento.",
+      "features": {
+        "slots": "{slots} vagas disponíveis diariamente",
+        "queue": "Fila de lançamento padrão",
+        "highlight": "Destaque na página inicial",
+        "backlink": "Backlink Dofollow se Top 3 diário"
+      },
+      "button": "Lançar Gratuitamente"
+    },
+    "premiumLaunch": {
+      "title": "Lançamento Premium",
+      "price": "R$ {price} / lançamento",
+      "description": "Agendamento prioritário com datas de lançamento mais rápidas.",
+      "features": {
+        "queue": "Pule a Fila Gratuita - Acesso prioritário",
+        "backlink": "Backlink Dofollow Garantido",
+        "slots": "{slots} vagas premium diariamente",
+        "earlyDates": "Datas de lançamento antecipadas",
+        "highlight": "Destaque na página inicial"
+      },
+      "button": "Obter Premium"
+    },
+    "premiumPlusLaunch": {
+      "title": "Premium Plus",
+      "price": "R$ {price}",
+      "discountedPrice": "R$ {discountedPrice}",
+      "discountCode": "-50% com o código: {code}",
+      "description": "Visibilidade máxima com destaque especial na página inicial",
+      "features": {
+        "highlight": "Destaque Premium: Posição mais visível na nossa plataforma",
+        "slots": "Vagas Exclusivas Diárias: Apenas {slots} projetos por dia",
+        "earlyDates": "Datas de Lançamento Mais Rápidas: Prioridade máxima para seu projeto",
+        "backlink": "Backlink Dofollow Garantido: Impulsionamento valioso de SEO para seu site"
+      },
+      "button": "Obter Premium Plus"
+    },
+    "faq": {
+      "title": "Perguntas Frequentes",
+      "items": {
+        "question1": {
+          "title": "Quando os lançamentos acontecem?",
+          "content": "Todos os lançamentos acontecem às 8h. Lançamos um número limitado de projetos por dia para garantir visibilidade de qualidade."
+        },
+        "question2": {
+          "title": "Quantos projetos são lançados por dia?",
+          "content": "Lançamos até {free} projetos gratuitos, {premium} projetos premium e {premiumPlus} projetos premium plus diariamente."
+        },
+        "question3": {
+          "title": "Com quanta antecedência posso agendar meu lançamento?",
+          "content": "Usuários gratuitos podem agendar até {freeDays} dias de antecedência, usuários Premium até {premiumDays} dias, e usuários Premium Plus até {premiumPlusDays} dias."
+        }
+      }
+    }
   }
 }
