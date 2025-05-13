@@ -171,6 +171,8 @@
     "backToSignIn": "Back to Sign in"
   },
   "terms": {
+    "metaTitle": "Terms of Service - Product Launch",
+    "metaDescription": "Read our Terms of Service to understand your rights and responsibilities when using our platform.",
     "title": "Terms of Service",
     "lastUpdated": "Last updated",
     "returnToHome": "Return to Home",
@@ -255,18 +257,20 @@
     }
   },
   "pricing": {
+    "metaTitle": "Pricing - Product Launch",
+    "metaDescription": "Choose the perfect launch plan for your project. Get visibility with our flexible options.",
     "title": "Choose Your Launch Plan",
     "description": "Get the visibility your project deserves with our flexible launch options. All launches happen at 8:00 AM UTC.",
     "freeLaunch": {
       "title": "Free Launch",
       "price": "$0 /launch",
       "description": "Standard launch with up to {days} days scheduling window.",
-      "features": [
-        "{slots} slots available daily",
-        "Standard launch queue",
-        "Featured on homepage",
-        "Dofollow Backlink if Top 3 daily"
-      ],
+      "features": {
+        "slots": "{slots} slots available daily",
+        "queue": "Standard launch queue",
+        "highlight": "Featured on homepage",
+        "backlink": "Dofollow Backlink if Top 3 daily"
+      },
       "button": "Launch for Free"
     },
     "premiumLaunch": {
@@ -312,6 +316,114 @@
           "content": "Free users can schedule up to {freeDays} days in advance, Premium users up to {premiumDays} days, and Premium Plus users up to {premiumPlusDays} days."
         }
       }
+    }
+  },
+  "legal": {
+    "metaTitle": "Legal Information - Product Launch",
+    "metaDescription": "Learn about our legal policies, including terms of service and privacy policy. Your rights matter to us.",
+    "title": "Legal Information",
+    "description": "At Open Launch, we are committed to transparency and protecting your rights. As an open source project, we believe in openness and community collaboration. Please review our legal documents to understand how we operate and protect your information.",
+    "terms": {
+      "title": "Terms of Service",
+      "description": "The rules and guidelines for using our platform and services."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "How we collect, use, and protect your personal information."
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have any questions about our legal policies, please contact us:",
+      "mail": "Mail"
+    },
+    "returnToHome": "Return to Home"
+  },
+  "privacyPolicy": {
+    "metaTitle": "Privacy Policy - {appName}",
+    "metaDescription": "Privacy Policy for Open-Launch platform",
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: {date}",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "At Open Launch, we highly value the protection of your personal data. This privacy policy explains how we collect, use, and protect your information when you use our platform."
+      },
+      "informationWeCollect": {
+        "title": "2. Information We Collect",
+        "content": "Information you provide to us:",
+        "providedList": {
+          "item1": "Account information (name, email address, password)",
+          "item2": "Profile information (username, photo)",
+          "item3": "Content you publish (project submissions, comments)",
+          "item4": "Communications with us"
+        },
+        "collected": "Information automatically collected:",
+        "collectedList": {
+          "item1": "Usage data (pages visited, time spent, interactions)",
+          "item2": "Device information (device type, operating system, browser)",
+          "item3": "Country"
+        }
+      },
+      "howWeUse": {
+        "title": "3. How We Use Your Information",
+        "content": "We use your information to:",
+        "list": {
+          "item1": "Provide, maintain, and improve our platform",
+          "item2": "Create and manage your account",
+          "item3": "Process your transactions",
+          "item4": "Communicate with you about our services",
+          "item5": "Personalize your experience",
+          "item6": "Ensure the security of our platform",
+          "item7": "Comply with legal obligations"
+        }
+      },
+      "sharing": {
+        "title": "4. Sharing Your Information",
+        "content": "We do not sell your personal data. We may share your information in the following situations:",
+        "list": {
+          "item1": "With service providers who help us operate our platform",
+          "item2": "For legal obligations (when required by law or to protect our rights)",
+          "item3": "With your consent or according to your instructions"
+        }
+      },
+      "rights": {
+        "title": "5. Your Rights and Choices",
+        "content": "You have the following rights regarding your personal data:",
+        "list": {
+          "item1": "Access your data",
+          "item2": "Rectify or update your information",
+          "item3": "Delete your account and data (with certain limitations)",
+          "item4": "Limit the processing of your data",
+          "item5": "Withdraw your consent"
+        },
+        "feedback": "To exercise these rights, contact us at {email}."
+      },
+      "security": {
+        "title": "6. Data Security",
+        "content": "We implement appropriate security measures to protect your information. However, no method of transmission over the Internet or electronic storage is completely secure."
+      },
+      "retention": {
+        "title": "7. Data Retention",
+        "content": "We retain your personal data for as long as necessary to provide you with our services and as required by law. When you delete your account, we delete your personal data or anonymize it, unless retention is necessary for legal reasons."
+      },
+      "children": {
+        "title": "8. Children",
+        "content": "Our service is not intended for individuals under the age of 13. We do not knowingly collect personal information from children under 13."
+      },
+      "changes": {
+        "title": "9. Changes to This Policy",
+        "content": "We may update this privacy policy from time to time. We will notify you of significant changes, but we encourage you to review this page regularly to stay informed."
+      },
+      "contact": {
+        "title": "10. Contact Us",
+        "content": "If you have any questions about this privacy policy, please contact us at {email}."
+      },
+      "openSource": {
+        "title": "11. Open Source Transparency",
+        "content": "As an open source project, Open Launch is committed to transparency in how we handle data. Our source code is publicly available on GitHub, allowing you to review how we process and protect your information.",
+        "feedback": "We encourage community contributions and feedback on our privacy practices. If you have suggestions for improving our data handling, please open an issue or submit a pull request on our GitHub repository."
+      },
+      "returnToHome": "Return to Home"
     }
   }
 }

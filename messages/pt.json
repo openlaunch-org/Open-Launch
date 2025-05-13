@@ -171,6 +171,8 @@
     "backToSignIn": "Voltar para Entrar"
   },
   "terms": {
+    "metaTitle": "Termos de Serviço - Product Launch",
+    "metaDescription": "Leia os Termos de Serviço do Product Launch para entender seus direitos e responsabilidades ao usar nossa plataforma.",
     "title": "Termos de Serviço",
     "lastUpdated": "Última atualização",
     "returnToHome": "Voltar para a Página Inicial",
@@ -255,6 +257,8 @@
     }
   },
   "pricing": {
+    "metaTitle": "Preços - Product Launch",
+    "metaDescription": "Escolha o plano perfeito para o lançamento do seu projeto",
     "title": "Escolha Seu Plano de Lançamento",
     "description": "Dê a visibilidade que seu projeto merece com nossas opções flexíveis de lançamento. Todos os lançamentos acontecem às 8:00 AM UTC.",
     "freeLaunch": {
@@ -265,7 +269,7 @@
         "slots": "{slots} vagas disponíveis diariamente",
         "queue": "Fila de lançamento padrão",
         "highlight": "Destaque na página inicial",
-        "backlink": "Backlink Dofollow se Top 3 diário"
+        "backlink": "Backlink se conquistar o Top 3"
       },
       "button": "Lançar Gratuitamente"
     },
@@ -312,6 +316,114 @@
           "content": "Usuários gratuitos podem agendar até {freeDays} dias de antecedência, usuários Premium até {premiumDays} dias, e usuários Premium Plus até {premiumPlusDays} dias."
         }
       }
+    }
+  },
+  "legal": {
+    "metaTitle": "Informações Legais - Product Launch",
+    "metaDescription": "Revise nossos termos de serviço, política de privacidade e informações de contato.",
+    "title": "Informações Legais",
+    "description": "No Product Launch, estamos comprometidos com a transparência e a proteção dos seus direitos. Como um projeto de código aberto, acreditamos na abertura e na colaboração da comunidade. Por favor, revise nossos documentos legais para entender como operamos e protegemos suas informações.",
+    "terms": {
+      "title": "Termos de Serviço",
+      "description": "As regras e diretrizes para usar nossa plataforma e serviços."
+    },
+    "privacy": {
+      "title": "Política de Privacidade",
+      "description": "Como coletamos, usamos e protegemos suas informações pessoais."
+    },
+    "contact": {
+      "title": "Informações de Contato",
+      "description": "Se você tiver alguma dúvida sobre nossas políticas legais, entre em contato conosco:",
+      "mail": "Email"
+    },
+    "returnToHome": "Voltar para a Página Inicial"
+  },
+  "privacyPolicy": {
+    "metaTitle": "Política de Privacidade - {appName}",
+    "metaDescription": "Política de Privacidade para a plataforma {appName}, explicando como coletamos, usamos e protegemos suas informações pessoais.",
+    "title": "Política de Privacidade",
+    "lastUpdated": "Última atualização: {date}",
+    "sections": {
+      "introduction": {
+        "title": "1. Introdução",
+        "content": "No Product Launch, valorizamos muito a proteção dos seus dados pessoais. Esta política de privacidade explica como coletamos, usamos e protegemos suas informações ao usar nossa plataforma."
+      },
+      "informationWeCollect": {
+        "title": "2. Informações que Coletamos",
+        "provided": "Informações que você nos fornece:",
+        "providedList": {
+          "item1": "Informações da conta (nome, endereço de email, senha)",
+          "item2": "Informações do perfil (nome de usuário, foto)",
+          "item3": "Conteúdo que você publica (envios de projetos, comentários)",
+          "item4": "Comunicações conosco"
+        },
+        "collected": "Informações coletadas automaticamente:",
+        "collectedList": {
+          "item1": "Dados de uso (páginas visitadas, tempo gasto, interações)",
+          "item2": "Informações do dispositivo (tipo de dispositivo, sistema operacional, navegador)",
+          "item3": "País"
+        }
+      },
+      "howWeUse": {
+        "title": "3. Como Usamos Suas Informações",
+        "content": "Usamos suas informações para:",
+        "list": {
+          "item1": "Fornecer, manter e melhorar nossa plataforma",
+          "item2": "Criar e gerenciar sua conta",
+          "item3": "Processar suas transações",
+          "item4": "Comunicar com você sobre nossos serviços",
+          "item5": "Personalizar sua experiência",
+          "item6": "Garantir a segurança da nossa plataforma",
+          "item7": "Cumprir obrigações legais"
+        }
+      },
+      "sharing": {
+        "title": "4. Compartilhamento de Suas Informações",
+        "content": "Não vendemos seus dados pessoais. Podemos compartilhar suas informações nas seguintes situações:",
+        "list": {
+          "item1": "Com provedores de serviços que nos ajudam a operar nossa plataforma",
+          "item2": "Para obrigações legais (quando exigido por lei ou para proteger nossos direitos)",
+          "item3": "Com seu consentimento ou de acordo com suas instruções"
+        }
+      },
+      "rights": {
+        "title": "5. Seus Direitos e Escolhas",
+        "content": "Você tem os seguintes direitos em relação aos seus dados pessoais:",
+        "list": {
+          "item1": "Acessar seus dados",
+          "item2": "Retificar ou atualizar suas informações",
+          "item3": "Excluir sua conta e dados (com certas limitações)",
+          "item4": "Limitar o processamento de seus dados",
+          "item5": "Retirar seu consentimento"
+        },
+        "feedback": "Para exercer esses direitos, entre em contato conosco em {email}."
+      },
+      "security": {
+        "title": "6. Segurança dos Dados",
+        "content": "Implementamos medidas de segurança apropriadas para proteger suas informações. No entanto, nenhum método de transmissão pela Internet ou armazenamento eletrônico é completamente seguro."
+      },
+      "retention": {
+        "title": "7. Retenção de Dados",
+        "content": "Mantemos seus dados pessoais pelo tempo necessário para fornecer nossos serviços e conforme exigido por lei. Quando você exclui sua conta, excluímos seus dados pessoais ou os anonimizamos, a menos que a retenção seja necessária por razões legais."
+      },
+      "children": {
+        "title": "8. Crianças",
+        "content": "Nosso serviço não é destinado a indivíduos com menos de 13 anos. Não coletamos intencionalmente informações pessoais de crianças menores de 13 anos."
+      },
+      "changes": {
+        "title": "9. Alterações a Esta Política",
+        "content": "Podemos atualizar esta política de privacidade periodicamente. Notificaremos você sobre mudanças significativas, mas incentivamos que você revise esta página regularmente para se manter informado."
+      },
+      "contact": {
+        "title": "10. Entre em Contato Conosco",
+        "content": "Se você tiver alguma dúvida sobre esta política de privacidade, entre em contato conosco em {email}."
+      },
+      "openSource": {
+        "title": "11. Transparência de Código Aberto",
+        "content": "Como um projeto de código aberto, o Product Launch está comprometido com a transparência em como lidamos com dados. Nosso código-fonte está publicamente disponível no GitHub, permitindo que você revise como processamos e protegemos suas informações.",
+        "feedback": "Incentivamos contribuições da comunidade e feedback sobre nossas práticas de privacidade. Se você tiver sugestões para melhorar nosso tratamento de dados, abra uma issue ou envie um pull request no nosso repositório do GitHub."
+      },
+      "returnToHome": "Voltar para a Página Inicial"
     }
   }
 }

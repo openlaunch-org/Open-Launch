@@ -2,6 +2,7 @@ import Link from "next/link"
 
 import { RiCheckboxCircleFill } from "@remixicon/react"
 import { useMessages, useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
 import { LAUNCH_LIMITS, LAUNCH_SETTINGS } from "@/lib/constants"
 import {
@@ -12,9 +13,13 @@ import {
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 
-export const metadata = {
-  title: `Pricing - ${process.env.NEXT_PUBLIC_APP_NAME}`,
-  description: "Choose the perfect plan for your project launch",
+export async function generateMetadata() {
+  const t = await getTranslations("pricing")
+
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
 export default function PricingPage() {

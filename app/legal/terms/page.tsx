@@ -2,10 +2,15 @@
 import Link from "next/link"
 
 import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
-export const metadata = {
-  title: `Terms of Service - ${process.env.NEXT_PUBLIC_APP_NAME}`,
-  description: "Terms of Service for Open-Launch platform",
+export async function generateMetadata() {
+  const t = await getTranslations("terms")
+
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
 export default function TermsOfServicePage() {
