@@ -3,10 +3,12 @@
 import { useRouter } from "next/navigation"
 
 import { RiAddCircleFill } from "@remixicon/react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "../ui/button"
 
 export function WelcomeBanner() {
+  const t = useTranslations("banner")
   const router = useRouter()
 
   return (
@@ -14,13 +16,10 @@ export function WelcomeBanner() {
       <div className="flex items-start justify-between md:items-center">
         <div className="flex items-start gap-4 md:items-center">
           <div>
-            <h2 className="text-foreground mb-1 text-lg font-semibold">Welcome to Open-Launch!</h2>
-            <p className="text-muted-foreground mb-3 max-w-xl text-sm">
-              Discover and support the best new tech products. Explore daily launches and upvote
-              your favorite projects.
-            </p>
+            <h2 className="text-foreground mb-1 text-lg font-semibold">{t("welcome")}</h2>
+            <p className="text-muted-foreground mb-3 max-w-xl text-sm">{t("description")}</p>
             <Button onClick={() => router.push("/projects/submit")} variant="outline">
-              Submit a Project
+              {t("submitProject")}
               <RiAddCircleFill className="ml-1 h-4 w-4" />
             </Button>
           </div>

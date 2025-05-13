@@ -2,20 +2,7 @@
 import Link from "next/link"
 
 import { RiGithubFill, RiTwitterXFill } from "@remixicon/react"
-
-// Link groups for a columnar layout
-const discoverLinks = [
-  { title: "Trending", href: "/trending" },
-  { title: "Categories", href: "/categories" },
-  { title: "Submit Project", href: "/projects/submit" },
-]
-
-const resourcesLinks = [{ title: "Pricing", href: "/pricing" }]
-
-const legalLinks = [
-  { title: "Terms of Service", href: "/legal/terms" },
-  { title: "Privacy Policy", href: "/legal/privacy" },
-]
+import { useTranslations } from "next-intl"
 
 // Liens pour la nouvelle colonne "Connect"
 const connectLinkItems = [
@@ -32,6 +19,23 @@ const connectLinkItems = [
 ]
 
 export default function FooterSection() {
+  const t = useTranslations("footer")
+  const legalLinks = [
+    { title: t("termsOfService"), href: "/legal/terms" },
+    { title: t("privacyPolicy"), href: "/legal/privacy" },
+  ]
+  const resourcesLinks = [
+    { title: t("pricing"), href: "/pricing" },
+    { title: t("helpCenter"), href: "#" },
+  ]
+
+  // Link groups for a columnar layout
+  const discoverLinks = [
+    { title: t("trending"), href: "/trending" },
+    { title: t("categories"), href: "/categories" },
+    { title: t("submitProject"), href: "/projects/submit" },
+  ]
+
   return (
     <footer className="bg-background border-t pt-6 pb-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -41,21 +45,21 @@ export default function FooterSection() {
             <Link href="/" className="font-heading mb-3 flex items-center">
               <span className="font-heading flex items-center text-lg font-bold">
                 <img src="/logo.svg" alt="logo" className="mr-1 h-6 w-6" />
-                Open-Launch
+                Product Launch
               </span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              © {new Date().getFullYear()} Open-Launch. All rights reserved.
+              © {new Date().getFullYear()} Product Launch. {t("allRightsReserved")}
             </p>
             <p className="text-muted-foreground mb-4 text-sm">
-              Open source project by{" "}
+              {t("createdBy")}{" "}
               <Link
-                href="https://x.com/Ericbn09"
+                href="https://wysion.com"
                 target="_blank"
                 rel="noopener"
                 className="hover:text-primary underline"
               >
-                Eric
+                Wysion
               </Link>
             </p>
             <div className="flex items-center justify-start space-x-3">
@@ -77,7 +81,7 @@ export default function FooterSection() {
             {/* Discover Column */}
             <div className="text-left">
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
-                Discover
+                {t("discover")}
               </h3>
               <ul role="list" className="mt-4 flex flex-col items-start space-y-3">
                 {discoverLinks.map((link) => (
@@ -96,7 +100,7 @@ export default function FooterSection() {
             {/* Resources Column */}
             <div className="text-left">
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
-                Resources
+                {t("resources")}
               </h3>
               <ul role="list" className="mt-4 flex flex-col items-start space-y-3">
                 {resourcesLinks.map((link) => (
@@ -115,7 +119,7 @@ export default function FooterSection() {
             {/* Legal Column */}
             <div className="text-left">
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
-                Legal
+                {t("legal")}
               </h3>
               <ul role="list" className="mt-4 flex flex-col items-start space-y-3">
                 {legalLinks.map((link) => (
@@ -134,7 +138,7 @@ export default function FooterSection() {
             {/* Connect Column */}
             <div className="text-left">
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
-                Connect
+                {t("connect")}
               </h3>
               <ul role="list" className="mt-4 flex flex-col items-start space-y-3">
                 {connectLinkItems.map((item) => (

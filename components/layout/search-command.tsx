@@ -15,12 +15,15 @@ import {
   RiRocketLine,
   RiSearchLine,
 } from "@remixicon/react"
+import { useTranslations } from "next-intl"
 
 import { useSearch } from "@/lib/hooks/use-search"
 import { CommandDialog, CommandInput } from "@/components/ui/command"
 import { DialogTitle } from "@/components/ui/dialog"
 
 export function SearchCommand() {
+  const t = useTranslations("search")
+  const tc = useTranslations("common")
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
@@ -206,13 +209,13 @@ export function SearchCommand() {
         onClick={() => setOpen(true)}
       >
         <RiSearchLine className="mr-2 h-3.5 w-3.5" />
-        <span>Search...</span>
+        <span>{t("searchElipses")}</span>
         <kbd className="bg-muted pointer-events-none ml-auto hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
-        <DialogTitle className="sr-only">Search</DialogTitle>
+        <DialogTitle className="sr-only">{t("search")}</DialogTitle>
         <CommandInput
           placeholder="Search projects, categories..."
           value={query}
@@ -231,7 +234,7 @@ export function SearchCommand() {
           {isLoading && (
             <div className="flex items-center justify-center py-4 text-center">
               <RiLoader4Line className="text-primary mr-2 h-5 w-5 animate-spin" />
-              <span className="text-sm">Searching...</span>
+              <span className="text-sm">{t("searching")}</span>
             </div>
           )}
 
@@ -245,7 +248,7 @@ export function SearchCommand() {
 
           {/* Afficher "No results" */}
           {!isLoading && !error && query.length >= 2 && (!results || results.length === 0) && (
-            <div className="text-muted-foreground py-4 text-center text-sm">No results found.</div>
+            <div className="text-muted-foreground py-4 text-center text-sm">{tc("noResults")}</div>
           )}
 
           {/* Afficher les résultats */}
@@ -255,7 +258,7 @@ export function SearchCommand() {
           {query.length === 0 && (
             <div className="space-y-4">
               <div>
-                <h4 className="mb-2 px-1 text-sm font-medium">Suggestions</h4>
+                <h4 className="mb-2 px-1 text-sm font-medium">{t("suggestions")}</h4>
                 <div className="space-y-1">
                   <div
                     data-index="0"
@@ -265,7 +268,7 @@ export function SearchCommand() {
                     onClick={() => runCommand(() => router.push("/trending"))}
                   >
                     <RiFireLine className="mr-2 h-4 w-4 text-orange-500" />
-                    <span>Trending projects</span>
+                    <span>{t("trendingProjects")}</span>
                   </div>
                   <div
                     data-index="1"
@@ -275,13 +278,13 @@ export function SearchCommand() {
                     onClick={() => runCommand(() => router.push("/categories"))}
                   >
                     <RiAppsLine className="mr-2 h-4 w-4 text-purple-500" />
-                    <span>Categories</span>
+                    <span>{t("categories")}</span>
                   </div>
                 </div>
               </div>
 
               <div className="border-border border-t pt-4">
-                <h4 className="mb-2 px-1 text-sm font-medium">Navigation</h4>
+                <h4 className="mb-2 px-1 text-sm font-medium">{t("navigation")}</h4>
 
                 <div className="space-y-1">
                   {/* pour explore launches */}
@@ -294,7 +297,7 @@ export function SearchCommand() {
                     onClick={() => runCommand(() => router.push("/"))}
                   >
                     <RiRocketLine className="text-primary mr-2 h-4 w-4" />
-                    <span>Explore launches</span>
+                    <span>{t("exploreLaunches")}</span>
                   </div>
 
                   {/* pour dashboard */}
@@ -306,7 +309,7 @@ export function SearchCommand() {
                     onClick={() => runCommand(() => router.push("/dashboard"))}
                   >
                     <RiDashboardLine className="mr-2 h-4 w-4 text-green-500" />
-                    <span>Dashboard</span>
+                    <span>{t("dashboard")}</span>
                   </div>
                   <div
                     data-index="4"
@@ -316,7 +319,7 @@ export function SearchCommand() {
                     onClick={() => runCommand(() => router.push("/projects/submit"))}
                   >
                     <RiAddCircleLine className="mr-2 h-4 w-4 text-sky-500" />
-                    <span>Submit Project</span>
+                    <span>{tc("submitProject")}</span>
                   </div>
                 </div>
               </div>

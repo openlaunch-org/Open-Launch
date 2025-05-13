@@ -14,6 +14,7 @@ import {
   RiUserAddLine,
 } from "@remixicon/react"
 import { User } from "better-auth"
+import { getTranslations } from "next-intl/server"
 
 import { auth } from "@/lib/auth"
 import {
@@ -33,6 +34,7 @@ import { SearchCommand } from "./search-command"
 import { UserNav } from "./user-nav"
 
 export default async function Nav() {
+  const t = await getTranslations("nav")
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -55,8 +57,8 @@ export default async function Nav() {
         <div className="flex items-center gap-8">
           <Link href="/" className="font-heading flex items-center">
             <span className="font-heading flex items-center text-lg font-bold">
-              <img src="/logo.svg" alt="logo" className="h-6 w-6 mr-1" />
-              Open-Launch
+              <img src="/logo.svg" alt="logo" className="mr-1 h-6 w-6" />
+              Product Launch
             </span>
           </Link>
 
@@ -74,10 +76,10 @@ export default async function Nav() {
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/sign-in">Sign in</Link>
+                <Link href="/sign-in">{t("signIn")}</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link href="/sign-up">Sign up</Link>
+                <Link href="/sign-up">{t("signUp")}</Link>
               </Button>
             </>
           )}
@@ -90,7 +92,7 @@ export default async function Nav() {
             <Button variant="default" size="sm" asChild className="mr-2">
               <Link href="/sign-in">
                 <RiLoginBoxLine className="h-4 w-4" />
-                Sign in
+                {t("signIn")}
               </Link>
             </Button>
           )}
@@ -104,7 +106,7 @@ export default async function Nav() {
               <div className="flex h-full flex-col">
                 <div className="px-2">
                   <SheetHeader className="mb-2 pb-0">
-                    <SheetTitle>Menu</SheetTitle>
+                    <SheetTitle>{t("menu")}</SheetTitle>
                   </SheetHeader>
                 </div>
 
@@ -132,7 +134,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiHomeLine className="text-muted-foreground h-4 w-4" />
-                            <span>Home</span>
+                            <span>{t("home")}</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -141,7 +143,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiFlashlightLine className="text-muted-foreground h-4 w-4" />
-                            <span>Trending</span>
+                            <span>{t("trending")}</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -150,7 +152,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiLayoutGridLine className="text-muted-foreground h-4 w-4" />
-                            <span>Categories</span>
+                            <span>{t("categories")}</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -159,7 +161,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiMedalLine className="text-muted-foreground h-4 w-4" />
-                            <span>Winners</span>
+                            <span>{t("winners")}</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -168,7 +170,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiMoneyDollarCircleLine className="text-muted-foreground h-4 w-4" />
-                            <span>Pricing</span>
+                            <span>{t("pricing")}</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -177,7 +179,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiDashboardLine className="text-muted-foreground h-4 w-4" />
-                            <span>Dashboard</span>
+                            <span>{t("dashboard")}</span>
                           </Link>
                         </SheetClose>
                       </div>
@@ -204,7 +206,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiLoginBoxLine className="text-muted-foreground h-4 w-4" />
-                            <span>Sign in</span>
+                            <span>{t("signIn")}</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -213,7 +215,7 @@ export default async function Nav() {
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiUserAddLine className="text-muted-foreground h-4 w-4" />
-                            <span>Sign up</span>
+                            <span>{t("signUp")}</span>
                           </Link>
                         </SheetClose>
                       </div>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { RiGithubFill, RiGoogleFill } from "@remixicon/react"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -26,6 +27,7 @@ export function SignUpForm() {
     github: false,
   })
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const t = useTranslations("auth")
 
   const {
     register,
@@ -100,8 +102,8 @@ export function SignUpForm() {
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 sm:px-0">
       <Card className="w-full rounded-md shadow-none">
         <CardHeader className="flex flex-col items-center gap-2 px-4 sm:px-6">
-          <CardTitle className="text-center text-xl sm:text-2xl">Create an account</CardTitle>
-          <CardDescription className="text-center">Sign up to get started</CardDescription>
+          <CardTitle className="text-center text-xl sm:text-2xl">{t("createAccount")}</CardTitle>
+          <CardDescription className="text-center">{t("signUpToGetStarted")}</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-6 sm:px-6">
           <form onSubmit={handleSubmit(handleSignUp)} className="flex flex-col gap-4">
@@ -113,7 +115,7 @@ export function SignUpForm() {
               disabled={loadingButtons.google}
             >
               <RiGoogleFill className="me-1" size={16} aria-hidden="true" />
-              {loadingButtons.google ? "Loading..." : "Login with Google"}
+              {loadingButtons.google ? t("loading") : t("loginWithGoogle")}
             </Button>
             <Button
               className="w-full cursor-pointer"
@@ -123,21 +125,21 @@ export function SignUpForm() {
               disabled={loadingButtons.github}
             >
               <RiGithubFill className="me-1" size={16} aria-hidden="true" />
-              {loadingButtons.github ? "Loading..." : "Login with GitHub"}
+              {loadingButtons.github ? t("loading") : t("loginWithGitHub")}
             </Button>
             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
               <span className="bg-background text-muted-foreground relative z-10 px-2">
-                Or continue with
+                {t("orContinueWith")}
               </span>
             </div>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">{t("fullName")}</Label>
                 <Input id="name" {...register("name")} placeholder="John Doe" className="w-full" />
                 {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -148,12 +150,12 @@ export function SignUpForm() {
                 {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("password")}</Label>
                 <Input
                   id="password"
                   type="password"
                   {...register("password")}
-                  placeholder="Min. 8 characters"
+                  placeholder={t("min8Characters")}
                   className="w-full"
                 />
                 {errors.password && (
@@ -169,12 +171,12 @@ export function SignUpForm() {
                 className="w-full cursor-pointer"
                 disabled={loadingButtons.email || !turnstileToken}
               >
-                {loadingButtons.email ? "Creating account..." : "Create account"}
+                {loadingButtons.email ? t("creatingAccount") : t("createAccount")}
               </Button>
               <div className="text-muted-foreground text-center text-sm">
-                Already have an account?{" "}
+                {t("alreadyHaveAccount")}{" "}
                 <Link href="/sign-in" className="text-primary hover:underline">
-                  Sign in
+                  {t("signIn")}
                 </Link>
               </div>
             </div>
@@ -182,8 +184,8 @@ export function SignUpForm() {
         </CardContent>
       </Card>
       <div className="text-muted-foreground [&_a]:hover:text-primary px-4 text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-        By clicking continue, you agree to our <Link href="/legal/terms">Terms of Service</Link> and{" "}
-        <Link href="/legal/privacy">Privacy Policy</Link>.
+        {t("agreeToTerms")} <Link href="/legal/terms">{t("termsOfService")}</Link> {t("and")}{" "}
+        <Link href="/legal/privacy">{t("privacyPolicy")}</Link>.
       </div>
     </div>
   )

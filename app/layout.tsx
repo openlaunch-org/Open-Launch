@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Outfit as FontHeading, Inter as FontSans } from "next/font/google"
 
+import { NextIntlClientProvider } from "next-intl"
 import PlausibleProvider from "next-plausible"
 import { Toaster } from "sonner"
 
@@ -74,18 +75,20 @@ export default function RootLayout({
         className={`font-sans antialiased ${fontSans.variable} ${fontHeading.variable} sm:overflow-y-scroll`}
         suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="flex min-h-dvh flex-col">
-            <Nav />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+        <NextIntlClientProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex min-h-dvh flex-col">
+              <Nav />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </NextIntlClientProvider>
         <Toaster />
       </body>
     </html>

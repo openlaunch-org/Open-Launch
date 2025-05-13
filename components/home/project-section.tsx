@@ -3,6 +3,7 @@
 import Link from "next/link"
 
 import { RiArrowRightLine } from "@remixicon/react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 
@@ -41,6 +42,9 @@ export function ProjectSection({
   sortByUpvotes = false,
   isAuthenticated,
 }: ProjectSectionProps) {
+  const t = useTranslations("projects")
+  const tc = useTranslations("common")
+
   const sortedProjects = sortByUpvotes
     ? [...projects].sort((a, b) => (b.upvoteCount ?? 0) - (a.upvoteCount ?? 0))
     : projects
@@ -48,7 +52,7 @@ export function ProjectSection({
   const ViewAllButton = () => (
     <Button variant="ghost" size="sm" className={"w-full justify-center text-sm sm:w-auto"} asChild>
       <Link href={moreHref!} className="flex items-center gap-1">
-        View all <RiArrowRightLine className="h-4 w-4" />
+        {tc("viewAll", { gender: "male" })} <RiArrowRightLine className="h-4 w-4" />
       </Link>
     </Button>
   )
@@ -61,7 +65,7 @@ export function ProjectSection({
       asChild
     >
       <Link href={moreHref!} className="flex items-center gap-1">
-        View all <RiArrowRightLine className="h-4 w-4" />
+        {tc("viewAll", { gender: "male" })} <RiArrowRightLine className="h-4 w-4" />
       </Link>
     </Button>
   )
@@ -103,7 +107,7 @@ export function ProjectSection({
           </div>
         ) : (
           <div className="text-muted-foreground border-border bg-card rounded-lg border border-dashed py-8 text-center text-sm">
-            {'No projects found for "' + title + '"'}
+            {t("noProjectFound", { title })}
           </div>
         )}
 

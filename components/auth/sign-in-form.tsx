@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { RiGithubFill, RiGoogleFill } from "@remixicon/react"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -99,14 +100,14 @@ export function SignInForm() {
     })
   }, [])
 
+  const t = useTranslations("auth")
+
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 sm:px-0">
       <Card className="w-full rounded-md shadow-none">
         <CardHeader className="flex flex-col items-center gap-2 px-4 sm:px-6">
-          <CardTitle className="text-center text-xl sm:text-2xl">Welcome back</CardTitle>
-          <CardDescription className="text-center">
-            Sign in to your account to continue
-          </CardDescription>
+          <CardTitle className="text-center text-xl sm:text-2xl">{t("welcomeBack")}</CardTitle>
+          <CardDescription className="text-center">{t("signInToContinue")}</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-6 sm:px-6">
           <form onSubmit={handleSubmit(handleLoginEmail)} className="flex flex-col gap-4">
@@ -118,7 +119,7 @@ export function SignInForm() {
               disabled={loadingButtons.google}
             >
               <RiGoogleFill className="me-1" size={16} aria-hidden="true" />
-              {loadingButtons.google ? "Loading..." : "Login with Google"}
+              {loadingButtons.google ? t("loggingIn") : t("loginWithGoogle")}
             </Button>
             <Button
               className="w-full cursor-pointer"
@@ -128,17 +129,17 @@ export function SignInForm() {
               disabled={loadingButtons.github}
             >
               <RiGithubFill className="me-1" size={16} aria-hidden="true" />
-              {loadingButtons.github ? "Loading..." : "Login with GitHub"}
+              {loadingButtons.github ? t("loggingIn") : t("loginWithGitHub")}
             </Button>
 
             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
               <span className="bg-background text-muted-foreground relative z-10 px-2">
-                Or continue with
+                {t("orContinueWith")}
               </span>
             </div>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -150,12 +151,12 @@ export function SignInForm() {
               </div>
               <div className="grid gap-2">
                 <div className="flex flex-wrap items-center justify-between gap-1">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t("password")}</Label>
                   <Link
                     href="/forgot-password"
                     className="text-xs underline-offset-4 hover:underline"
                   >
-                    Forgot your password?
+                    {t("forgotPassword")}
                   </Link>
                 </div>
                 <Input id="password" type="password" {...register("password")} className="w-full" />
@@ -172,22 +173,22 @@ export function SignInForm() {
                 className="w-full cursor-pointer"
                 disabled={loadingButtons.email || !turnstileToken}
               >
-                {loadingButtons.email ? "Logging in..." : "Login"}
+                {loadingButtons.email ? t("loggingIn") : t("login")}
               </Button>
             </div>
 
             <div className="text-muted-foreground text-center text-sm">
-              Don&apos;t have an account?{" "}
+              {t("dontHaveAccount")}{" "}
               <Link href="/sign-up" className="text-primary underline-offset-4 hover:underline">
-                Sign up
+                {t("signUp")}
               </Link>
             </div>
           </form>
         </CardContent>
       </Card>
       <div className="text-muted-foreground [&_a]:hover:text-primary px-4 text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-        By clicking continue, you agree to our <Link href="/legal/terms">Terms of Service</Link> and{" "}
-        <Link href="/legal/privacy">Privacy Policy</Link>.
+        {t("agreeToTerms")} <Link href="/legal/terms">{t("termsOfService")}</Link>{" "}
+        {t("privacyPolicy")} <Link href="/legal/privacy">{t("privacyPolicy")}</Link>.
       </div>
     </div>
   )

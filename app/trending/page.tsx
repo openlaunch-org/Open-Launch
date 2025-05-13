@@ -2,6 +2,8 @@ import { Suspense } from "react"
 import { headers } from "next/headers"
 import Link from "next/link"
 
+import { useTranslations } from "next-intl"
+
 import { auth } from "@/lib/auth"
 import { PROJECT_LIMITS_VARIABLES } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
@@ -128,6 +130,8 @@ export default async function TrendingPage({
 }: {
   searchParams: Promise<{ filter?: string }>
 }) {
+  const t = useTranslations("common")
+
   const params = await searchParams
   const filter = params.filter || "today"
   const topCategories = await getTopCategories(5)
@@ -164,7 +168,7 @@ export default async function TrendingPage({
               >
                 <div className="flex items-center gap-4">
                   <div className="text-primary text-2xl font-bold">{ongoingLaunches}</div>
-                  <div className="text-sm font-medium">Active Launches</div>
+                  <div className="text-sm font-medium">{t("activeLaunches")}</div>
                 </div>
               </Link>
             </div>

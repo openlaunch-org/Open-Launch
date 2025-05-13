@@ -5,6 +5,8 @@ import Link from "next/link"
 
 import { RiCalendarLine, RiCheckLine, RiMessage2Line } from "@remixicon/react"
 import { formatDistance } from "date-fns"
+import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
 // Interface pour les props du composant
 interface DashboardProjectCardProps {
@@ -30,6 +32,8 @@ export function DashboardProjectCard({
   commentCount,
   actionButton,
 }: DashboardProjectCardProps) {
+  const t = useTranslations("common")
+
   const projectPageUrl = `/projects/${slug}`
 
   const renderStatusBadge = () => {
@@ -37,12 +41,12 @@ export function DashboardProjectCard({
       return (
         <span className="flex items-center gap-1 text-blue-600">
           <RiCalendarLine className="h-3.5 w-3.5" />
-          Scheduled: {new Date(scheduledLaunchDate).toLocaleDateString()}
+          {t("scheduled")}: {new Date(scheduledLaunchDate).toLocaleDateString()}
         </span>
       )
     } else if (launchStatus === "ongoing") {
       // For ongoing, we'll display upvotes/comments separately
-      return <span className="flex items-center gap-1 text-green-600">Active Launch</span>
+      return <span className="flex items-center gap-1 text-green-600">{t("activeLaunch")}</span>
     } else if (launchStatus === "launched") {
       return (
         <span className="text-muted-foreground flex items-center gap-1">

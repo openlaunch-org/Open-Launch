@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { forgetPassword } from "@/lib/auth-client"
@@ -16,6 +17,8 @@ import { Label } from "../ui/label"
 import { TurnstileCaptcha } from "./turnstile-captcha"
 
 export function ForgotPasswordForm() {
+  const t = useTranslations("auth")
+
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState("")
@@ -32,7 +35,7 @@ export function ForgotPasswordForm() {
 
   const handleForgotPassword = async (data: ForgotPasswordFormData) => {
     if (!turnstileToken) {
-      setError("Please complete the security verification")
+      setError(t("pleaseCompleteSecurity"))
       return
     }
 
@@ -64,15 +67,13 @@ export function ForgotPasswordForm() {
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 sm:px-0">
       <Card className="w-full rounded-md shadow-none">
         <CardHeader className="flex flex-col items-center gap-2 px-4 sm:px-6">
-          <CardTitle className="text-center text-xl sm:text-2xl">Forgot your password?</CardTitle>
-          <CardDescription className="text-center">
-            Enter your email to reset your password
-          </CardDescription>
+          <CardTitle className="text-center text-xl sm:text-2xl">{t("forgotPassword")}</CardTitle>
+          <CardDescription className="text-center">{t("enterEmailToReset")}</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-6 sm:px-6">
           <form onSubmit={handleSubmit(handleForgotPassword)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -90,26 +91,25 @@ export function ForgotPasswordForm() {
             {success && (
               <div className="text-center text-sm">
                 <p className="text-muted-foreground">
-                  If an account exists for {submittedEmail}, you will receive a password reset email
-                  shortly.
+                  {t("resetEmailSent", { email: submittedEmail })}
                 </p>
               </div>
             )}
             <Button type="submit" className="w-full" disabled={loading || !turnstileToken}>
-              {loading ? "Sending..." : "Send reset link"}
+              {loading ? t("sending") : t("sendResetLink")}
             </Button>
             <div className="text-muted-foreground text-center text-sm">
-              Remember your password?{" "}
+              {t("rememberPassword")}{" "}
               <Link href="/sign-in" className="text-primary hover:underline">
-                Sign in
+                {t("signIn")}
               </Link>
             </div>
           </form>
         </CardContent>
       </Card>
       <div className="text-muted-foreground [&_a]:hover:text-primary px-4 text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{" "}
-        <a href="#">Privacy Policy</a>.
+        {t("agreeToTerms")} <a href="#">{t("termsOfService")}</a> {t("and")}{" "}
+        <a href="#">{t("privacyPolicy")}</a>.
       </div>
     </div>
   )

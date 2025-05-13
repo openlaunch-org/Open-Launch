@@ -1,11 +1,15 @@
 import { headers } from "next/headers"
 import Link from "next/link"
 
+import { Megaphone } from "lucide-react"
+import { getTranslations } from "next-intl/server"
+
 import { auth } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PremiumCard } from "@/components/home/premium-card"
 import { ProjectSection } from "@/components/home/project-section"
+import { SponsorCard } from "@/components/home/sponsor-card"
 import { WelcomeBanner } from "@/components/home/welcome-banner"
 import {
   getFeaturedPremiumProjects,
@@ -15,10 +19,11 @@ import {
 } from "@/app/actions/home"
 import { getLast7DaysVisitors } from "@/app/actions/plausible"
 import { getTopCategories } from "@/app/actions/projects"
-import { SponsorCard } from "@/components/home/sponsor-card"
-import { Megaphone } from "lucide-react"
 
 export default async function Home() {
+  const t = await getTranslations("home")
+  const tc = await getTranslations("common")
+
   // Récupérer les données réelles
   const todayProjects = await getTodayProjects()
   const yesterdayProjects = await getYesterdayProjects()
@@ -54,14 +59,14 @@ export default async function Home() {
             </div>
 
             <ProjectSection
-              title="Top Projects Launching Today"
+              title={t("todayProjects")}
               projects={todayProjects}
               sortByUpvotes={true}
               isAuthenticated={!!session?.user}
             />
 
             <ProjectSection
-              title="Yesterday's Launches"
+              title={t("yesterdayProjects")}
               projects={yesterdayProjects}
               moreHref="/trending?filter=yesterday"
               sortByUpvotes={true}
@@ -69,7 +74,7 @@ export default async function Home() {
             />
 
             <ProjectSection
-              title="This Month's Best"
+              title={t("monthProjects")}
               projects={monthProjects}
               moreHref="/trending?filter=month"
               sortByUpvotes={true}
@@ -81,34 +86,31 @@ export default async function Home() {
           <div className="top-24">
             {/* Quick Stats */}
             <div className="space-y-3 py-5 pt-0">
-              <h3 className="flex items-center gap-2 font-semibold">Live Now</h3>
+              <h3 className="flex items-center gap-2 font-semibold">{t("liveNow")}</h3>
               <Link
                 href="/trending"
                 className="bg-secondary/30 hover:bg-secondary/50 border-primary block rounded-md border-l-4 px-5 py-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-colors"
               >
                 <div className="flex items-center gap-4">
                   <div className="text-primary text-2xl font-bold">{ongoingLaunches}</div>
-                  <div className="text-sm font-medium">Active Launches</div>
+                  <div className="text-sm font-medium">{tc("activeLaunches")}</div>
                 </div>
               </Link>
-              
+
               {/* Last 7 Days Visitors Stat */}
               {visitorsLast7Days !== null && (
-                <div className="bg-secondary/30 hover:bg-secondary/50 border-green-500 block rounded-md border-l-4 px-5 py-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-colors">
+                <div className="bg-secondary/30 hover:bg-secondary/50 block rounded-md border-l-4 border-green-500 px-5 py-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className="text-green-600 text-2xl font-bold">
-                      {visitorsLast7Days}
-                    </div>
-                    <div className="text-sm font-medium">Visitors (Last 7 Days)</div>
+                    <div className="text-2xl font-bold text-green-600">{visitorsLast7Days}</div>
+                    <div className="text-sm font-medium">{t("visitorsLast7Days")}</div>
                   </div>
                 </div>
               )}
-              
             </div>
 
             {/* Featured Sponsor */}
             <div className="space-y-3 py-5">
-              <h3 className="flex items-center gap-2 font-semibold">Featured Sponsor</h3>
+              <h3 className="flex items-center gap-2 font-semibold">{t("featuredSponsor")}</h3>
               <SponsorCard
                 name="Landing Lab"
                 description="Landing Lab provides professional landing pages."
@@ -116,22 +118,24 @@ export default async function Home() {
                 imageUrl="/sponsors/logolandinglab.png"
               />
               <SponsorCard
-                name="Your Product Here?"
-                description="Become a sponsor!"
-                url="mailto:contact@open-launch.com?subject=Sponsoring%20Inquiry%20on%20Open-Launch"
+                name={t("sponsorTitle")}
+                description={t("sponsorDescription")}
+                url={
+                  "mailto:" +
+                  process.env.NEXT_PUBLIC_CONTACT_EMAIL +
+                  "?subject=Sponsoring%20Inquiry"
+                }
                 icon={<Megaphone size={18} className="text-muted-foreground" />}
               />
             </div>
-            
-
 
             {/* Categories */}
             <div className="space-y-3 py-5">
               <div className="flex items-center justify-between">
-                <h3 className="flex items-center gap-2 font-semibold">Top Categories</h3>
+                <h3 className="flex items-center gap-2 font-semibold">{t("topCategories")}</h3>
                 <Button variant="ghost" size="sm" className="text-sm" asChild>
                   <Link href="/categories" className="flex items-center gap-1">
-                    View all
+                    {tc("viewAll", { gender: "other" })}
                   </Link>
                 </Button>
               </div>
@@ -165,40 +169,36 @@ export default async function Home() {
 
             {/* Quick Links */}
             <div className="space-y-3 py-5">
-              <h3 className="flex items-center gap-2 font-semibold">Quick Access</h3>
+              <h3 className="flex items-center gap-2 font-semibold">{t("quickStats")}</h3>
               <div className="space-y-2">
                 {session?.user && (
                   <Link
                     href="/dashboard"
                     className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                   >
-                    Dashboard
+                    {tc("dashboard")}
                   </Link>
                 )}
                 <Link
                   href="/trending"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Trending Now
+                  {t("trendingNow")}
                 </Link>
                 <Link
                   href="/winners"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Daily Winners
+                  {t("dailyWinners")}
                 </Link>
                 <Link
                   href="/trending?filter=month"
                   className="-mx-2 flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:underline"
                 >
-                  Best of Month
+                  {t("bestOfMonth")}
                 </Link>
               </div>
             </div>
-
-      
-
-         
           </div>
         </div>
       </div>
