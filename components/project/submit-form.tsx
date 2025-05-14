@@ -589,7 +589,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
         <div className="bg-muted/50 h-1.5 w-full overflow-hidden rounded-full">
           <div
             className="bg-primary h-full rounded-full transition-all duration-300 ease-out"
-            style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
+            style={{ width: `${(currentStep / 4) * 100}%` }}
           />
         </div>
       </div>
@@ -676,7 +676,8 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="logoUrl">
-                {t("submitForm.labels.logo")} <span className="text-red-500">*</span>
+                {t("submitForm.labels.logo")} ({t("submitForm.labels.maxFileSize", { size: "1MB" })}
+                )<span className="text-red-500">*</span>
               </Label>
               {uploadedLogoUrl ? (
                 <div className="bg-muted/30 relative w-fit rounded-md border p-3">
@@ -751,7 +752,9 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="coverImageUrl">
-                {t("submitForm.labels.coverImage")} <span className="text-red-500">*</span>
+                {t("submitForm.labels.coverImage")} (
+                {t("submitForm.labels.maxFileSize", { size: "1MB" })})
+                <span className="text-red-500">*</span>
               </Label>
               {uploadedCoverImageUrl ? (
                 <div className="bg-muted/30 relative w-fit rounded-md border p-3">
@@ -1248,10 +1251,10 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                         {t("submitForm.labels.scheduledFor")}{" "}
                       </span>
                       <span className="text-foreground font-medium">
-                        {format(parseISO(formData.scheduledDate), DATE_FORMAT.DISPLAY)}
+                        {tFormat.dateTime(parseISO(formData.scheduledDate))}
                       </span>
                       <span className="text-muted-foreground/70 ml-1 text-xs">
-                        • {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:h
+                        • {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}h
                       </span>
                     </div>
                   )}
@@ -1294,10 +1297,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     </p>
                     {uploadedLogoUrl && (
                       <p className="flex flex-col items-start gap-2">
-                        <strong>
-                          {t("submitForm.labels.logo")} (
-                          {t("submitForm.labels.maxFileSize", { size: "1MB" })}):
-                        </strong>
+                        <strong>{t("submitForm.labels.logo")}:</strong>
                         <Image
                           src={uploadedLogoUrl}
                           alt="Uploaded logo"
@@ -1309,10 +1309,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     )}
                     {uploadedCoverImageUrl && (
                       <p className="flex flex-col items-start gap-2">
-                        <strong>
-                          {t("submitForm.labels.coverImage")} (
-                          {t("submitForm.labels.maxFileSize", { size: "1MB" })}):
-                        </strong>
+                        <strong>{t("submitForm.labels.coverImage")}:</strong>
                         <Image
                           src={uploadedCoverImageUrl}
                           alt="Uploaded cover image"
