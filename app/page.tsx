@@ -109,13 +109,13 @@ export default async function Home() {
             </div>
 
             {/* Featured Sponsor */}
-            <div className="space-y-3 py-5">
+            <div className="py-5">
               <h3 className="flex items-center gap-2 font-semibold">{t("featuredSponsor")}</h3>
               <SponsorCard
-                name="Landing Lab"
-                description="Landing Lab provides professional landing pages."
-                url="https://www.landinglab.xyz/"
-                imageUrl="/sponsors/logolandinglab.png"
+                name="ClawCloud Run"
+                description="In a Jiffy. Build, Deploy and Run."
+                url="https://run.claw.cloud?ref=open-launch"
+                imageUrl="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk58nC2t7bg1XPzV7Kxo25HAvNtwa6hLcRpjB0T"
               />
               <SponsorCard
                 name={t("sponsorTitle")}
