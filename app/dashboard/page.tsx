@@ -10,6 +10,7 @@ import {
   RiRocketLine,
   RiThumbUpLine,
 } from "@remixicon/react"
+import { getTranslations } from "next-intl/server"
 
 import { auth } from "@/lib/auth"
 import { Button } from "@/components/ui/button"
@@ -43,6 +44,8 @@ interface BaseProject {
 }
 
 export default async function Dashboard() {
+  const t = await getTranslations("dashboard")
+
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -79,12 +82,12 @@ export default async function Dashboard() {
         <div className="mb-8">
           <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h1 className="font-heading text-2xl font-bold sm:text-3xl">Dashboard</h1>
-              <p className="text-muted-foreground">Welcome, {session?.user?.name || "User"}</p>
+              <h1 className="font-heading text-2xl font-bold sm:text-3xl">{t("title")}</h1>
+              <p className="text-muted-foreground">{t("welcome", { name: session?.user?.name })}</p>
             </div>
             <div className="flex gap-2">
               <Button variant="secondary" asChild>
-                <Link href="/">Explore Launches</Link>
+                <Link href="/">{t("exploreLaunches")}</Link>
               </Button>
               <Button asChild>
                 <Link
@@ -92,7 +95,7 @@ export default async function Dashboard() {
                   className="flex w-full items-center justify-center gap-2 sm:w-auto"
                 >
                   <RiAddLine className="h-4 w-4" />
-                  Submit a Project
+                  {t("submitProject")}
                 </Link>
               </Button>
             </div>
@@ -106,9 +109,11 @@ export default async function Dashboard() {
             <Card className="border dark:border-zinc-800">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="font-heading text-xl font-semibold">My Projects</CardTitle>
+                  <CardTitle className="font-heading text-xl font-semibold">
+                    {t("myProjects")}
+                  </CardTitle>
                 </div>
-                <CardDescription>Manage your submitted tech projects</CardDescription>
+                <CardDescription>{t("manageProjects")}</CardDescription>
               </CardHeader>
               <CardContent className="pb-1">
                 <Tabs defaultValue="active">
@@ -117,19 +122,19 @@ export default async function Dashboard() {
                       value="active"
                       className="cursor-pointer px-1 py-1.5 text-xs sm:px-3 sm:py-1 sm:text-sm"
                     >
-                      Active ({activeLaunches.length})
+                      {t("active")} ({activeLaunches.length})
                     </TabsTrigger>
                     <TabsTrigger
                       value="upcoming"
                       className="cursor-pointer px-1 py-1.5 text-xs sm:px-3 sm:py-1 sm:text-sm"
                     >
-                      Upcoming ({upcomingLaunches.length})
+                      {t("upcoming")} ({upcomingLaunches.length})
                     </TabsTrigger>
                     <TabsTrigger
                       value="past"
                       className="cursor-pointer px-1 py-1.5 text-xs sm:px-3 sm:py-1 sm:text-sm"
                     >
-                      Past ({previousLaunches.length})
+                      {t("past")} ({previousLaunches.length})
                     </TabsTrigger>
                   </TabsList>
 
@@ -145,12 +150,10 @@ export default async function Dashboard() {
                         <div className="bg-secondary/50 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                           <RiCalendarLine className="text-muted-foreground h-6 w-6" />
                         </div>
-                        <h3 className="mb-1 font-medium">No upcoming launches</h3>
-                        <p className="text-muted-foreground mb-4 text-sm">
-                          You don&apos;t have any scheduled project launches yet
-                        </p>
+                        <h3 className="mb-1 font-medium">{t("noUpcoming")}</h3>
+                        <p className="text-muted-foreground mb-4 text-sm">{t("noUpcomingDesc")}</p>
                         <Button size="sm" asChild>
-                          <Link href="/projects/submit">Submit a Project</Link>
+                          <Link href="/projects/submit">{t("submitProject")}</Link>
                         </Button>
                       </div>
                     )}
@@ -168,12 +171,10 @@ export default async function Dashboard() {
                         <div className="bg-secondary/50 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                           <RiRocketLine className="text-muted-foreground h-6 w-6" />
                         </div>
-                        <h3 className="mb-1 font-medium">No active launches</h3>
-                        <p className="text-muted-foreground mb-4 text-sm">
-                          You don&apos;t have any active project launches at the moment
-                        </p>
+                        <h3 className="mb-1 font-medium">{t("noActive")}</h3>
+                        <p className="text-muted-foreground mb-4 text-sm">{t("noActiveDesc")}</p>
                         <Button size="sm" asChild>
-                          <Link href="/projects/submit">Submit a Project</Link>
+                          <Link href="/projects/submit">{t("submitProject")}</Link>
                         </Button>
                       </div>
                     )}
@@ -191,12 +192,10 @@ export default async function Dashboard() {
                         <div className="bg-secondary/50 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                           <RiRocketLine className="text-muted-foreground h-6 w-6" />
                         </div>
-                        <h3 className="mb-1 font-medium">No past launches</h3>
-                        <p className="text-muted-foreground mb-4 text-sm">
-                          You haven&apos;t launched any projects yet
-                        </p>
+                        <h3 className="mb-1 font-medium">{t("noPast")}</h3>
+                        <p className="text-muted-foreground mb-4 text-sm">{t("noPastDesc")}</p>
                         <Button size="sm" asChild>
-                          <Link href="/projects/submit">Submit a Project</Link>
+                          <Link href="/projects/submit">{t("submitProject")}</Link>
                         </Button>
                       </div>
                     )}
@@ -209,9 +208,11 @@ export default async function Dashboard() {
             {badgeProjects.length > 0 && (
               <Card className="border dark:border-zinc-800">
                 <CardHeader className="pb-3">
-                  <CardTitle className="font-heading text-xl font-semibold">Your Badges</CardTitle>
+                  <CardTitle className="font-heading text-xl font-semibold">
+                    {t("yourBadges")}
+                  </CardTitle>
                   <CardDescription className="text-muted-foreground">
-                    Projects you&apos;ve recently launched and ranked in the top 3
+                    {t("badgesDesc")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-3 pt-0">
@@ -225,9 +226,9 @@ export default async function Dashboard() {
                           variant="default"
                           size="sm"
                           className="h-8 w-full px-4 text-sm font-semibold sm:w-auto"
-                          title="Voir le badge"
+                          title={t("seeBadge")}
                         >
-                          <Link href={`/projects/${project.slug}/badges`}>Badges</Link>
+                          <Link href={`/projects/${project.slug}/badges`}>{t("badges")}</Link>
                         </Button>
                       }
                     />
@@ -241,10 +242,10 @@ export default async function Dashboard() {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="font-heading text-xl font-semibold">
-                    Recent Upvotes
+                    {t("recentUpvotes")}
                   </CardTitle>
                 </div>
-                <CardDescription>Projects you&apos;ve recently upvoted</CardDescription>
+                <CardDescription>{t("upvotesDesc")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -257,12 +258,10 @@ export default async function Dashboard() {
                       <div className="bg-secondary/50 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                         <RiThumbUpLine className="text-muted-foreground h-6 w-6" />
                       </div>
-                      <h3 className="mb-1 font-medium">No upvotes yet</h3>
-                      <p className="text-muted-foreground mb-4 text-sm">
-                        You haven&apos;t upvoted any projects yet
-                      </p>
+                      <h3 className="mb-1 font-medium">{t("noUpvotes")}</h3>
+                      <p className="text-muted-foreground mb-4 text-sm">{t("noUpvotesDesc")}</p>
                       <Button size="sm" asChild>
-                        <Link href="/trending">Explore Projects</Link>
+                        <Link href="/trending">{t("exploreProjects")}</Link>
                       </Button>
                     </div>
                   )}
@@ -275,8 +274,8 @@ export default async function Dashboard() {
           <div className="space-y-6">
             <Card className="border dark:border-zinc-800">
               <CardHeader className="pb-3">
-                <CardTitle className="font-heading text-xl font-semibold">Profile</CardTitle>
-                <CardDescription>Your account information</CardDescription>
+                <CardTitle className="font-heading text-xl font-semibold">{t("profile")}</CardTitle>
+                <CardDescription>{t("accountInfo")}</CardDescription>
               </CardHeader>
               <CardContent className="pb-3">
                 <div className="flex items-center gap-4">
@@ -305,7 +304,7 @@ export default async function Dashboard() {
                 <Button variant="outline" asChild className="w-full">
                   <Link href="/settings" className="flex items-center justify-center gap-2">
                     <RiRocketLine className="h-4 w-4" />
-                    Edit Profile
+                    {t("editProfile")}
                   </Link>
                 </Button>
               </CardFooter>
@@ -313,38 +312,40 @@ export default async function Dashboard() {
 
             <Card className="border dark:border-zinc-800">
               <CardHeader>
-                <CardTitle className="font-heading text-xl font-semibold">Quick Actions</CardTitle>
-                <CardDescription>Common tasks you can perform</CardDescription>
+                <CardTitle className="font-heading text-xl font-semibold">
+                  {t("quickActions")}
+                </CardTitle>
+                <CardDescription>{t("quickActionsDesc")}</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-2">
                 <Button variant="outline" asChild className="justify-start">
                   <Link href="/projects/submit" className="flex items-center gap-2">
                     <RiAddLine className="h-4 w-4" />
-                    Submit a Project
+                    {t("submitProject")}
                   </Link>
                 </Button>
                 <Button variant="outline" asChild className="justify-start">
                   <Link href="/" className="flex items-center gap-2">
                     <RiRocketLine className="h-4 w-4" />
-                    Explore Launches
+                    {t("exploreLaunches")}
                   </Link>
                 </Button>
                 <Button variant="outline" asChild className="justify-start">
                   <Link href="/winners" className="flex items-center gap-2">
                     <RiRocketLine className="h-4 w-4" />
-                    Winners
+                    {t("winners")}
                   </Link>
                 </Button>
                 <Button variant="outline" asChild className="justify-start">
                   <Link href="/trending" className="flex items-center gap-2">
                     <RiFireLine className="h-4 w-4" />
-                    Trending Projects
+                    {t("trendingProjects")}
                   </Link>
                 </Button>
                 <Button variant="outline" asChild className="justify-start">
                   <Link href="/categories" className="flex items-center gap-2">
                     <RiHashtag className="h-4 w-4" />
-                    Explore categories
+                    {t("exploreCategories")}
                   </Link>
                 </Button>
               </CardContent>

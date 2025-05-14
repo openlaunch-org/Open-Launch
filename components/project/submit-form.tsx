@@ -25,6 +25,7 @@ import {
 } from "@remixicon/react"
 import { addDays, format, parseISO } from "date-fns"
 import { Tag, TagInput } from "emblor"
+import { useFormatter, useTranslations } from "next-intl"
 
 import {
   DATE_FORMAT,
@@ -85,6 +86,9 @@ interface SubmitProjectFormProps {
 }
 
 export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
+  const t = useTranslations()
+  const tFormat = useFormatter()
+
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -169,7 +173,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       setAvailableDates(availability)
     } catch (err) {
       console.error("Error loading dates:", err)
-      setError("Failed to load available dates")
+      setError(t("submitForm.errors.loadDates"))
     } finally {
       setIsLoadingDates(false)
     }
@@ -209,7 +213,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       setCategories(data)
     } catch (err) {
       console.error("Error fetching categories:", err)
-      setError("Failed to load categories")
+      setError(t("submitForm.errors.loadCategories"))
     } finally {
       setIsLoadingCategories(false)
     }
@@ -271,7 +275,10 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
         if (!result.allowed) {
           setIsLaunchDateOverLimit(true)
           setLaunchDateLimitError(
-            `You have already scheduled ${result.count}/${result.limit} project(s) for this date. Please select another date.`,
+            t("submitForm.errors.launchDateLimit", {
+              count: result.count,
+              limit: result.limit,
+            }),
           )
         } else {
           setIsLaunchDateOverLimit(false)
@@ -279,7 +286,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       } catch (err) {
         console.error("Error checking launch date limit:", err)
         setIsLaunchDateOverLimit(false)
-        setLaunchDateLimitError("Could not verify launch date limit. Please try again.")
+        setLaunchDateLimitError(t("submitForm.errors.verifyLaunchLimit"))
       } finally {
         setIsLoadingDateCheck(false)
       }
@@ -303,13 +310,13 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
         !formData.description ||
         (process.env.NODE_ENV !== "development" && (!uploadedLogoUrl || !uploadedCoverImageUrl))
       ) {
-        setError("Please fill in all required project information and upload images.")
+        setError(t("submitForm.errors.requiredInfo"))
         return
       }
       try {
         new URL(formData.websiteUrl)
       } catch {
-        setError("Please enter a valid website URL.")
+        setError(t("submitForm.errors.validUrl"))
         return
       }
     }
@@ -321,28 +328,28 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
         formData.platforms.length === 0 ||
         !formData.pricing
       ) {
-        setError("Please complete the technical details and categorization.")
+        setError(t("submitForm.errors.technicalDetails"))
         return
       }
 
       if (formData.categories.length > 3) {
-        setError("You can select a maximum of 3 categories.")
+        setError(t("submitForm.errors.maxCategories"))
         return
       }
 
       if (formData.techStack.length > 5) {
-        setError("You can add a maximum of 5 technologies.")
+        setError(t("submitForm.errors.maxTechStack"))
         return
       }
     }
 
     if (currentStep === 3) {
       if (!formData.scheduledDate) {
-        setError("Please select a launch date.")
+        setError(t("submitForm.errors.selectLaunchDate"))
         return
       }
       if (isLaunchDateOverLimit) {
-        setError(launchDateLimitError || "This launch date is not available due to daily limit.")
+        setError(launchDateLimitError || t("submitForm.errors.launchDateLimit"))
         return
       }
     }
@@ -373,24 +380,20 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       formData.platforms.length === 0 ||
       !formData.pricing
     ) {
-      setError(
-        "Some required information or images are missing. Please go back and complete all fields.",
-      )
+      setError(t("submitForm.errors.missingInfo"))
       setIsPending(false)
       return
     }
 
     const urlExists = await checkWebsiteUrl(formData.websiteUrl)
     if (urlExists) {
-      setError("This website URL has already been submitted. Please use a different URL.")
+      setError(t("submitForm.errors.urlExists"))
       setIsPending(false)
       return
     }
 
     if (isLaunchDateOverLimit && formData.scheduledDate) {
-      setError(
-        launchDateLimitError || "Cannot submit: The selected launch date exceeds your daily limit.",
-      )
+      setError(launchDateLimitError || t("submitForm.errors.launchDateOverLimit"))
       setIsPending(false)
       return
     }
@@ -400,19 +403,19 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
     setLaunchDateLimitError(null)
 
     if (formData.techStack.length === 0) {
-      setError("Please enter at least one technology in the Tech Stack.")
+      setError(t("submitForm.errors.techStackRequired"))
       setIsPending(false)
       return
     }
 
     if (formData.categories.length > 3) {
-      setError("You can select a maximum of 3 categories.")
+      setError(t("submitForm.errors.maxCategories"))
       setIsPending(false)
       return
     }
 
     if (formData.techStack.length > 5) {
-      setError("You can add a maximum of 5 technologies.")
+      setError(t("submitForm.errors.maxTechStack"))
       setIsPending(false)
       return
     }
@@ -444,7 +447,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       const submissionResult = await submitProject(projectData)
 
       if (!submissionResult.success || !submissionResult.projectId || !submissionResult.slug) {
-        throw new Error(submissionResult.error || "Failed to submit project data.")
+        throw new Error(submissionResult.error || t("submitForm.errors.unexpected"))
       }
 
       const projectId = submissionResult.projectId
@@ -483,7 +486,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
           setError(
             scheduleError instanceof Error
               ? scheduleError.message
-              : "An error occurred during scheduling.",
+              : t("submitForm.errors.unexpected"),
           )
           setIsPending(false)
           return
@@ -507,7 +510,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       setError(
         submissionError instanceof Error
           ? submissionError.message
-          : "An unexpected error occurred.",
+          : t("submitForm.errors.unexpected"),
       )
       setIsPending(false)
     }
@@ -523,15 +526,15 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       <div className="container mx-auto max-w-3xl">
         <div className="flex items-center justify-between pt-2 sm:px-4 sm:pt-0">
           {[
-            { step: 1, label: "Project Info", icon: RiListCheck },
+            { step: 1, label: t("submitForm.step.info"), icon: RiListCheck },
             {
               step: 2,
-              label: "Details",
-              shortLabel: "Details",
+              label: t("submitForm.step.details"),
+              shortLabel: t("submitForm.step.details"),
               icon: RiInformation2Line,
             },
-            { step: 3, label: "Launch Date", icon: RiCalendarLine },
-            { step: 4, label: "Review", icon: RiFileCheckLine },
+            { step: 3, label: t("submitForm.step.launchDate"), icon: RiCalendarLine },
+            { step: 4, label: t("submitForm.step.review"), icon: RiFileCheckLine },
           ].map(({ step, label, shortLabel, icon: Icon }) => (
             <div
               key={`step-${step}`}
@@ -632,20 +635,20 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
           <div className="space-y-6">
             <div>
               <Label htmlFor="name">
-                Project Name <span className="text-red-500">*</span>
+                {t("submitForm.labels.projectName")} <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="My Awesome Project"
+                placeholder={t("submitForm.placeholders.projectName")}
                 required
               />
             </div>
             <div>
               <Label htmlFor="websiteUrl">
-                Website URL <span className="text-red-500">*</span>
+                {t("submitForm.labels.websiteUrl")} <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="websiteUrl"
@@ -653,33 +656,33 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                 type="url"
                 value={formData.websiteUrl}
                 onChange={handleInputChange}
-                placeholder="https://myawesomeproject.com"
+                placeholder={t("submitForm.placeholders.websiteUrl")}
                 required
               />
             </div>
             <div>
               <Label htmlFor="description">
-                Short Description <span className="text-red-500">*</span>
+                {t("submitForm.labels.description")} <span className="text-red-500">*</span>
               </Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="Describe your project in a sentence or two."
+                placeholder={t("submitForm.placeholders.description")}
                 required
                 rows={3}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="logoUrl">
-                Logo (Max 1MB) <span className="text-red-500">*</span>
+                {t("submitForm.labels.logo")} <span className="text-red-500">*</span>
               </Label>
               {uploadedLogoUrl ? (
                 <div className="bg-muted/30 relative w-fit rounded-md border p-3">
                   <Image
                     src={uploadedLogoUrl}
-                    alt="Logo preview"
+                    alt={t("submitForm.labels.logo")}
                     width={64}
                     height={64}
                     className="rounded object-contain"
@@ -690,7 +693,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     size="icon"
                     className="text-muted-foreground hover:text-foreground absolute top-1 right-1 h-6 w-6"
                     onClick={() => setUploadedLogoUrl(null)}
-                    aria-label="Remove logo"
+                    aria-label={t("submitForm.labels.removeLogo")}
                   >
                     <RiCloseCircleLine className="h-5 w-5" />
                   </Button>
@@ -730,28 +733,31 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                         if (ready)
                           return (
                             <>
-                              <RiImageAddLine className="h-4 w-4" /> Upload Logo
+                              <RiImageAddLine className="h-4 w-4" />{" "}
+                              {t("submitForm.buttons.uploadLogo")}
                             </>
                           )
-                        return "Getting ready..."
+                        return t("submitForm.status.gettingReady")
                       },
                     }}
                   />
                   {isUploadingLogo && (
-                    <span className="text-muted-foreground text-xs">Uploading...</span>
+                    <span className="text-muted-foreground text-xs">
+                      {t("submitForm.status.uploading")}
+                    </span>
                   )}
                 </div>
               )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="coverImageUrl">
-                Cover Image (Max 1MB) <span className="text-red-500">*</span>
+                {t("submitForm.labels.coverImage")} <span className="text-red-500">*</span>
               </Label>
               {uploadedCoverImageUrl ? (
                 <div className="bg-muted/30 relative w-fit rounded-md border p-3">
                   <Image
                     src={uploadedCoverImageUrl}
-                    alt="Cover image preview"
+                    alt={t("submitForm.labels.coverImage")}
                     width={240}
                     height={135}
                     className="rounded object-cover"
@@ -762,7 +768,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     size="icon"
                     className="text-muted-foreground hover:text-foreground absolute top-1 right-1 h-6 w-6"
                     onClick={() => setUploadedCoverImageUrl(null)}
-                    aria-label="Remove cover image"
+                    aria-label={t("submitForm.labels.removeCoverImage")}
                   >
                     <RiCloseCircleLine className="h-5 w-5" />
                   </Button>
@@ -802,15 +808,18 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                         if (ready)
                           return (
                             <>
-                              <RiImageAddLine className="h-4 w-4" /> Upload Cover Image
+                              <RiImageAddLine className="h-4 w-4" />{" "}
+                              {t("submitForm.buttons.uploadCoverImage")}
                             </>
                           )
-                        return "Getting ready..."
+                        return t("submitForm.status.gettingReady")
                       },
                     }}
                   />
                   {isUploadingCover && (
-                    <span className="text-muted-foreground text-xs">Uploading...</span>
+                    <span className="text-muted-foreground text-xs">
+                      {t("submitForm.status.uploading")}
+                    </span>
                   )}
                 </div>
               )}
@@ -822,14 +831,14 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
           <div className="space-y-8">
             <div>
               <Label className="mb-2 block">
-                Categories <span className="text-red-500">*</span>
+                {t("submitForm.labels.categories")} <span className="text-red-500">*</span>
                 <span className="text-muted-foreground ml-2 text-xs">
-                  ({formData.categories.length}/3 selected)
+                  ({formData.categories.length}/3 {t("submitForm.info.categoriesHint")})
                 </span>
               </Label>
               {isLoadingCategories ? (
                 <div className="text-muted-foreground flex items-center gap-2">
-                  <RiLoader4Line className="h-4 w-4 animate-spin" /> Loading...
+                  <RiLoader4Line className="h-4 w-4 animate-spin" /> {t("common.loading")}
                 </div>
               ) : categories.length > 0 ? (
                 <div className="max-h-60 space-y-3 overflow-y-auto rounded-md border p-4">
@@ -853,18 +862,18 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground text-sm">No categories available.</p>
+                <p className="text-muted-foreground text-sm">{t("submitForm.info.noCategories")}</p>
               )}
               <p className="text-muted-foreground mt-1 text-xs">
-                Select up to 3 relevant categories.
+                {t("submitForm.info.categoriesHint")}
               </p>
             </div>
 
             <div>
               <Label htmlFor={tagInputId}>
-                Tech Stack <span className="text-red-500">*</span>
+                {t("submitForm.labels.techStack")} <span className="text-red-500">*</span>
                 <span className="text-muted-foreground ml-2 text-xs">
-                  ({formData.techStack.length}/5 technologies)
+                  ({formData.techStack.length}/5 {t("submitForm.labels.techStack")})
                 </span>
               </Label>
               <TagInput
@@ -877,7 +886,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                   }
                   setTechStackTags(newTags)
                 }}
-                placeholder="Type a technology and press Enter..."
+                placeholder={t("submitForm.placeholders.techStack")}
                 styleClasses={{
                   inlineTagsContainer:
                     "border-input rounded-md bg-background shadow-xs transition-[color,box-shadow] focus-within:border-ring outline-none focus-within:ring-[3px] focus-within:ring-ring/50 p-1 gap-1 mt-1",
@@ -892,13 +901,13 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                 setActiveTagIndex={setActiveTechTagIndex}
               />
               <p className="text-muted-foreground mt-1 text-xs">
-                Enter up to 5 technologies used, press Enter or comma to add a tag.
+                {t("submitForm.info.techStackHint")}
               </p>
             </div>
 
             <div>
               <Label className="mb-2 block">
-                Platforms <span className="text-red-500">*</span>
+                {t("submitForm.labels.platforms")} <span className="text-red-500">*</span>
               </Label>
               <div className="space-y-3 rounded-md border p-4">
                 {Object.entries(platformType).map(([key, value]) => (
@@ -914,19 +923,19 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       htmlFor={`platform-${value}`}
                       className="cursor-pointer font-normal capitalize"
                     >
-                      {key.toLowerCase()}
+                      {t(`submitForm.platforms.${key.toLowerCase()}`)}
                     </Label>
                   </div>
                 ))}
               </div>
               <p className="text-muted-foreground mt-1 text-xs">
-                Select all platforms your project supports.
+                {t("submitForm.info.platformsHint")}
               </p>
             </div>
 
             <div>
               <Label className="mb-2 block">
-                Pricing Model <span className="text-red-500">*</span>
+                {t("submitForm.labels.pricing")} <span className="text-red-500">*</span>
               </Label>
               <RadioGroup
                 value={formData.pricing}
@@ -940,7 +949,9 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       className="hover:bg-muted/50 flex h-full cursor-pointer items-center space-x-2 rounded-md border p-3 transition-colors"
                     >
                       <RadioGroupItem value={value} id={`pricing-${value}`} />
-                      <span className="font-normal capitalize">{key.toLowerCase()}</span>
+                      <span className="font-normal">
+                        {t(`submitForm.pricingTypes.${key.toLowerCase()}`)}
+                      </span>
                     </Label>
                   </div>
                 ))}
@@ -949,25 +960,25 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <Label htmlFor="githubUrl">GitHub URL (Optional)</Label>
+                <Label htmlFor="githubUrl">{t("submitForm.labels.githubUrl")}</Label>
                 <Input
                   id="githubUrl"
                   name="githubUrl"
                   type="url"
                   value={formData.githubUrl}
                   onChange={handleInputChange}
-                  placeholder="https://github.com/user/repo"
+                  placeholder={t("submitForm.placeholders.githubUrl")}
                 />
               </div>
               <div>
-                <Label htmlFor="twitterUrl">Twitter URL (Optional)</Label>
+                <Label htmlFor="twitterUrl">{t("submitForm.labels.twitterUrl")}</Label>
                 <Input
                   id="twitterUrl"
                   name="twitterUrl"
                   type="url"
                   value={formData.twitterUrl}
                   onChange={handleInputChange}
-                  placeholder="https://twitter.com/username"
+                  placeholder={t("submitForm.placeholders.twitterUrl")}
                 />
               </div>
             </div>
@@ -978,22 +989,21 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
           <div className="space-y-8">
             <div className="flex items-center gap-2">
               <RiCalendarLine className="h-5 w-5" />
-              <h3 className="text-lg font-medium">Choose Launch Type & Date</h3>
+              <h3 className="text-lg font-medium">{t("submitForm.info.chooseLaunchType")}</h3>
             </div>
 
             <div className="bg-muted/30 border-muted flex items-start gap-2 rounded-lg border p-3 sm:p-4">
               <RiInformationLine className="mt-0.5 h-5 w-5 flex-shrink-0" />
               <div className="text-xs sm:text-sm">
-                <p className="font-medium">Select your launch type and date</p>
+                <p className="font-medium">{t("submitForm.info.selectTypeAndDate")}</p>
                 <p className="text-muted-foreground mt-1">
-                  All launches happen at {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00 UTC. We launch a
-                  limited number of projects each day.
+                  {t.rich("submitForm.info.launchTime", { hour: LAUNCH_SETTINGS.LAUNCH_HOUR_UTC })}
                 </p>
               </div>
             </div>
 
             <div>
-              <h4 className="mb-4 text-sm font-medium">Launch Type</h4>
+              <h4 className="mb-4 text-sm font-medium">{t("submitForm.info.launchTypeHeader")}</h4>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div
                   className={`cursor-pointer rounded-lg border p-4 transition-all duration-150 ${formData.launchType === LAUNCH_TYPES.FREE ? "border-primary ring-primary bg-primary/5 relative shadow-sm ring-1" : "hover:border-foreground/20 hover:bg-muted/50"}`}
@@ -1004,30 +1014,40 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       variant="default"
                       className="bg-primary text-primary-foreground absolute -top-2 -right-2 text-xs"
                     >
-                      Selected
+                      {t("submitForm.info.selected")}
                     </Badge>
                   )}
                   <h5 className="mb-2 flex items-center gap-1.5 font-medium">
                     <RiRocketLine className="h-4 w-4" />
-                    Free Launch
+                    {t("submitForm.launchPlans.free.name")}
                   </h5>
-                  <p className="mb-3 text-2xl font-bold">$0</p>
+                  <p className="mb-3 text-2xl font-bold">
+                    {t("submitForm.launchPlans.free.price")}
+                  </p>
                   <ul className="text-muted-foreground space-y-1.5 text-xs">
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>{LAUNCH_LIMITS.FREE_DAILY_LIMIT} slots/day</span>
+                      <span>
+                        {t("submitForm.launchPlans.free.features.slots", {
+                          slots: LAUNCH_LIMITS.FREE_DAILY_LIMIT,
+                        })}
+                      </span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Standard visibility</span>
+                      <span>{t("submitForm.launchPlans.free.features.visibility")}</span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Up to {LAUNCH_SETTINGS.MAX_DAYS_AHEAD} days scheduling</span>
+                      <span>
+                        {t("submitForm.launchPlans.free.features.schedule", {
+                          days: LAUNCH_SETTINGS.MAX_DAYS_AHEAD,
+                        })}
+                      </span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-foreground/60 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Dofollow Backlink if Top 3 daily</span>
+                      <span>{t("submitForm.launchPlans.free.features.backlink")}</span>
                     </li>
                   </ul>
                 </div>
@@ -1041,30 +1061,42 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       variant="default"
                       className="bg-primary text-primary-foreground absolute -top-2 -right-2 text-xs"
                     >
-                      Selected
+                      {t("submitForm.info.selected")}
                     </Badge>
                   )}
                   <h5 className="mb-2 flex items-center gap-1.5 font-medium">
                     <RiStarLine className="text-primary h-4 w-4" />
-                    Premium Launch
+                    {t("submitForm.launchPlans.premium.name")}
                   </h5>
-                  <p className="mb-3 text-2xl font-bold">${LAUNCH_SETTINGS.PREMIUM_PRICE}</p>
+                  <p className="mb-3 text-2xl font-bold">
+                    {t("submitForm.launchPlans.premium.price", {
+                      price: LAUNCH_SETTINGS.PREMIUM_PRICE,
+                    })}
+                  </p>
                   <ul className="text-muted-foreground space-y-1.5 text-xs">
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Skip the Free Queue - Priority access</span>
+                      <span>{t("submitForm.launchPlans.premium.features.queue")}</span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>{LAUNCH_LIMITS.PREMIUM_DAILY_LIMIT} premium slots/day</span>
+                      <span>
+                        {t("submitForm.launchPlans.premium.features.slots", {
+                          slots: LAUNCH_LIMITS.PREMIUM_DAILY_LIMIT,
+                        })}
+                      </span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Guaranteed Dofollow Backlink</span>
+                      <span>{t("submitForm.launchPlans.premium.features.backlink")}</span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-primary/80 h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Up to {LAUNCH_SETTINGS.PREMIUM_MAX_DAYS_AHEAD} days scheduling</span>
+                      <span>
+                        {t("submitForm.launchPlans.premium.features.schedule", {
+                          days: LAUNCH_SETTINGS.PREMIUM_MAX_DAYS_AHEAD,
+                        })}
+                      </span>
                     </li>
                   </ul>
                 </div>
@@ -1082,37 +1114,51 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       variant="default"
                       className="bg-primary text-primary-foreground absolute -top-2 -right-2 text-xs"
                     >
-                      Selected
+                      {t("submitForm.info.selected")}
                     </Badge>
                   )}
                   <h5 className="mb-2 flex items-center gap-1.5 font-medium">
                     <RiVipCrownLine className="text-primary h-4 w-4" />
-                    Premium Plus
+                    {t("submitForm.launchPlans.premiumPlus.name")}
                   </h5>
                   <p className="mb-1 text-2xl font-bold">
-                    ${LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE}{" "}
-                    <span className="text-muted-foreground text-xs line-through">$25</span>
+                    {t("submitForm.launchPlans.premiumPlus.price", {
+                      price: LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE,
+                    })}{" "}
+                    <span className="text-muted-foreground text-xs line-through">
+                      {t("submitForm.launchPlans.premiumPlus.discountedPrice", {
+                        price: LAUNCH_SETTINGS.PREMIUM_PLUS_FULL_PRICE,
+                      })}
+                    </span>
                   </p>
-                  <span className="bg-primary/10 text-primary inline-block rounded-full px-2 py-0.5 text-xs">
-                    -50% code: OPENLAUNCH
+                  <span className="bg-primary/10 text-primary mb-1 block inline-block rounded-full px-2 py-0.5 text-xs">
+                    {t("submitForm.info.discountCode", {
+                      code: LAUNCH_SETTINGS.PREMIUM_PLUS_DISCOUNT_CODE,
+                    })}
                   </span>
                   <ul className="text-muted-foreground space-y-1.5 text-xs">
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Premium Spotlight Placement</span>
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
-                      <span>{LAUNCH_LIMITS.PREMIUM_PLUS_DAILY_LIMIT} exclusive slots/day</span>
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
-                      <span>Guaranteed Dofollow Backlink</span>
+                      <span>{t("submitForm.launchPlans.premiumPlus.features.highlight")}</span>
                     </li>
                     <li className="flex items-center gap-1.5">
                       <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
                       <span>
-                        Up to {LAUNCH_SETTINGS.PREMIUM_PLUS_MAX_DAYS_AHEAD} days scheduling
+                        {t("submitForm.launchPlans.premiumPlus.features.slots", {
+                          slots: LAUNCH_LIMITS.PREMIUM_PLUS_DAILY_LIMIT,
+                        })}
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
+                      <span>{t("submitForm.launchPlans.premiumPlus.features.backlink")}</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <RiCheckboxCircleFill className="text-primary h-3.5 w-3.5 flex-shrink-0" />
+                      <span>
+                        {t("submitForm.launchPlans.premiumPlus.features.schedule", {
+                          days: LAUNCH_SETTINGS.PREMIUM_PLUS_MAX_DAYS_AHEAD,
+                        })}
                       </span>
                     </li>
                   </ul>
@@ -1122,15 +1168,15 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
 
             <div>
               <h4 className="mb-3 text-sm font-medium">
-                Launch Date <span className="text-red-500">*</span>
+                {t("submitForm.labels.launchDate")} <span className="text-red-500">*</span>
               </h4>
               {isLoadingDates ? (
                 <div className="text-muted-foreground flex items-center justify-center gap-2 py-4">
-                  <RiLoader4Line className="h-5 w-5 animate-spin" /> Loading available dates...
+                  <RiLoader4Line className="h-5 w-5 animate-spin" /> {t("common.loading")}
                 </div>
               ) : availableDates.length === 0 && !isLoadingDates ? (
                 <p className="text-muted-foreground rounded-md border p-4 text-center text-sm">
-                  No available launch dates found for the selected type in the allowed range.
+                  {t("submitForm.errors.noAvailableDates")}
                 </p>
               ) : (
                 <div>
@@ -1141,7 +1187,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     value={formData.scheduledDate || ""}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a launch date" />
+                      <SelectValue placeholder={t("submitForm.placeholders.launchDate")} />
                     </SelectTrigger>
                     <SelectContent>
                       {groupDatesByMonth(availableDates).map((group) => (
@@ -1164,7 +1210,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
 
                             if (date.totalSlots <= 0) isDisabled = true
 
-                            const slotsText = `${slotsAvailable} ${formData.launchType === LAUNCH_TYPES.FREE ? "free" : formData.launchType === LAUNCH_TYPES.PREMIUM ? "premium" : "premium+"} slot(s)`
+                            const slotsText = `${slotsAvailable} ${formData.launchType === LAUNCH_TYPES.FREE ? t("submitForm.info.freeSlots") : formData.launchType === LAUNCH_TYPES.PREMIUM ? t("submitForm.info.premiumSlots") : t("submitForm.info.premiumPlusSlots")}`
 
                             return (
                               <SelectItem
@@ -1174,7 +1220,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                                 className="group text-sm"
                               >
                                 <div className="flex w-full items-center justify-between">
-                                  <span>{format(dateObj, "EEE, MMM d")}</span>
+                                  <span>{format(dateObj, "dd/MM/yyyy")}</span>
                                   <span
                                     className={`ml-2 text-xs ${isDisabled ? "text-muted-foreground/50" : "text-muted-foreground group-hover:text-foreground"}`}
                                   >
@@ -1198,12 +1244,14 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                   {formData.scheduledDate && !isLaunchDateOverLimit && (
                     <div className="bg-primary/5 border-primary/10 mt-3 flex w-fit items-center gap-1.5 rounded-md border px-3 py-2 text-sm">
                       <RiCalendarLine className="text-primary/80 h-4 w-4" />
-                      <span className="text-muted-foreground">Scheduled for </span>
+                      <span className="text-muted-foreground">
+                        {t("submitForm.labels.scheduledFor")}{" "}
+                      </span>
                       <span className="text-foreground font-medium">
                         {format(parseISO(formData.scheduledDate), DATE_FORMAT.DISPLAY)}
                       </span>
                       <span className="text-muted-foreground/70 ml-1 text-xs">
-                        • {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00 UTC
+                        • {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:h
                       </span>
                     </div>
                   )}
@@ -1217,21 +1265,21 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
           <div className="space-y-8">
             <div className="flex items-center gap-2">
               <RiCheckLine className="h-5 w-5" />
-              <h3 className="text-lg font-medium">Review and Submit</h3>
+              <h3 className="text-lg font-medium">{t("submitForm.info.reviewAndSubmit")}</h3>
             </div>
 
             <div className="bg-card overflow-hidden rounded-lg border">
               <div className="space-y-6 p-6">
                 <div>
                   <h4 className="mb-3 border-b pb-2 text-base font-semibold">
-                    Project Information
+                    {t("submitForm.step.info")}
                   </h4>
                   <div className="space-y-2 text-sm">
                     <p>
-                      <strong>Name:</strong> {formData.name}
+                      <strong>{t("submitForm.labels.name")}:</strong> {formData.name}
                     </p>
                     <p>
-                      <strong>Website:</strong>{" "}
+                      <strong>{t("submitForm.labels.website")}:</strong>{" "}
                       <a
                         href={formData.websiteUrl}
                         target="_blank"
@@ -1242,11 +1290,14 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       </a>
                     </p>
                     <p>
-                      <strong>Description:</strong> {formData.description}
+                      <strong>{t("submitForm.labels.description")}:</strong> {formData.description}
                     </p>
                     {uploadedLogoUrl && (
                       <p className="flex flex-col items-start gap-2">
-                        <strong>Logo:</strong>
+                        <strong>
+                          {t("submitForm.labels.logo")} (
+                          {t("submitForm.labels.maxFileSize", { size: "1MB" })}):
+                        </strong>
                         <Image
                           src={uploadedLogoUrl}
                           alt="Uploaded logo"
@@ -1258,7 +1309,10 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     )}
                     {uploadedCoverImageUrl && (
                       <p className="flex flex-col items-start gap-2">
-                        <strong>Cover Image:</strong>
+                        <strong>
+                          {t("submitForm.labels.coverImage")} (
+                          {t("submitForm.labels.maxFileSize", { size: "1MB" })}):
+                        </strong>
                         <Image
                           src={uploadedCoverImageUrl}
                           alt="Uploaded cover image"
@@ -1272,10 +1326,12 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                 </div>
 
                 <div>
-                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">Details</h4>
+                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">
+                    {t("submitForm.step.details")}
+                  </h4>
                   <div className="space-y-3 text-sm">
                     <div>
-                      <strong>Categories:</strong>
+                      <strong>{t("submitForm.labels.categories")}:</strong>
                       <div className="mt-1 flex flex-wrap gap-2">
                         {formData.categories.map((catId) => (
                           <Badge key={catId} variant="secondary">
@@ -1295,7 +1351,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       </div>
                     </div>
                     <div>
-                      <strong>Platforms:</strong>
+                      <strong>{t("submitForm.labels.platforms")}:</strong>
                       <div className="mt-1 flex flex-wrap gap-2">
                         {formData.platforms.map((plat) => (
                           <Badge key={plat} variant="secondary" className="capitalize">
@@ -1305,7 +1361,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       </div>
                     </div>
                     <p>
-                      <strong>Pricing:</strong>{" "}
+                      <strong>{t("submitForm.labels.pricing")}:</strong>{" "}
                       <span className="capitalize">
                         <Badge variant="outline">{getPricingLabel(formData.pricing)}</Badge>
                       </span>
@@ -1325,7 +1381,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                     )}
                     {formData.twitterUrl && (
                       <p>
-                        <strong>Twitter:</strong>{" "}
+                        <strong>Twitter/X:</strong>{" "}
                         <a
                           href={formData.twitterUrl}
                           target="_blank"
@@ -1340,7 +1396,9 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                 </div>
 
                 <div>
-                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">Launch Plan</h4>
+                  <h4 className="mb-3 border-b pb-2 text-base font-semibold">
+                    {t("submitForm.labels.launchPlan")}
+                  </h4>
                   <div className="flex flex-col gap-4 text-sm sm:flex-row">
                     <div
                       className={`flex w-fit items-center gap-2 rounded-md border px-3 py-2 ${
@@ -1354,14 +1412,17 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       {formData.launchType === LAUNCH_TYPES.FREE && (
                         <>
                           <RiRocketLine className="text-foreground/70 h-4 w-4" />{" "}
-                          <span className="text-foreground/70 font-medium">Free Launch</span>
+                          <span className="text-foreground/70 font-medium">
+                            {t("submitForm.launchPlans.free.title")}
+                          </span>
                         </>
                       )}
                       {formData.launchType === LAUNCH_TYPES.PREMIUM && (
                         <>
                           <RiStarLine className="text-primary h-4 w-4" />{" "}
                           <span className="text-primary font-medium">
-                            Premium Launch (${LAUNCH_SETTINGS.PREMIUM_PRICE})
+                            {t("submitForm.launchPlans.premium.title")} (R${" "}
+                            {LAUNCH_SETTINGS.PREMIUM_PRICE})
                           </span>
                         </>
                       )}
@@ -1370,13 +1431,20 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                           <RiVipCrownLine className="text-primary h-4 w-4" />{" "}
                           <div className="text-primary font-medium">
                             <div>
-                              Premium Plus (${LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE}){" "}
+                              {t("submitForm.launchPlans.premiumPlus.title")} (R${" "}
+                              {LAUNCH_SETTINGS.PREMIUM_PLUS_PRICE}){" "}
                               <span className="text-muted-foreground text-xs line-through">
-                                R$ 50
+                                R$ {LAUNCH_SETTINGS.PREMIUM_PLUS_FULL_PRICE}
                               </span>
                             </div>
                             <span className="bg-primary/10 text-primary inline-block rounded-full px-2 py-0.5 text-xs">
-                              -50% code: OPENLAUNCH
+                              {t("submitForm.info.discountCode", {
+                                percent:
+                                  (LAUNCH_SETTINGS.PREMIUM_PLUS_DISCOUNT /
+                                    LAUNCH_SETTINGS.PREMIUM_PLUS_FULL_PRICE) *
+                                  100,
+                                code: LAUNCH_SETTINGS.PREMIUM_PLUS_DISCOUNT_CODE,
+                              })}
                             </span>
                           </div>
                         </>
@@ -1393,7 +1461,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                       </div>
                       {formData.scheduledDate && (
                         <span className="text-muted-foreground/70 ml-6 text-xs">
-                          {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}:00 UTC
+                          {LAUNCH_SETTINGS.LAUNCH_HOUR_UTC}h
                         </span>
                       )}
                     </div>
@@ -1405,13 +1473,12 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
                 <div className="flex items-start gap-3">
                   <RiInformationLine className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-500" />
                   <div className="space-y-1 text-sm">
-                    <p className="font-medium">Ready to submit?</p>
+                    <p className="font-medium">{t("submitForm.info.readyToSubmit")}</p>
                     <p className="text-muted-foreground text-xs">
-                      Please review all information carefully. Once submitted, your project will be
-                      scheduled for launch.
+                      {t("submitForm.info.readyToSubmitDesc")}
                       {formData.launchType !== LAUNCH_TYPES.FREE && (
                         <span className="mt-1 block">
-                          You will be redirected to the payment page after submission.
+                          {t("submitForm.info.readyToSubmitAlert")}
                         </span>
                       )}
                     </p>
@@ -1446,7 +1513,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
           disabled={currentStep === 1 || isPending || isUploadingLogo || isUploadingCover}
         >
           <RiArrowLeftLine className="mr-2 h-4 w-4" />
-          Previous
+          {t("common.previous")}
         </Button>
 
         {currentStep < 4 ? (
@@ -1463,7 +1530,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
             {currentStep === 3 && isLoadingDateCheck && (
               <RiLoader4Line className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Next
+            {t("common.next")}
             <RiArrowRightLine className="ml-2 h-4 w-4" />
           </Button>
         ) : (
@@ -1477,7 +1544,7 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
             ) : (
               <RiRocketLine className="mr-2 h-4 w-4" />
             )}
-            Submit Project
+            {t("submitForm.buttons.submit")}
           </Button>
         )}
       </div>

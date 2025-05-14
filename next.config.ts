@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_UPLOADTHING_URL!,
+        hostname: new URL(process.env.NEXT_PUBLIC_UPLOADTHING_URL!).hostname,
       },
     ],
   },

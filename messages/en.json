@@ -1,4 +1,39 @@
 {
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}",
+    "user": "User",
+    "exploreLaunches": "Explore Launches",
+    "submitProject": "Submit a Project",
+    "myProjects": "My Projects",
+    "manageProjects": "Manage your submitted tech projects",
+    "active": "Active",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "noUpcoming": "No upcoming launches",
+    "noUpcomingDesc": "You don't have any scheduled project launches yet",
+    "noActive": "No active launches",
+    "noActiveDesc": "You don't have any active project launches at the moment",
+    "noPast": "No past launches",
+    "noPastDesc": "You haven't launched any projects yet",
+    "yourBadges": "Your Badges",
+    "badgesDesc": "Projects you've recently launched and ranked in the top 3",
+    "seeBadge": "See badge",
+    "badges": "Badges",
+    "recentUpvotes": "Recent Upvotes",
+    "upvotesDesc": "Projects you've recently upvoted",
+    "noUpvotes": "No upvotes yet",
+    "noUpvotesDesc": "You haven't upvoted any projects yet",
+    "exploreProjects": "Explore Projects",
+    "profile": "Profile",
+    "accountInfo": "Your account information",
+    "editProfile": "Edit Profile",
+    "quickActions": "Quick Actions",
+    "quickActionsDesc": "Common tasks you can perform",
+    "winners": "Winners",
+    "trendingProjects": "Trending Projects",
+    "exploreCategories": "Explore categories"
+  },
   "common": {
     "loading": "Loading...",
     "error": "There was an error loading the data.",
@@ -60,6 +95,148 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "dashboard": "Dashboard"
+  },
+  "submitPage": {
+    "title": "Submit a Project",
+    "description": "Share your project with the community. Fill in the details below."
+  },
+  "submitForm": {
+    "launchPlans": {
+      "free": {
+        "name": "Free",
+        "title": "Free Launch",
+        "price": "$ 0",
+        "features": {
+          "slots": "{slots} slots/day",
+          "visibility": "Standard visibility",
+          "schedule": "Up to 90 days scheduling",
+          "backlink": "Dofollow Backlink if Top 3 daily"
+        }
+      },
+      "premium": {
+        "name": "Premium",
+        "title": "Premium Launch",
+        "price": "$ {price}",
+        "features": {
+          "queue": "Skip Free Queue - Priority Access",
+          "backlink": "Guaranteed Dofollow Backlink",
+          "slots": "{slots} premium slots/day",
+          "schedule": "Up to {days} days scheduling"
+        }
+      },
+      "premiumPlus": {
+        "name": "Premium Plus",
+        "title": "Premium Plus Launch",
+        "price": "$ {price}",
+        "discountedPrice": "$ {price}",
+        "discountCode": "-50% code: {code}",
+        "features": {
+          "highlight": "Premium Spotlight Placement",
+          "slots": "Only {slots} exclusive slots",
+          "backlink": "Guaranteed Dofollow Backlink",
+          "schedule": "Up to {days} days scheduling"
+        }
+      }
+    },
+    "step": {
+      "info": "Project Info",
+      "details": "Details",
+      "launchDate": "Launch Date",
+      "review": "Review"
+    },
+    "labels": {
+      "name": "Name",
+      "website": "Website",
+      "projectName": "Project Name",
+      "websiteUrl": "Website URL",
+      "description": "Short Description",
+      "maxFileSize": "Max {size}",
+      "logo": "Logo",
+      "coverImage": "Cover Image",
+      "categories": "Categories",
+      "techStack": "Tech Stack",
+      "platforms": "Platforms",
+      "pricing": "Pricing Model",
+      "githubUrl": "GitHub URL (Optional)",
+      "twitterUrl": "Twitter URL (Optional)",
+      "removeLogo": "Remove logo",
+      "removeCoverImage": "Remove cover image",
+      "launchDate": "Launch Date",
+      "launchPlan": "Launch Plan",
+      "scheduledFor": "Scheduled for"
+    },
+    "placeholders": {
+      "projectName": "My Awesome Project",
+      "websiteUrl": "https://myawesomeproject.com",
+      "description": "Describe your project in a sentence or two.",
+      "githubUrl": "https://github.com/user/repo",
+      "twitterUrl": "https://twitter.com/username",
+      "techStack": "Type a technology and press Enter...",
+      "launchDate": "Select a launch date"
+    },
+    "buttons": {
+      "uploadLogo": "Upload Logo",
+      "uploadCoverImage": "Upload Cover Image",
+      "submit": "Submit Project"
+    },
+    "status": {
+      "uploading": "Uploading...",
+      "gettingReady": "Getting ready..."
+    },
+    "platforms": {
+      "web": "Web",
+      "mobile": "Mobile",
+      "desktop": "Desktop",
+      "api": "API",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "other": "Other"
+    },
+    "pricingTypes": {
+      "free": "Free",
+      "freemium": "Freemium",
+      "paid": "Paid"
+    },
+    "errors": {
+      "requiredInfo": "Please fill in all required project information and upload images.",
+      "validUrl": "Please enter a valid website URL.",
+      "technicalDetails": "Please complete the technical details and categorization.",
+      "maxCategories": "You can select a maximum of 3 categories.",
+      "maxTechStack": "You can add a maximum of 5 technologies.",
+      "selectLaunchDate": "Please select a launch date.",
+      "launchDateLimit": "This launch date is not available due to daily limit.",
+      "missingInfo": "Some required information or images are missing. Please go back and complete all fields.",
+      "urlExists": "This website URL has already been submitted. Please use a different URL.",
+      "launchDateOverLimit": "Cannot submit: The selected launch date exceeds your daily limit.",
+      "launchDateLimitError": "You have already scheduled {count}/{limit} project(s) for this date. Please select another date.",
+      "techStackRequired": "Please enter at least one technology in the Tech Stack.",
+      "logoUploadFailed": "Logo upload failed: No URL returned.",
+      "coverUploadFailed": "Cover image upload failed: No URL returned.",
+      "unexpected": "An unexpected error occurred.",
+      "loadCategories": "Failed to load categories",
+      "loadDates": "Failed to load available dates",
+      "verifyLaunchLimit": "Could not verify launch date limit. Please try again.",
+      "noAvailableDates": "No available dates for the selected type in the allowed range."
+    },
+    "info": {
+      "categoriesHint": "Select up to 3 relevant categories.",
+      "noCategories": "No categories available.",
+      "techStackHint": "Enter up to 5 technologies used, press Enter or comma to add a tag.",
+      "platformsHint": "Select all platforms your project supports.",
+      "launchTypeHeader": "Launch Type",
+      "chooseLaunchType": "Choose Launch Type & Date",
+      "selectTypeAndDate": "Select your launch type and date",
+      "launchTime": "All launches happen at {hour}:00 UTC. We launch a limited number of projects each day.",
+      "selected": "Selected",
+      "freeSlots": "free slots",
+      "premiumSlots": "premium slots",
+      "premiumPlusSlots": "premium+ slots",
+      "reviewAndSubmit": "Review and Submit",
+      "readyToSubmit": "Ready to submit?",
+      "readyToSubmitDesc": "Please review all information carefully. Once submitted, your project will be scheduled for launch.",
+      "readyToSubmitAlert": "You will be redirected to the payment page after submission.",
+      "discountCode": "Discount code: {code}"
+    }
   },
   "categories": {
     "title": "Categories",
@@ -370,7 +547,7 @@
       },
       "informationWeCollect": {
         "title": "2. Information We Collect",
-        "content": "Information you provide to us:",
+        "provided": "Information you provide to us:",
         "providedList": {
           "item1": "Account information (name, email address, password)",
           "item2": "Profile information (username, photo)",

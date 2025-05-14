@@ -1,10 +1,45 @@
 {
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Bem-vindo, {name}",
+    "user": "Usuário",
+    "exploreLaunches": "Explorar Lançamentos",
+    "submitProject": "Enviar Projeto",
+    "myProjects": "Meus Projetos",
+    "manageProjects": "Gerencie seus projetos enviados",
+    "active": "Ativos",
+    "upcoming": "Agendados",
+    "past": "Passados",
+    "noUpcoming": "Nenhum lançamento agendado",
+    "noUpcomingDesc": "Você ainda não tem lançamentos de projetos agendados",
+    "noActive": "Nenhum lançamento ativo",
+    "noActiveDesc": "Você não tem lançamentos de projetos ativos no momento",
+    "noPast": "Nenhum lançamento passado",
+    "noPastDesc": "Você ainda não lançou nenhum projeto",
+    "yourBadges": "Seus Selos",
+    "badgesDesc": "Projetos que você lançou recentemente e ficaram entre os 3 primeiros",
+    "seeBadge": "Ver selo",
+    "badges": "Selos",
+    "recentUpvotes": "Upvotes Recentes",
+    "upvotesDesc": "Projetos que você votou recentemente",
+    "noUpvotes": "Nenhum upvote ainda",
+    "noUpvotesDesc": "Você ainda não votou em nenhum projeto",
+    "exploreProjects": "Explorar Projetos",
+    "profile": "Perfil",
+    "accountInfo": "Informações da sua conta",
+    "editProfile": "Editar Perfil",
+    "quickActions": "Ações Rápidas",
+    "quickActionsDesc": "Tarefas comuns que você pode realizar",
+    "winners": "Vencedores",
+    "trendingProjects": "Projetos em Alta",
+    "exploreCategories": "Explorar Categorias"
+  },
   "common": {
     "loading": "Carregando...",
     "error": "Ocorreu um erro ao carregar os dados.",
     "noData": "Nenhum dado encontrado.",
-    "previous": "Previous",
-    "next": "Next",
+    "previous": "Voltar",
+    "next": "Avançar",
     "seeMore": "Ver mais",
     "seeLess": "Ver menos",
     "viewAll": "Ver {gender, select, female {Todas} male {Todos} other {Tudo}}",
@@ -60,6 +95,148 @@
     "signIn": "Entrar",
     "signUp": "Cadastrar",
     "dashboard": "Dashboard"
+  },
+  "submitPage": {
+    "title": "Enviar Projeto",
+    "description": "Compartilhe seu projeto com a comunidade. Preencha os detalhes abaixo."
+  },
+  "submitForm": {
+    "launchPlans": {
+      "free": {
+        "name": "Gratuito",
+        "title": "Lançamento Gratuito",
+        "price": "R$ 0",
+        "features": {
+          "slots": "{slots} projetos por dia",
+          "visibility": "Visibilidade padrão",
+          "schedule": "Agendamento em até {days} dias",
+          "backlink": "Backlinks para os Top 3"
+        }
+      },
+      "premium": {
+        "name": "Premium",
+        "title": "Lançamento Premium",
+        "price": "R$ {price}",
+        "features": {
+          "queue": "Pule a Fila Gratuita - Acesso Prioritário",
+          "backlink": "Backlink Garantido",
+          "slots": "{slots} vagas diariamente",
+          "schedule": "Agendamento em até {days} dias"
+        }
+      },
+      "premiumPlus": {
+        "name": "Premium Plus",
+        "title": "Lançamento Premium Plus",
+        "price": "R$ {price}",
+        "discountedPrice": "R$ {price}",
+        "discountCode": "-50% com o código: {code}",
+        "features": {
+          "highlight": "Destaque Premium",
+          "slots": "Apenas {slots} vagas exclusivas",
+          "backlink": "Backlink DOFOLLOW Garantido",
+          "schedule": "Agendamento em até {days} dias"
+        }
+      }
+    },
+    "step": {
+      "info": "Informações do Projeto",
+      "details": "Detalhes",
+      "launchDate": "Data de Lançamento",
+      "review": "Revisar"
+    },
+    "labels": {
+      "name": "Nome",
+      "website": "Site",
+      "projectName": "Nome do Projeto",
+      "websiteUrl": "URL do Site",
+      "description": "Descrição Curta",
+      "maxFileSize": "Máx 1MB",
+      "logo": "Logo",
+      "coverImage": "Imagem de Capa",
+      "categories": "Categorias",
+      "techStack": "Tecnologias",
+      "platforms": "Plataformas",
+      "pricing": "Modelo de Preço",
+      "githubUrl": "URL do GitHub (Opcional)",
+      "twitterUrl": "URL do Twitter (Opcional)",
+      "removeLogo": "Remover logo",
+      "removeCoverImage": "Remover capa",
+      "launchDate": "Data de Lançamento",
+      "launchPlan": "Plano de Lançamento",
+      "scheduledFor": "Agendado para"
+    },
+    "placeholders": {
+      "projectName": "Meu Projeto Incrível",
+      "websiteUrl": "https://meuprojeto.com.br",
+      "description": "Descreva seu projeto em uma frase ou duas.",
+      "githubUrl": "https://github.com/usuario/repositorio",
+      "twitterUrl": "https://twitter.com/usuario",
+      "techStack": "Digite uma tecnologia e pressione Enter...",
+      "launchDate": "Selecione uma data de lançamento"
+    },
+    "buttons": {
+      "uploadLogo": "Enviar Logo",
+      "uploadCoverImage": "Enviar Capa",
+      "submit": "Enviar Projeto"
+    },
+    "status": {
+      "uploading": "Enviando...",
+      "gettingReady": "Preparando..."
+    },
+    "platforms": {
+      "web": "Web",
+      "mobile": "Mobile",
+      "desktop": "Desktop",
+      "api": "API",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "other": "Outro"
+    },
+    "pricingTypes": {
+      "free": "Gratuito",
+      "freemium": "Freemium",
+      "paid": "Pago"
+    },
+    "errors": {
+      "requiredInfo": "Preencha todas as informações obrigatórias do projeto e envie as imagens.",
+      "validUrl": "Digite uma URL válida.",
+      "technicalDetails": "Complete os detalhes técnicos e categorização.",
+      "maxCategories": "Você pode selecionar no máximo 3 categorias.",
+      "maxTechStack": "Você pode adicionar no máximo 5 tecnologias.",
+      "selectLaunchDate": "Selecione uma data de lançamento.",
+      "launchDateLimit": "Esta data não está disponível devido ao limite diário.",
+      "missingInfo": "Faltam informações ou imagens obrigatórias. Volte e preencha todos os campos.",
+      "urlExists": "Esta URL já foi enviada. Use uma URL diferente.",
+      "launchDateOverLimit": "Não é possível enviar: o limite diário para esta data foi atingido.",
+      "launchDateLimitError": "Você já agendou {count}/{limit} projeto(s) para esta data. Selecione outra data.",
+      "techStackRequired": "Digite pelo menos uma tecnologia.",
+      "logoUploadFailed": "Falha ao enviar logo: Nenhuma URL retornada.",
+      "coverUploadFailed": "Falha ao enviar capa: Nenhuma URL retornada.",
+      "unexpected": "Ocorreu um erro inesperado.",
+      "loadCategories": "Falha ao carregar categorias",
+      "loadDates": "Falha ao carregar datas disponíveis",
+      "verifyLaunchLimit": "Não foi possível verificar o limite de lançamentos. Tente novamente.",
+      "noAvailableDates": "Nenhuma data disponível para o tipo selecionado no intervalo permitido."
+    },
+    "info": {
+      "categoriesHint": "Selecione até 3 categorias relevantes.",
+      "noCategories": "Nenhuma categoria disponível.",
+      "techStackHint": "Insira até 5 tecnologias usadas, pressione Enter ou vírgula para adicionar.",
+      "platformsHint": "Selecione todas as plataformas suportadas pelo projeto.",
+      "launchTypeHeader": "Tipo de Lançamento",
+      "chooseLaunchType": "Escolha o Tipo e Data do Lançamento",
+      "selectTypeAndDate": "Selecione o tipo e a data do lançamento",
+      "launchTime": "Todos os lançamentos ocorrem às {hour}h. Lançamos um número limitado de projetos por dia.",
+      "selected": "Selecionado",
+      "freeSlots": "vaga(s) grátis",
+      "premiumSlots": "vaga(s) premium",
+      "premiumPlusSlots": "vaga(s) premium+",
+      "reviewAndSubmit": "Revisar e Enviar",
+      "readyToSubmit": "Pronto para enviar?",
+      "readyToSubmitDesc": "Por favor, revise todas as informações com atenção. Uma vez enviado, seu projeto será agendado para lançamento.",
+      "readyToSubmitAlert": "Você será redirecionado para a página de pagamento após o envio.",
+      "discountCode": "Cupom Exclusivo: {code}"
+    }
   },
   "categories": {
     "title": "Categorias",
