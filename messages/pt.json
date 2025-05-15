@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "{appName} - Descubra e apoie os melhores produtos de tecnologia",
+    "description": "{appName} é uma plataforma para descobrir e votar nos melhores produtos de tecnologia. Encontre os produtos lançados diariamente."
+  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Bem-vindo, {name}",

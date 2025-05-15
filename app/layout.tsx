@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Outfit as FontHeading, Inter as FontSans } from "next/font/google"
 
 import { NextIntlClientProvider } from "next-intl"
+import { getTranslations } from "next-intl/server"
 import PlausibleProvider from "next-plausible"
 import { Toaster } from "sonner"
 
@@ -23,35 +24,40 @@ const fontHeading = FontHeading({
 
 const appUrl = new URL(process.env.NEXT_PUBLIC_APP_URL!)
 
-export const metadata: Metadata = {
-  metadataBase: appUrl,
-  title: `${process.env.NEXT_PUBLIC_APP_NAME} - Discover the Best Tech Products`,
-  description:
-    "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
-  openGraph: {
-    title: "Open Launch - Discover the Best Tech Products",
-    description:
-      "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
-    url: process.env.NEXT_PUBLIC_APP_URL,
-    siteName: "Open Launch",
-    images: [
-      {
-        url: "og.png",
-        width: 1200,
-        height: 630,
-        alt: "Open Launch - Discover the Best Tech Products",
-      },
-    ],
-    locale: "pt_BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Open Launch - Discover the Best Tech Products",
-    description:
-      "Open Launch is a platform to discover and upvote the best tech products. Find top products launching daily.",
-    images: ["og.png"],
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("meta")
+
+  const appName = process.env.NEXT_PUBLIC_APP_NAME!
+  const title = t("title", { appName })
+  const description = t("description", { appName })
+
+  return {
+    metadataBase: appUrl,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: process.env.NEXT_PUBLIC_APP_URL,
+      siteName: process.env.NEXT_PUBLIC_APP_NAME!,
+      images: [
+        {
+          url: "og.png",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: "pt_BR",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["og.png"],
+    },
+  }
 }
 
 export default function RootLayout({

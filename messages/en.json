@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "{appName} - Discover and support the best new tech products",
+    "description": "{appName} is a platform to discover and upvote the best tech products. Find top products launching daily."
+  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome, {name}",
