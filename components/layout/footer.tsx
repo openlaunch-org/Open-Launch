@@ -1,20 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link"
 
-import { RiInstagramFill, RiLinkedinFill } from "@remixicon/react"
+import { RiDiscordFill, RiInstagramFill } from "@remixicon/react"
 import { useTranslations } from "next-intl"
 
 // Liens pour la nouvelle colonne "Connect"
 const connectLinkItems = [
   {
+    href: "https://discord.gg/productlaunch",
+    icon: RiDiscordFill,
+    label: "Discord",
+  },
+  {
     href: "https://instagram.com/productlaunch",
     icon: RiInstagramFill,
     label: "Instagram",
-  },
-  {
-    href: "https://linkedin.com/company/productlaunch",
-    icon: RiLinkedinFill,
-    label: "LinkedIn",
   },
 ]
 

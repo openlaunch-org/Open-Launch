@@ -83,9 +83,10 @@ interface DateGroup {
 
 interface SubmitProjectFormProps {
   userId: string
+  userEmail: string
 }
 
-export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
+export function SubmitProjectForm({ userId, userEmail }: SubmitProjectFormProps) {
   const t = useTranslations()
   const tFormat = useFormatter()
 
@@ -496,14 +497,17 @@ export function SubmitProjectForm({ userId }: SubmitProjectFormProps) {
       if (formData.launchType === LAUNCH_TYPES.FREE) {
         router.push(`/projects/${projectSlug}`)
       } else {
-        const paymentLink =
+        const paymentUrl = new URL(
           formData.launchType === LAUNCH_TYPES.PREMIUM
             ? PREMIUM_PAYMENT_LINK
-            : PREMIUM_PLUS_PAYMENT_LINK
+            : PREMIUM_PLUS_PAYMENT_LINK,
+        )
 
-        const paymentUrl = `${paymentLink}?client_reference_id=${projectId}`
+        paymentUrl.searchParams.set("client_reference_id", projectId)
+        paymentUrl.searchParams.set("prefilled_email", userEmail)
+        paymentUrl.searchParams.set("locale", "pt")
 
-        window.location.href = paymentUrl
+        window.location.href = paymentUrl.toString()
       }
     } catch (submissionError: unknown) {
       console.error("Error during final submission:", submissionError)

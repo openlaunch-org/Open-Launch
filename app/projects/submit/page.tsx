@@ -18,7 +18,7 @@ export default async function SubmitProject() {
   if (!session?.user?.id) {
     redirect("/sign-in?redirect=/projects/submit")
   }
-  const userId = session.user.id
+  const { user } = session
 
   return (
     <div className="from-background to-background/80 min-h-[calc(100vh-5rem)] bg-gradient-to-b">
@@ -30,7 +30,7 @@ export default async function SubmitProject() {
 
         <div className="bg-card rounded-lg border shadow-sm sm:rounded-xl">
           <div className="p-4 sm:p-6 md:p-8">
-            <SubmitProjectForm userId={userId} />
+            <SubmitProjectForm userId={user.id} userEmail={user.email} />
           </div>
         </div>
       </div>

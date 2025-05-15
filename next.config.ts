@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "placehold.co",
+      },
+      {
+        protocol: "https",
         hostname: new URL(process.env.NEXT_PUBLIC_UPLOADTHING_URL!).hostname,
       },
     ],
