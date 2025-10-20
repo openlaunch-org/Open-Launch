@@ -7,7 +7,6 @@
 [![Contributors](https://img.shields.io/github/contributors/drdruide/open-launch)](https://github.com/drdruide/open-launch/graphs/contributors)
 [![GitHub Issues](https://img.shields.io/github/issues/drdruide/open-launch)](https://github.com/drdruide/open-launch/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/drdruide/open-launch)](https://github.com/drdruide/open-launch/pulls)
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Open%20Launch-FFDD00?logo=buymeacoffee)](https://buymeacoffee.com/drdruide)
 
 **The first complete open source alternative to Product Hunt. Built with modern web technologies.**
 
@@ -32,6 +31,32 @@
 - [Acknowledgments](#acknowledgments)
 - [Support](#support)
 - [Sponsoring](#sponsoring)
+
+
+## Sponsors
+
+Huge thanks to our sponsors:
+
+<table>
+  <tbody>
+    <tr>
+      <td width="30%" align="center">
+        <a href="https://www.flyingstart.co?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
+          <img width="300" src="https://assets.open-launch.com/sponsors/flyingstart-min.png" alt="flyinstart_logo"/>
+        </a>
+      </td>
+      <td><a href="https://www.flyingstart.co?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch">Flying Start</a> offers affordable, brandable domain names for indie makers and startups ready to launch their next big idea.</td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">
+        <a href="https://kardow.com?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Developer&&utm_term=open-launch" target="_blank">
+          <img width="200" src="https://assets.open-launch.com/sponsors/kardow_logo_linkedin.png" alt="kardow_logo"/>
+        </a>
+      </td>
+      <td><a href="https://kardow.com?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Developer&&utm_term=open-launch">Kardow</a> is a no-code platform for creating and monetizing job boards.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Features
 
