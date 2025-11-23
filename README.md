@@ -41,6 +41,14 @@ Huge thanks to our sponsors:
   <tbody>
     <tr>
       <td width="30%" align="center">
+        <a href="https://ace.me?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
+          <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5y3kDX8muIfDO5ZWlciEYks7rxLGJVpFUM4N2" alt="ace_me_logo"/>
+        </a>
+      </td>
+      <td><a href="https://ace.me?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch">Ace.me</a> is your new website, email address & cloud storage. Simple, Fast, and Secure.</td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">
         <a href="https://www.flyingstart.co?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
           <img width="300" src="https://assets.open-launch.com/sponsors/flyingstart-min.png" alt="flyinstart_logo"/>
         </a>
