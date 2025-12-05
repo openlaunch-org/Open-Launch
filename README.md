@@ -41,6 +41,14 @@ Huge thanks to our sponsors:
   <tbody>
     <tr>
       <td width="30%" align="center">
+        <a href="https://seomode.co?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
+          <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5JYmzEAfGFHOhU9NIgjKvnuLr0q5bBoP1Am7D" alt="seo_mode_logo"/>
+        </a>
+      </td>
+      <td><a href="https://seomode.co?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch">SEO Mode</a> is getting your product listed in 100+ directories automatically.</td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">
         <a href="https://ace.me?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
           <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5y3kDX8muIfDO5ZWlciEYks7rxLGJVpFUM4N2" alt="ace_me_logo"/>
         </a>
