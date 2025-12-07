@@ -30,10 +30,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "designmodo.com",
       },
-      {
-        protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_UPLOADTHING_URL!,
-      },
+      ...(process.env.NEXT_PUBLIC_UPLOADTHING_URL
+        ? [
+            {
+              protocol: "https" as const,
+              hostname: process.env.NEXT_PUBLIC_UPLOADTHING_URL,
+            },
+          ]
+        : []),
       {
         protocol: "https",
         hostname: "images.unsplash.com",
