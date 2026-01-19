@@ -41,6 +41,14 @@ Huge thanks to our sponsors:
   <tbody>
     <tr>
       <td width="30%" align="center">
+        <a href="https://auraplusplus.com?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
+          <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5irrdflpJIt3xfTlAe1u5XnNvJMZkqmY9w4Wa" alt="auraplusplus_logo"/>
+        </a>
+      </td>
+      <td><a href="https://auraplusplus.com?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch">Aura++</a> is an all-in-one launch platform that helps you submit your project using AI, earn badges, get backlinks, publish a launch blog post, share on social media, and grow your online presence instantly.</td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">
         <a href="https://seomode.co?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
           <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5JYmzEAfGFHOhU9NIgjKvnuLr0q5bBoP1Am7D" alt="seo_mode_logo"/>
         </a>
