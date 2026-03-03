@@ -1,9 +1,5 @@
 # Open-Launch
 
-<a href="https://cloud.open-launch.com" target="_blank">Introducing Open-Launch Cloud: The Hosted, Revenue-Ready Platform for Your Community.</a>
-[![659_1x_shots_so](https://github.com/user-attachments/assets/ea91b45b-a98f-44b3-aea9-fbd310aeb171)](https://cloud.open-launch.com)
-
-
 
 [![License: Open Launch](https://img.shields.io/badge/License-Open_Launch-yellow.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-15.3.1-black?logo=next.js)](https://nextjs.org)
@@ -44,6 +40,14 @@ Huge thanks to our sponsors:
 
 <table>
   <tbody>
+    <tr>
+      <td width="30%" align="center">
+        <a href="https://joyfun.ai?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
+          <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5oIDaNBdwhNI64socGYOZVDdaCH0e2TLnirlk" alt="joyfun_logo"/>
+        </a>
+      </td>
+      <td><a href="https://joyfun.ai?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch">JoyFun AI</a> is a free all-in-one creative suite for AI videos, face swaps & effects</td>
+    </tr>
     <tr>
       <td width="30%" align="center">
         <a href="https://auraplusplus.com?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
