@@ -37,6 +37,41 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
  * Best-effort: a send failure just logs and falls through, so the
  * webhook still returns 200.
  */
+/**
+ * Cancel a directory_order tied to an Ultra subscription that's no longer
+ * billable. Stripe fires both `subscription.deleted` AND
+ * `subscription.updated[status=canceled]` for a single cancel — the
+ * WHERE clause restricts to paid/fulfilled so the second hit is a
+ * 0-row no-op, and `revalidateTag` only runs when we actually changed
+ * the row. Accepts both `paid` and `fulfilled` because Plus/Pro/Ultra
+ * orders sit at `paid` until the admin manually marks them fulfilled,
+ * and a customer can cancel before that step.
+ */
+async function markUltraOrderCanceled(stripeSubscriptionId: string, reason: string) {
+  const result = await db
+    .update(directoryOrder)
+    .set({ status: "canceled", updatedAt: new Date() })
+    .where(
+      and(
+        eq(directoryOrder.stripeSubscriptionId, stripeSubscriptionId),
+        inArray(directoryOrder.status, ["paid", "fulfilled"]),
+      ),
+    )
+  if (!result.rowCount || result.rowCount === 0) {
+    console.log(
+      "ℹ️ subscription cancel signal for unknown / already-canceled order:",
+      stripeSubscriptionId,
+      "reason:",
+      reason,
+    )
+    return
+  }
+  console.log("✅ Subscription dead, marked order canceled:", stripeSubscriptionId, "via", reason)
+  // A canceled Ultra vacates a sidebar slot — bust the cache so the
+  // now-empty slot vanishes promptly.
+  revalidateTag(ULTRA_SPONSORS_CACHE_TAG, "max")
+}
+
 async function alertOrphanPayment(
   session: Stripe.Checkout.Session,
   reason: string,
@@ -268,54 +303,16 @@ export async function POST(request: Request) {
       // Ultra is a subscription. When canceled (by user or admin via
       // Stripe Dashboard), flip the matching order to `canceled` so
       // the admin queue stops treating it as active.
-      //
-      // We accept *both* `paid` and `fulfilled` as from-states: an
-      // Ultra order sits at `paid` until the admin manually clicks
-      // "Mark fulfilled", and a customer can cancel before that
-      // happens. Limiting to `fulfilled` would have left such orders
-      // stuck in the queue forever.
       const sub = event.data.object as Stripe.Subscription
-      const subResult = await db
-        .update(directoryOrder)
-        .set({ status: "canceled", updatedAt: new Date() })
-        .where(
-          and(
-            eq(directoryOrder.stripeSubscriptionId, sub.id),
-            inArray(directoryOrder.status, ["paid", "fulfilled"]),
-          ),
-        )
-      if (!subResult.rowCount || subResult.rowCount === 0) {
-        // Stripe will send this event for any subscription deletion,
-        // including ones that aren't directory-order orders, or rows
-        // already in canceled/refunded state. Log so we can spot
-        // genuine mismatches in the audit trail.
-        console.log("ℹ️ subscription.deleted: no matching active order for", sub.id)
-      } else {
-        console.log("✅ Subscription canceled, marked order canceled:", sub.id)
-        // A canceled Ultra vacates a sidebar slot — bust the cache
-        // so the now-empty slot vanishes from the sidebar promptly
-        // (same reason as the fulfilment path).
-        revalidateTag(ULTRA_SPONSORS_CACHE_TAG, "max")
-      }
+      await markUltraOrderCanceled(sub.id, "deleted")
       return NextResponse.json({ success: true }, { status: 200 })
     } else if (event.type === "customer.subscription.updated") {
-      // Stripe fires `updated` for every state transition (trial → active,
-      // active → past_due → unpaid, plan changes, billing-anchor shifts).
-      // We only treat the "subscription has effectively died" terminal
-      // states as a cancel-equivalent for our Ultra directory order:
-      //
-      //   - `incomplete_expired`: initial charge failed and trial window
-      //                           lapsed; Stripe will never recover this.
-      //   - `unpaid`:             dunning gave up; Ultra no longer paying.
-      //   - `canceled`:           in case `subscription.deleted` was
-      //                           missed (Stripe sometimes only fires
-      //                           `updated` with status:'canceled').
-      //
-      // Healthy transitions (active, trialing, past_due-pending-retry,
-      // paused) are no-ops here — the order stays paid/fulfilled, and the
-      // sidebar slot keeps showing the sponsor until things resolve or
-      // die. If we kicked them out on past_due we'd punish customers
-      // mid-retry-window.
+      // Stripe fires `updated` for every state transition. We only act
+      // on the three terminal-death states (subscription effectively
+      // gone) and treat them as a cancel-equivalent for our directory
+      // order. Healthy transitions (active, trialing, past_due-pending-
+      // retry, paused) are no-ops — kicking customers on past_due would
+      // punish them mid-retry-window.
       const sub = event.data.object as Stripe.Subscription
       const DEAD_STATUSES: ReadonlyArray<Stripe.Subscription.Status> = [
         "incomplete_expired",
@@ -325,31 +322,7 @@ export async function POST(request: Request) {
       if (!DEAD_STATUSES.includes(sub.status)) {
         return NextResponse.json({ success: true, noop: true }, { status: 200 })
       }
-      const subResult = await db
-        .update(directoryOrder)
-        .set({ status: "canceled", updatedAt: new Date() })
-        .where(
-          and(
-            eq(directoryOrder.stripeSubscriptionId, sub.id),
-            inArray(directoryOrder.status, ["paid", "fulfilled"]),
-          ),
-        )
-      if (!subResult.rowCount || subResult.rowCount === 0) {
-        console.log(
-          "ℹ️ subscription.updated dead-state for unknown sub:",
-          sub.id,
-          "status:",
-          sub.status,
-        )
-      } else {
-        console.log(
-          "✅ Subscription dead (status:",
-          sub.status,
-          "), marked order canceled:",
-          sub.id,
-        )
-        revalidateTag(ULTRA_SPONSORS_CACHE_TAG, "max")
-      }
+      await markUltraOrderCanceled(sub.id, `updated[${sub.status}]`)
       return NextResponse.json({ success: true }, { status: 200 })
     } else if (event.type === "checkout.session.expired") {
       const session = event.data.object as Stripe.Checkout.Session

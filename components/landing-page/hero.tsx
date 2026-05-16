@@ -23,7 +23,7 @@ export default function Hero() {
               Boilerplate
             </h1>
             <p className="text-muted-foreground max-w-2xl text-center text-lg leading-relaxed tracking-tight md:text-xl">
-              Next.js 15+, TailwindCSS, TypeScript, Shadcn UI, Drizzle ORM, Postgres, Better Auth
+              Next.js 16+, TailwindCSS, TypeScript, Shadcn UI, Drizzle ORM, Postgres, Better Auth
             </p>
           </div>
           <div>

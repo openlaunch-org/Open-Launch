@@ -157,7 +157,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
-    "@types/node": "22",
+    "@types/node": "^22.19.19",
     "@types/pg": "^8.16.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

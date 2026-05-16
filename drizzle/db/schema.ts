@@ -73,9 +73,7 @@ export const session = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     impersonatedBy: text("impersonated_by"),
   },
-  (table) => ({
-    userIdIdx: index("session_userId_idx").on(table.userId),
-  }),
+  (table) => [index("session_userId_idx").on(table.userId)],
 )
 
 export const account = pgTable(
@@ -97,9 +95,7 @@ export const account = pgTable(
     createdAt: timestamp("created_at").notNull(),
     updatedAt: timestamp("updated_at").notNull(),
   },
-  (table) => ({
-    userIdIdx: index("account_userId_idx").on(table.userId),
-  }),
+  (table) => [index("account_userId_idx").on(table.userId)],
 )
 
 export const verification = pgTable(
@@ -112,9 +108,7 @@ export const verification = pgTable(
     createdAt: timestamp("created_at"),
     updatedAt: timestamp("updated_at"),
   },
-  (table) => ({
-    identifierIdx: index("verification_identifier_idx").on(table.identifier),
-  }),
+  (table) => [index("verification_identifier_idx").on(table.identifier)],
 )
 
 export const project = pgTable(

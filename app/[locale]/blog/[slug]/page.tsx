@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 
 import { db } from "@/drizzle/db"
 import { blogArticle } from "@/drizzle/db/schema"
+import { mdxComponents } from "@/mdx-components"
 import {
   RiArticleLine,
   RiInformationLine,
@@ -209,6 +210,7 @@ export default async function BlogArticlePage({
               <div className="prose prose-neutral dark:prose-invert [&_table]:border-border [&_thead]:bg-muted/30 [&_th]:border-border [&_th]:text-foreground [&_td]:border-border [&_tbody_tr:hover]:bg-muted/20 [&_img]:border-border max-w-none [&_img]:mx-auto [&_img]:rounded-lg [&_img]:border [&_img]:md:max-w-3xl [&_table]:my-8 [&_table]:w-full [&_table]:border-collapse [&_table]:overflow-hidden [&_table]:rounded-lg [&_table]:border [&_tbody_tr:last-child_td]:border-b-0 [&_td]:border-r [&_td]:border-b [&_td]:px-4 [&_td]:py-3 [&_td]:align-middle [&_td]:text-sm [&_td:last-child]:border-r-0 [&_th]:border-r [&_th]:border-b [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:align-middle [&_th]:text-sm [&_th]:font-bold [&_th:last-child]:border-r-0">
                 <MDXRemote
                   source={content}
+                  components={mdxComponents}
                   options={{
                     mdxOptions: {
                       remarkPlugins: [remarkGfm],

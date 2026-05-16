@@ -164,8 +164,9 @@ export async function PATCH(req: NextRequest, context: any) {
   }
 }
 
-// Export other methods without modification
-// Export other methods with wrappers to fix type compatibility issues in Next.js 15
+// Wrappers around fuma-comment's handler methods. Originally added to
+// silence Next.js 15 type-compat noise; keeping them through Next 16
+// because they're harmless and removing them risks regression.
 export async function GET(req: NextRequest, context: any) {
   return commentHandler.GET(req, context)
 }
