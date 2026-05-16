@@ -29,15 +29,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 /**
- * Stripe webhook is allowed to silently 200 on missing project / order
- * (so Stripe doesn't retry forever), but we still need a human to look
- * at the payment — otherwise customers paid for nothing and we never
- * notice. Reuses the admin payment email template with an ORPHAN tag.
- *
- * Best-effort: a send failure just logs and falls through, so the
- * webhook still returns 200.
- */
-/**
  * Cancel a directory_order tied to an Ultra subscription that's no longer
  * billable. Stripe fires both `subscription.deleted` AND
  * `subscription.updated[status=canceled]` for a single cancel — the
@@ -72,6 +63,15 @@ async function markUltraOrderCanceled(stripeSubscriptionId: string, reason: stri
   revalidateTag(ULTRA_SPONSORS_CACHE_TAG, "max")
 }
 
+/**
+ * Stripe webhook is allowed to silently 200 on missing project / order
+ * (so Stripe doesn't retry forever), but we still need a human to look
+ * at the payment — otherwise customers paid for nothing and we never
+ * notice. Reuses the admin payment email template with an ORPHAN tag.
+ *
+ * Best-effort: a send failure just logs and falls through, so the
+ * webhook still returns 200.
+ */
 async function alertOrphanPayment(
   session: Stripe.Checkout.Session,
   reason: string,
