@@ -42,6 +42,14 @@ Huge thanks to our sponsors:
   <tbody>
     <tr>
       <td width="30%" align="center">
+        <a href="https://prime-digital.ca?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
+          <img width="300" src="https://prime-digital.ca/wp-content/uploads/2026/07/logo-canada-prime.webp" alt="joyfun_logo"/>
+        </a>
+      </td>
+      <td><a href="https://prime-digital.ca?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch">Prime Digital</a> is a local SEO & AI search visibility for small businesses</td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">
         <a href="https://joyfun.ai?utm_source=Github&utm_medium=Github_Repo_Content_Ad&utm_content=Sponsor&&utm_term=open-launch" target="_blank">
           <img width="300" src="https://yxucdfr9f5.ufs.sh/f/M3RHr0TmpHk5oIDaNBdwhNI64socGYOZVDdaCH0e2TLnirlk" alt="joyfun_logo"/>
         </a>
